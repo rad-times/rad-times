@@ -2,6 +2,7 @@ import {View, Text, StyleSheet, Image, Pressable} from "react-native";
 import {Colors} from "@/constants/Colors";
 import {Spot} from "@/types/Spot";
 import Icon from "@/components/atom/Icon";
+import _ from 'lodash';
 
 type SpotListingItemProps = {
   spotDetails: Spot
@@ -18,24 +19,29 @@ function SpotListingItem({
     console.log('map');
   }
 
+  const getSpotImageContent = (imagePath = '') => {
+    if (!_.isEmpty(imagePath)) {
+      return (
+        <Image
+          style={styles.spotImage}
+          source={{
+            uri: spotDetails.spot_image
+          }}
+        />
+      );
+    }
+    return (
+      <View style={styles.spotImage}>
+        <View style={styles.spotImageMissing}>
+          <Icon size={24} name="image-sharp" color={Colors.DARK_GREY} />
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.mainWrapper}>
-      {spotDetails.spot_image &&
-          <Image
-              style={styles.spotImage}
-              source={{
-                uri: spotDetails.spot_image
-              }}
-          />
-      }
-
-      {!spotDetails.spot_image &&
-          <View style={styles.spotImage}>
-              <View style={styles.spotImageMissing}>
-                  <Icon size={24} name="image-sharp" color={Colors.DARK_GREY} />
-              </View>
-          </View>
-      }
+      {getSpotImageContent(spotDetails.spot_image)}
       <View style={styles.spotInformationBlock}>
         <Text style={styles.spotNameText}>{spotDetails.spot_name}</Text>
         <Text style={styles.spotDescriptionText}>{spotDetails.spot_description}</Text>

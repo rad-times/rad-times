@@ -3,6 +3,7 @@ import {Colors} from "@/constants/Colors";
 
 import Icon from "@/components/atom/Icon";
 import {Person} from "@/types/Person";
+import _ from "lodash";
 
 interface CrewListItemProps {
   personDetail: Person
@@ -16,24 +17,30 @@ function CrewListItem({
     console.log('favorite');
   }
 
+  const getPersonImageContent = (imagePath = '') => {
+    if (!_.isEmpty(imagePath)) {
+      return (
+        <Image
+          style={styles.personImage}
+          source={{
+            uri: personDetail.profile_image
+          }}
+        />
+      );
+    }
+
+    return (
+      <View style={styles.personImage}>
+        <View style={styles.personImageMissing}>
+          <Icon size={24} name="image-sharp" color={Colors.DARK_GREY} />
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.mainWrapper}>
-      {personDetail.profile_image &&
-          <Image
-              style={styles.personImage}
-              source={{
-                uri: personDetail.profile_image
-              }}
-          />
-      }
-      {!personDetail.profile_image &&
-          <View style={styles.personImage}>
-              <View style={styles.personImageMissing}>
-                  <Icon size={24} name="image-sharp" color={Colors.DARK_GREY} />
-              </View>
-          </View>
-      }
-
+      {getPersonImageContent(personDetail.profile_image)}
       <View style={styles.personInformationBlock}>
         <Text style={styles.personNameText}>{personDetail.first_name} {personDetail.last_name}</Text>
         <Text style={styles.personLocationText}>{personDetail.location?.city_name}, {personDetail.location?.state_name}</Text>
