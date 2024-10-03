@@ -1,4 +1,4 @@
-import {StyleSheet, TextInput, View} from "react-native";
+import {Pressable, StyleSheet, TextInput, View} from "react-native";
 import Icon from "@/components/atom/Icon";
 import {Colors} from "@/constants/Colors";
 import FiltersBtn from "@/components/atom/FilterBtn";
@@ -6,11 +6,13 @@ import FiltersBtn from "@/components/atom/FilterBtn";
 interface FilterableSearchBarProps {
   searchTerm: string,
   handleChange: Function
+  clearSearchTerm: Function
 }
 
 export default function FilterableSearchBar({
   searchTerm,
-  handleChange
+  handleChange,
+  clearSearchTerm
 }: FilterableSearchBarProps) {
   return (
     <View style={styles.contentWrapper}>
@@ -27,6 +29,12 @@ export default function FilterableSearchBar({
           value={searchTerm}
           style={styles.inputContainer}
         />
+        <Pressable
+          style={styles.iconContainer}
+          onPress={() => clearSearchTerm()}
+        >
+          <Icon size={24} name="close" color={Colors.DARK_GREY} />
+        </Pressable>
         <FiltersBtn
           onPress={() => {
             console.log('filter');

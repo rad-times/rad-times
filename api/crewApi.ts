@@ -30,6 +30,7 @@ export async function getCrewByPersonId(id: number): Promise<Person[]> {
     return _.get(queryResp, 'data.crewByPersonId', []);
 
   } catch (err) {
+    console.error(err);
     // @TODO Error handling
     return [];
   }

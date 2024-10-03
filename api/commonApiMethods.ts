@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 interface CommonGraphQlRequestProps {
   queryBody: string
   errorMessage: string
@@ -12,11 +14,17 @@ export async function commonGraphQlRequest({
     headers: {"Content-Type": "application/json" },
     body: JSON.stringify({ query: queryBody })
   })
-    .then((response) => {
+    .then(async (response) => {
       if (response.status >= 400) {
         throw new Error(errorMessage);
       } else {
-        return response.json();
+        const resp = await response.json();
+
+        if (_.get(resp, 'errors', []).length) {
+          throw new Error(`${errorMessage}: ${_.get(resp, 'errors')[0].message}`);
+        }
+
+        return resp;
       }
     });
 }

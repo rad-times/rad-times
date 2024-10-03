@@ -1,10 +1,11 @@
 import {Pressable, SafeAreaView, StyleSheet, Text, View} from "react-native";
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import {Colors} from "@/constants/Colors";
 import {setCurrentSpotMapDetails, setSpotLocationMapShown, SpotState} from "@/state/spotSearchSlice";
 import {useDispatch, useSelector} from "react-redux";
 import Icon from "@/components/atom/Icon";
 import _ from 'lodash';
+import {Maps} from "@/constants/Maps";
 
 export default function SpotMapModalContent() {
   const dispatch = useDispatch();
@@ -27,16 +28,28 @@ export default function SpotMapModalContent() {
       <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.map}
+        mapType={'standard'}
+        customMapStyle={Maps.customSetup}
         initialRegion={{
-          latitude: 34.167854629302816,
-          longitude: -118.337691202992,
-          latitudeDelta: 0.001,
-          longitudeDelta: 0.001,
+          latitude: spotDetails.location.lat,
+          longitude: spotDetails.location.lng,
+          latitudeDelta: Maps.delta,
+          longitudeDelta: Maps.delta,
         }}
-      />
+      >
+        <Marker
+          coordinate={{
+            latitude: spotDetails.location.lat,
+            longitude: spotDetails.location.lng
+          }}
+          title={spotDetails.spot_name}
+          description={spotDetails.spot_description}
+          pinColor={Colors.DARK_RED}
+        />
+      </MapView>
     );
   }
-  console.log('spotDetails', spotDetails);
+
   return (
     <SafeAreaView style={styles.mapWrapper}>
       <View style={styles.spotModalTopBar}>

@@ -44,6 +44,7 @@ export async function getPersonById(id: number): Promise<Person> {
     return _.get(queryResp, 'data.personById', unknownUser);
 
   } catch (err) {
+    console.error(err);
     // @TODO Error handling
     return unknownUser;
   }

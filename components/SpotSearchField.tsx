@@ -23,10 +23,15 @@ export default function SpotSearchField() {
     setSearchTerm(inputValue);
   }
 
+  const handleClearSearchTerm = () => {
+    setSearchTerm('');
+  }
+
   return (
     <FilterableSearchBar
       searchTerm={searchTerm}
       handleChange={handleSearchInputChange}
+      clearSearchTerm={handleClearSearchTerm}
     />
   );
 };

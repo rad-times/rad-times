@@ -52,13 +52,16 @@ function getSpotByFavoriteQuery() {
 
 export async function fetchSpotsByName(name: String): Promise<Spot[]> {
   try {
+
     const queryResp = await commonGraphQlRequest({
       queryBody:  getSpotByNameQuery(name),
       errorMessage: "Error fetching spot data by name"
     });
+
     return _.get(queryResp, 'data.spotByName', []);
 
   } catch (err) {
+    console.error(err);
     // @TODO Error handling
     return [];
   }
