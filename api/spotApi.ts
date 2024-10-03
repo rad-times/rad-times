@@ -11,6 +11,12 @@ function getSpotByNameQuery(inputName: String) {
       spot_description
       last_check_in
       is_public
+      is_private
+      is_favorite
+      location {
+        lat
+        lng
+      }
       keywords {
         keyword_id
         keyword_name
@@ -31,6 +37,10 @@ function getSpotByFavoriteQuery() {
       is_public
       is_private
       is_favorite
+      location {
+        lat
+        lng
+      }
       keywords {
         keyword_id
         keyword_name

@@ -1,8 +1,10 @@
-import {View, Text, StyleSheet, Image, Pressable} from "react-native";
+import {View, Text, StyleSheet, Image, Pressable, Modal} from "react-native";
 import {Colors} from "@/constants/Colors";
 import {Spot} from "@/types/Spot";
 import Icon from "@/components/atom/Icon";
 import _ from 'lodash';
+import {setSpotLocationMapShown, setCurrentSpotMapDetails} from "@/state/spotSearchSlice";
+import {useDispatch} from "react-redux";
 
 type SpotListingItemProps = {
   spotDetails: Spot
@@ -11,12 +13,15 @@ type SpotListingItemProps = {
 function SpotListingItem({
   spotDetails
 }: SpotListingItemProps) {
+  const dispatch = useDispatch();
+
   const onPressFavorite = () => {
     console.log('favorite');
   }
 
   const onPressMap = () => {
-    console.log('map');
+    dispatch(setCurrentSpotMapDetails(spotDetails));
+    dispatch(setSpotLocationMapShown(true));
   }
 
   const getSpotImageContent = (imagePath = '') => {
@@ -54,7 +59,7 @@ function SpotListingItem({
             {
               backgroundColor: pressed ? Colors.LIGHT_GREY : Colors.WHITE,
             },
-            styles.icon,
+            styles.icon
           ]}>
           <Icon size={24} name="star-outline" color={Colors.DARK_GREY} />
         </Pressable>
@@ -65,7 +70,7 @@ function SpotListingItem({
             {
               backgroundColor: pressed ? Colors.LIGHT_GREY : Colors.WHITE,
             },
-            styles.icon,
+            styles.icon
           ]}>
           <Icon size={24} name="location-sharp" color={Colors.DARK_GREY} />
         </Pressable>

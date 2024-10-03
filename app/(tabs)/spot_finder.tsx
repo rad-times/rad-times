@@ -1,24 +1,34 @@
-import {View, FlatList, StyleSheet} from "react-native";
+import {View, FlatList, StyleSheet, Modal} from "react-native";
 
 import PageTitle from "@/components/atom/PageTitle";
 import {Colors} from "@/constants/Colors";
 import SpotSearchField from "@/components/SpotSearchField";
 import {useSelector} from "react-redux";
-import {SpotSearchResults} from "@/state/spotSearchSlice";
+import {SpotState} from "@/state/spotSearchSlice";
 import SpotListingItem from "@/components/SpotListingItem";
+import SpotMapModalContent from "@/components/SpotMapModalContent";
 
-type SpotSearchState = {
-  spotSearch: SpotSearchResults
-}
 
 export default function SpotFinder() {
-  const searchResultsList = useSelector((state: SpotSearchState) => state.spotSearch.searchResults);
+  const searchResultsList = useSelector((state: SpotState) => state.spotSearch.searchResults);
+  const spotLocationMapShown = useSelector((state: SpotState) => state.spotSearch.spotLocationMapShown);
 
   return (
     <View style={styles.main}>
       <PageTitle
         title={"SPOT CHECK"}
       />
+
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={spotLocationMapShown}
+        onRequestClose={() => {
+          console.log('closing');
+        }}>
+        <SpotMapModalContent />
+      </Modal>
+
       <SpotSearchField />
       <View style={styles.resultsWrapper}>
         <FlatList
@@ -39,5 +49,13 @@ const styles = StyleSheet.create({
   },
   resultsWrapper: {
     margin: 20
+  },
+  spotModalRegionHidden: {
+    display: 'none'
+  },
+  spotModalRegion: {
+    display: 'none',
+    height: '90%',
+    width: '90%'
   }
 });
