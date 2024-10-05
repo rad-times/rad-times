@@ -1,4 +1,4 @@
-import {setSearchResults} from "@/state/spotSearchSlice";
+import {setSearchResults} from "@/state/spotSlice";
 import {useDispatch} from "react-redux";
 import {fetchSpotsByName} from "@/api/spotApi";
 import React, {useEffect, useState} from "react";

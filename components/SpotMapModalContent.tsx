@@ -1,7 +1,7 @@
 import {Pressable, SafeAreaView, StyleSheet, Text, View} from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import {Colors} from "@/constants/Colors";
-import {setCurrentSpotMapDetails, setSpotLocationMapShown, SpotState} from "@/state/spotSearchSlice";
+import {setCurrentSpotMapDetails, setSpotLocationMapShown, SpotState} from "@/state/spotSlice";
 import {useDispatch, useSelector} from "react-redux";
 import Icon from "@/components/atom/Icon";
 import _ from 'lodash';

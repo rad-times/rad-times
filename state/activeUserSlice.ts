@@ -21,7 +21,10 @@ export const activeUserSlice = createSlice({
     setActiveUser: (state, action) => {
       return {
         ...state,
-        user: action.payload
+        user: {
+          ...action.payload,
+          id: Number(action.payload.id)
+        }
       }
     }
   }

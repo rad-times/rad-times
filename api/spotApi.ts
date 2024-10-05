@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import {Spot} from '@/types/Spot';
-import {commonGraphQlRequest} from '@/api/commonApiMethods';
+import {commonGraphQlRequest, commonGraphQlMutation} from '@/api/commonApiMethods';
+import {GenericResponse} from "@/types/GenericResponse";
 
 function getSpotByNameQuery(inputName: String) {
   return `{
@@ -50,15 +51,29 @@ function getSpotByFavoriteQuery() {
   }`;
 }
 
+function toggleSpotFavorite(spotId: number, personId: number, isFavorite: boolean) {
+  return `mutation {
+    toggleSpotFavorite(spotId: ${spotId}, personId: ${personId}, isFavorite: ${isFavorite}) {
+      spot_id
+      is_favorite
+    }
+  }`;
+}
+
 export async function fetchSpotsByName(name: String): Promise<Spot[]> {
   try {
-
     const queryResp = await commonGraphQlRequest({
       queryBody:  getSpotByNameQuery(name),
       errorMessage: "Error fetching spot data by name"
     });
 
-    return _.get(queryResp, 'data.spotByName', []);
+    const resp = _.get(queryResp, 'data.spotByName', []);
+    return resp.map((spot:Spot) => {
+      return {
+        ...spot,
+        spot_id: Number(spot.spot_id)
+      }
+    });
 
   } catch (err) {
     console.error(err);
@@ -73,10 +88,35 @@ export async function fetchSpotsByFavoriteOnly(): Promise<Spot[]> {
       queryBody:  getSpotByFavoriteQuery(),
       errorMessage: "Error fetching favorite spot data"
     });
-    return _.get(queryResp, 'data.spotByName', []);
-
+    const resp = _.get(queryResp, 'data.spotByName', []);
+    return resp.map((spot:Spot) => {
+      return {
+        ...spot,
+        spot_id: Number(spot.spot_id)
+      }
+    });
   } catch (err) {
     // @TODO Error handling
     return [];
+  }
+}
+
+export async function toggleFavoriteSpot(spotId: number, personId: number, isFavorite: boolean): Promise<Spot> {
+  try {
+    const queryResp = await commonGraphQlRequest({
+      queryBody:  toggleSpotFavorite(spotId, personId, isFavorite),
+      errorMessage: "Error setting spot as favorite"
+    });
+    const resp = _.get(queryResp, 'data.toggleSpotFavorite', {});
+    return {
+      spot_id: Number(resp.spot_id),
+      is_favorite: resp.is_favorite
+    };
+
+  } catch (err) {
+    // @TODO Error handling
+    return {
+      spot_id: spotId
+    }
   }
 }

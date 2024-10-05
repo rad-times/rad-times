@@ -4,13 +4,13 @@ import PageTitle from "@/components/atom/PageTitle";
 import {Colors} from "@/constants/Colors";
 import SpotSearchField from "@/components/SpotSearchField";
 import {useSelector} from "react-redux";
-import {SpotState} from "@/state/spotSearchSlice";
+import {SpotState} from "@/state/spotSlice";
 import SpotListingItem from "@/components/SpotListingItem";
 import SpotMapModalContent from "@/components/SpotMapModalContent";
 
 
 export default function SpotFinder() {
-  const searchResultsList = useSelector((state: SpotState) => state.spotSearch.searchResults);
+  const searchResultsList = useSelector((state: SpotState) => state.spotSearch.spotListing);
   const spotLocationMapShown = useSelector((state: SpotState) => state.spotSearch.spotLocationMapShown);
 
   return (

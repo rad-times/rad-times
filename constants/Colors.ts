@@ -5,5 +5,6 @@ export const Colors = {
   WHITE: '#eaeaea',
   LIGHT_GREY: '#cacaca',
   GREY: '#595959',
-  DARK_GREY: '#3c3c3c'
+  DARK_GREY: '#3c3c3c',
+  YELLOW: '#C7AB0C'
 };

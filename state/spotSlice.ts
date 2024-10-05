@@ -1,30 +1,43 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {Spot} from '@/types/Spot';
 
-type SpotSearchResults = {
-  searchResults: Spot[],
+type SpotListing = {
+  spotListing: Spot[],
   spotLocationMapShown: boolean,
   currentSpotMapDetails: Spot | null
 }
-const initialState: SpotSearchResults = {
-  searchResults: [],
+const initialState: SpotListing = {
+  spotListing: [],
   spotLocationMapShown: false,
   currentSpotMapDetails: null
 };
 
 type SpotState = {
-  spotSearch: SpotSearchResults
+  spotSearch: SpotListing
 }
 
 //State slice
-export const spotSearchSlice = createSlice({
+export const spotSlice = createSlice({
   name: "spotSearch",
   initialState,
   reducers: {
+    updateSpotFavorite: (state, action) => {
+      const updatedSpots = state.spotListing.map(spot => {
+        return {
+          ...spot,
+          is_favorite: spot.spot_id === action.payload.spotId ? action.payload.isFavorite : spot.is_favorite
+        };
+      });
+
+      return {
+        ...state,
+        spotListing: updatedSpots
+      }
+    },
     setSearchResults: (state, action) => {
       return {
         ...state,
-        searchResults: action.payload
+        spotListing: action.payload
       };
     },
     setCurrentSpotMapDetails: (state, action) => {
@@ -49,7 +62,8 @@ export {
 export const {
   setSearchResults,
   setCurrentSpotMapDetails,
-  setSpotLocationMapShown
-} = spotSearchSlice.actions;
+  setSpotLocationMapShown,
+  updateSpotFavorite
+} = spotSlice.actions;
 
-export default spotSearchSlice.reducer;
+export default spotSlice.reducer;

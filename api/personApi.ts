@@ -4,7 +4,7 @@ import _ from "lodash";
 
 function getPersonByIdQuery(id: number) {
   return `{
-    personById(id: "${id}") {
+    personById(id: ${id}) {
       id
       first_name
       last_name

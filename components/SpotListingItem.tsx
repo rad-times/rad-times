@@ -3,8 +3,10 @@ import {Colors} from "@/constants/Colors";
 import {Spot} from "@/types/Spot";
 import Icon from "@/components/atom/Icon";
 import _ from 'lodash';
-import {setSpotLocationMapShown, setCurrentSpotMapDetails} from "@/state/spotSearchSlice";
-import {useDispatch} from "react-redux";
+import {setSpotLocationMapShown, setCurrentSpotMapDetails, updateSpotFavorite} from "@/state/spotSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {toggleFavoriteSpot} from "@/api/spotApi";
+import {ActiveUserStateProp} from "@/state/activeUserSlice";
 
 type SpotListingItemProps = {
   spotDetails: Spot
@@ -14,9 +16,19 @@ function SpotListingItem({
   spotDetails
 }: SpotListingItemProps) {
   const dispatch = useDispatch();
+  const activeUser = useSelector((state: ActiveUserStateProp) => state.activeUser.user);
 
-  const onPressFavorite = () => {
-    console.log('favorite');
+  const onPressFavorite = async () => {
+    try {
+      const toggleResp = await toggleFavoriteSpot(spotDetails.spot_id, activeUser.id, !spotDetails.is_favorite);
+      dispatch(updateSpotFavorite({
+        spotId: spotDetails.spot_id,
+        isFavorite: toggleResp.is_favorite
+      }));
+
+    } catch (err) {
+      console.log("What the fuck", err);
+    }
   }
 
   const onPressMap = () => {
@@ -61,7 +73,7 @@ function SpotListingItem({
             },
             styles.icon
           ]}>
-          <Icon size={24} name="star-outline" color={Colors.DARK_GREY} />
+          <Icon size={24} name="star-outline" color={spotDetails.is_favorite ? Colors.YELLOW : Colors.DARK_GREY} />
         </Pressable>
 
         <Pressable
