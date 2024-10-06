@@ -51,9 +51,9 @@ function getSpotByFavoriteQuery() {
   }`;
 }
 
-function toggleSpotFavorite(spotId: number, personId: number, isFavorite: boolean) {
+function toggleSpotFavoriteQuery(spotId: number, personId: number, isFavorite: boolean) {
   return `mutation {
-    toggleSpotFavorite(spotId: ${spotId}, personId: ${personId}, isFavorite: ${isFavorite}) {
+    toggleSpotFavorite(spotId: ${spotId}, activeUserId: ${personId}, isFavorite: ${isFavorite}) {
       spot_id
       is_favorite
     }
@@ -104,14 +104,10 @@ export async function fetchSpotsByFavoriteOnly(): Promise<Spot[]> {
 export async function toggleFavoriteSpot(spotId: number, personId: number, isFavorite: boolean): Promise<Spot> {
   try {
     const queryResp = await commonGraphQlRequest({
-      queryBody:  toggleSpotFavorite(spotId, personId, isFavorite),
+      queryBody:  toggleSpotFavoriteQuery(spotId, personId, isFavorite),
       errorMessage: "Error setting spot as favorite"
     });
-    const resp = _.get(queryResp, 'data.toggleSpotFavorite', {});
-    return {
-      spot_id: Number(resp.spot_id),
-      is_favorite: resp.is_favorite
-    };
+    return _.get(queryResp, 'data.toggleSpotFavorite', {});
 
   } catch (err) {
     // @TODO Error handling

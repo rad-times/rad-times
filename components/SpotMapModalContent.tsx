@@ -9,7 +9,7 @@ import {Maps} from "@/constants/Maps";
 
 export default function SpotMapModalContent() {
   const dispatch = useDispatch();
-  const spotDetails = useSelector((state: SpotState) => state.spotSearch.currentSpotMapDetails);
+  const spotDetails = useSelector((state: SpotState) => state.spotList.currentSpotMapDetails);
 
   const closeSpotMap = () => {
     dispatch(setCurrentSpotMapDetails(null));

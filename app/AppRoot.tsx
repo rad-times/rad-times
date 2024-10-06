@@ -1,10 +1,11 @@
 import {Colors} from "@/constants/Colors";
 import {Stack} from "expo-router";
 import {useCallback, useEffect, useState} from "react";
-import {getPersonById} from "@/api/personApi";
+import {getActivePersonById} from "@/api/personApi";
 import * as SplashScreen from "expo-splash-screen";
 import {setActiveUser} from "@/state/activeUserSlice";
 import {useDispatch} from "react-redux";
+import {setCrewList} from "@/state/crewSearchSlice";
 
 export default function Layout() {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -13,10 +14,11 @@ export default function Layout() {
   useEffect(() => {
     async function prepare() {
       try {
-        await getPersonById(1)
+        await getActivePersonById(1)
           .then(personResp => {
             dispatch(setActiveUser(personResp));
-          })
+            dispatch(setCrewList(personResp?.crew || []))
+          });
 
       } catch (e) {
         console.warn(e);

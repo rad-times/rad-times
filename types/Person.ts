@@ -2,11 +2,12 @@ import {Geolocation} from "@/types/Geolocation";
 
 export interface Person {
   id: number
-  first_name: string
-  last_name: string
+  first_name?: string
+  last_name?: string
   email_address?: string
   bio?: string
   profile_image?: string
+  is_favorite?: boolean
   location?: Geolocation
   crew?: Person[]
 }

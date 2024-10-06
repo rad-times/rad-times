@@ -8,6 +8,24 @@ function getPersonByIdQuery(id: number) {
       id
       first_name
       last_name
+      bio
+      profile_image
+      location {
+        location_id
+        city_name
+        state_name
+        country_name
+      }
+    }
+  }`;
+}
+
+function getActivePersonByIdQuery(id: number) {
+  return `{
+    activePersonById(id: ${id}) {
+      id
+      first_name
+      last_name
       email_address
       bio
       profile_image
@@ -16,6 +34,7 @@ function getPersonByIdQuery(id: number) {
         first_name
         last_name
         bio
+        is_favorite
         profile_image
         location {
           location_id
@@ -34,6 +53,7 @@ function getPersonByIdQuery(id: number) {
   }`;
 }
 
+
 export async function getPersonById(id: number): Promise<Person> {
   try {
     const queryResp = await commonGraphQlRequest({
@@ -42,6 +62,22 @@ export async function getPersonById(id: number): Promise<Person> {
     });
 
     return _.get(queryResp, 'data.personById', unknownUser);
+
+  } catch (err) {
+    console.error(err);
+    // @TODO Error handling
+    return unknownUser;
+  }
+}
+
+export async function getActivePersonById(id: number): Promise<Person> {
+  try {
+    const queryResp = await commonGraphQlRequest({
+      queryBody:  getActivePersonByIdQuery(id),
+      errorMessage: "Error fetching person by id"
+    });
+
+    return _.get(queryResp, 'data.activePersonById', unknownUser);
 
   } catch (err) {
     console.error(err);

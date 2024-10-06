@@ -5,6 +5,11 @@ import Icon from "@/components/atom/Icon";
 import {Person} from "@/types/Person";
 import _ from "lodash";
 
+import {useDispatch, useSelector} from "react-redux";
+import {ActiveUserStateProp} from "@/state/activeUserSlice";
+import {togglePersonFavorite} from "@/api/crewApi";
+import {updateFriendFavorite} from "@/state/crewSearchSlice";
+
 interface CrewListItemProps {
   personDetail: Person
 }
@@ -12,9 +17,15 @@ interface CrewListItemProps {
 function CrewListItem({
   personDetail
 }: CrewListItemProps) {
+  const activeUser = useSelector((state: ActiveUserStateProp) => state.activeUser.user);
+  const dispatch = useDispatch();
 
-  const onPressFavorite = () => {
-    console.log('favorite');
+  const onPressFavorite = async () => {
+    const toggleResp = await togglePersonFavorite(personDetail.id, activeUser.id, !personDetail.is_favorite);
+    dispatch(updateFriendFavorite({
+      id: personDetail.id,
+      is_favorite: toggleResp.is_favorite
+    }));
   }
 
   const getPersonImageContent = (imagePath = '') => {
@@ -56,7 +67,7 @@ function CrewListItem({
             },
             styles.icon,
           ]}>
-          <Icon size={24} name="star-outline" color={Colors.DARK_GREY} />
+          <Icon size={24} name="star-outline" color={personDetail.is_favorite ? Colors.YELLOW : Colors.DARK_GREY} />
         </Pressable>
       </View>
     </View>

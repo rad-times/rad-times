@@ -1,12 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import activeUser from "@/state/activeUserSlice";
-import spotSearch from "@/state/spotSlice";
-import crewSearch from "@/state/crewSearchSlice";
+import spotList from "@/state/spotSlice";
+import crew from "@/state/crewSearchSlice";
 
 export const store = configureStore({
   reducer: {
     activeUser,
-    spotSearch,
-    crewSearch
+    spotList,
+    crew
   }
 });

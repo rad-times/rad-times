@@ -13,7 +13,7 @@ const initialState: SpotListing = {
 };
 
 type SpotState = {
-  spotSearch: SpotListing
+  spotList: SpotListing
 }
 
 //State slice

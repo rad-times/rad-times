@@ -19,10 +19,15 @@ export default function CrewSearchField() {
     setSearchTermFromInput(inputValue);
   }
 
+  const clearSearch = () => {
+    setSearchTermFromInput('');
+  }
+
   return (
     <FilterableSearchBar
       searchTerm={crewSearchTerm}
       handleChange={handleSearchInputChange}
+      clearSearchTerm={clearSearch}
     />
   );
 };
