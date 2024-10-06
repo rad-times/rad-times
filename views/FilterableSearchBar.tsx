@@ -1,7 +1,7 @@
 import {Pressable, StyleSheet, TextInput, View} from "react-native";
-import Icon from "@/components/atom/Icon";
+import Icon from "@/views/components/Icon";
 import {Colors} from "@/constants/Colors";
-import FiltersBtn from "@/components/atom/FilterBtn";
+import FiltersBtn from "@/views/components/FilterBtn";
 
 interface FilterableSearchBarProps {
   searchTerm: string,

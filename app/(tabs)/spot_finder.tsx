@@ -1,12 +1,12 @@
 import {View, FlatList, StyleSheet, Modal} from "react-native";
 
-import PageTitle from "@/components/atom/PageTitle";
+import PageTitle from "@/views/components/PageTitle";
 import {Colors} from "@/constants/Colors";
-import SpotSearchField from "@/components/SpotSearchField";
+import SpotSearchField from "@/views/SpotSearchField";
 import {useSelector} from "react-redux";
 import spotList, {SpotState} from "@/state/spotSlice";
-import SpotListingItem from "@/components/SpotListingItem";
-import SpotMapModalContent from "@/components/SpotMapModalContent";
+import SpotListingItem from "@/views/SpotListingItem";
+import SpotMapModalContent from "@/views/SpotMapModalContent";
 
 
 export default function SpotFinder() {

@@ -1,6 +1,6 @@
 import {SafeAreaView, StyleSheet, Pressable, PressableProps, Image} from "react-native";
 import {Colors} from "@/constants/Colors";
-import Icon from "@/components/atom/Icon";
+import Icon from "@/views/components/Icon";
 
 export type FiltersBtnProps = {
   onPress: Function

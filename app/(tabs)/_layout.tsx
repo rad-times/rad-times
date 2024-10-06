@@ -1,6 +1,7 @@
 import { Tabs } from 'expo-router';
-import Icon from '@/components/atom/Icon'
+import Icon from '@/views/components/Icon'
 import {Colors} from '@/constants/Colors';
+import setup from "@/app/(tabs)/setup";
 
 const baseTabOptions = {
   headerShown: false,
@@ -51,7 +52,7 @@ export default function SpotCheckNavigationLayout() {
         }}
       />
       <Tabs.Screen
-        name="settings"
+        name="setup"
         options={{
           ...baseTabOptions,
           tabBarLabel: "SETUP",

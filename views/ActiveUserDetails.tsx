@@ -29,8 +29,6 @@ function ActiveUserDetails({}: ActiveUserDetailProps) {
 const styles = StyleSheet.create({
   mainWrapper: {
     marginTop: 20,
-    marginLeft: 20,
-    marginRight: 20,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'flex-start'

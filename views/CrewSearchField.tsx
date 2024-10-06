@@ -1,7 +1,7 @@
 import {setSearchTerm} from "@/state/crewSearchSlice";
 import {useDispatch} from "react-redux";
 import React, {useEffect, useState} from "react";
-import FilterableSearchBar from "@/components/FilterableSearchBar";
+import FilterableSearchBar from "@/views/FilterableSearchBar";
 
 export default function CrewSearchField() {
   const [crewSearchTerm, setSearchTermFromInput] = useState('');

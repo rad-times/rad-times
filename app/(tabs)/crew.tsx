@@ -1,9 +1,9 @@
 import {View, Text, StyleSheet, FlatList} from "react-native";
 import {Colors} from "@/constants/Colors";
-import PageTitle from "@/components/atom/PageTitle";
-import CrewSearchField from "@/components/CrewSearchField";
+import PageTitle from "@/views/components/PageTitle";
+import CrewSearchField from "@/views/CrewSearchField";
 import {useSelector} from "react-redux";
-import CrewListItem from "@/components/CrewListItem";
+import CrewListItem from "@/views/CrewListItem";
 import {CrewListState} from "@/state/crewSearchSlice";
 
 

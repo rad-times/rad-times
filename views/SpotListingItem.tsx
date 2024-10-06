@@ -1,7 +1,7 @@
 import {View, Text, StyleSheet, Image, Pressable, Modal} from "react-native";
 import {Colors} from "@/constants/Colors";
 import {Spot} from "@/types/Spot";
-import Icon from "@/components/atom/Icon";
+import Icon from "@/views/components/Icon";
 import _ from 'lodash';
 import {setSpotLocationMapShown, setCurrentSpotMapDetails, updateSpotFavorite} from "@/state/spotSlice";
 import {useDispatch, useSelector} from "react-redux";

@@ -2,17 +2,21 @@ import {Colors} from "@/constants/Colors";
 import {Stack} from "expo-router";
 import {useCallback, useEffect, useState} from "react";
 import {getActivePersonById} from "@/api/personApi";
-import * as SplashScreen from "expo-splash-screen";
+import { SplashScreen } from "expo-router";
 import {setActiveUser} from "@/state/activeUserSlice";
 import {useDispatch} from "react-redux";
 import {setCrewList} from "@/state/crewSearchSlice";
+import {StyleSheet, View} from "react-native";
+
+SplashScreen.preventAutoHideAsync()
+  .catch(err => console.log('error', err));
 
 export default function Layout() {
   const [appIsReady, setAppIsReady] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    async function prepare() {
+    async function fetchAppLoadData() {
       try {
         await getActivePersonById(1)
           .then(personResp => {
@@ -23,12 +27,15 @@ export default function Layout() {
       } catch (e) {
         console.warn(e);
       } finally {
-        // Tell the application to render
         setAppIsReady(true);
       }
     }
 
-    prepare();
+    fetchAppLoadData()
+      .catch((err:string)  => {
+        // @TODO handle error
+        console.error(err);
+      });
   }, []);
 
   const onLayoutRootView = useCallback(async () => {
@@ -43,21 +50,35 @@ export default function Layout() {
   }, [appIsReady]);
 
   if (!appIsReady) {
-    return;
+    return null;
   }
 
   return (
-    <Stack
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: Colors.DARK_RED
-        },
-        title: ''
-    }}
+    <View
+      style={styles.rootWrapper}
+      onLayout={onLayoutRootView}
     >
-      <Stack.Screen
-        name="(tabs)"
-      />
-    </Stack>
+      <Stack
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: Colors.DARK_RED
+          },
+          headerTintColor: Colors.WHITE,
+          title: ''
+      }}
+      >
+        <Stack.Screen
+          name="(tabs)"
+        />
+      </Stack>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  rootWrapper: {
+    height: '100%',
+    width: '100%',
+    backgroundColor: Colors.BLACK
+  }
+});

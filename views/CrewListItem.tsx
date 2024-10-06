@@ -1,7 +1,7 @@
 import {View, Text, StyleSheet, Image, Pressable} from "react-native";
 import {Colors} from "@/constants/Colors";
 
-import Icon from "@/components/atom/Icon";
+import Icon from "@/views/components/Icon";
 import {Person} from "@/types/Person";
 import _ from "lodash";
 

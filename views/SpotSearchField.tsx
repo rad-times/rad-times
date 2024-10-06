@@ -2,7 +2,7 @@ import {setSearchResults} from "@/state/spotSlice";
 import {useDispatch} from "react-redux";
 import {fetchSpotsByName} from "@/api/spotApi";
 import React, {useEffect, useState} from "react";
-import FilterableSearchBar from "@/components/FilterableSearchBar";
+import FilterableSearchBar from "@/views/FilterableSearchBar";
 
 export default function SpotSearchField() {
   const [searchTerm, setSearchTerm] = useState('');

@@ -3,7 +3,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import {Colors} from "@/constants/Colors";
 import {setCurrentSpotMapDetails, setSpotLocationMapShown, SpotState} from "@/state/spotSlice";
 import {useDispatch, useSelector} from "react-redux";
-import Icon from "@/components/atom/Icon";
+import Icon from "@/views/components/Icon";
 import _ from 'lodash';
 import {Maps} from "@/constants/Maps";
 
