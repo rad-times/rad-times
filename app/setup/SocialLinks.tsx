@@ -1,10 +1,10 @@
 import {View, Text} from "react-native";
 import {ReactNode} from "react";
 
-export default function settings(): ReactNode {
+export default function SocialLinks(): ReactNode {
   return (
     <View>
-      <Text>Settings</Text>
+      <Text>Social links</Text>
     </View>
   );
 }

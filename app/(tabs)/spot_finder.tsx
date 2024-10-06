@@ -4,7 +4,7 @@ import PageTitle from "@/views/components/PageTitle";
 import {Colors} from "@/constants/Colors";
 import SpotSearchField from "@/views/SpotSearchField";
 import {useSelector} from "react-redux";
-import spotList, {SpotState} from "@/state/spotSlice";
+import {SpotState} from "@/state/spotSlice";
 import SpotListingItem from "@/views/SpotListingItem";
 import SpotMapModalContent from "@/views/SpotMapModalContent";
 import {ReactNode} from "react";

@@ -6,7 +6,7 @@ import ActiveUserDetails from '@/views/ActiveUserDetails'
 import StackLink from '@/views/StackLink'
 import {ReactNode} from "react";
 
-export default function SetupStack(): ReactNode {
+export default function Setup(): ReactNode {
   return (
     <View style={styles.container}>
       <PageTitle
@@ -17,22 +17,22 @@ export default function SetupStack(): ReactNode {
         <View style={styles.spacer}></View>
         <StackLink
           title={"Edit My Profile"}
-          link={"/setup/edit_profile"}
+          link={"/setup/EditProfile"}
         />
         <View style={styles.spacer}></View>
         <StackLink
           title={"My Social Media Links"}
-          link={"/setup/social_links"}
+          link={"/setup/SocialLinks"}
         />
         <View style={styles.spacer}></View>
         <StackLink
           title={"Session Photos / Videos"}
-          link={"/setup/photo_video"}
+          link={"/setup/PhotoVideo"}
         />
         <View style={styles.spacer}></View>
         <StackLink
           title={"Settings and Preferences"}
-          link={"/setup/settings"}
+          link={"/setup/Settings"}
         />
       </View>
     </View>

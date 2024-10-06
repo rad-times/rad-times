@@ -1,9 +1,9 @@
-import {View, Text, StyleSheet} from "react-native";
+import {View, StyleSheet} from "react-native";
 import {Colors} from "@/constants/Colors";
 import PageTitle from "@/views/components/PageTitle";
 import {ReactNode} from "react";
 
-export default function index(): ReactNode {
+export default function Index(): ReactNode {
   return (
     <View style={styles.container}>
       <PageTitle

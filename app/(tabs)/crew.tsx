@@ -8,7 +8,7 @@ import {CrewListState} from "@/state/crewSearchSlice";
 import {ReactNode} from "react";
 
 
-export default function crew(): ReactNode {
+export default function Crew(): ReactNode {
   const currentCrewSearchTerm = useSelector((state: CrewListState) => state.crew.searchTerm);
   const crewList = useSelector((state: CrewListState) => state.crew.crewList);
 

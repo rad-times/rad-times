@@ -5,7 +5,7 @@ import {Link} from "expo-router";
 
 interface StackLinkProps {
   title: string
-  link: "/setup/edit_profile" | "/setup/photo_video" | "/setup/settings" | "/setup/social_links"
+  link: "/setup/EditProfile" | "/setup/PhotoVideo" | "/setup/Settings" | "/setup/SocialLinks"
 }
 
 const FONT_SIZE = 20;
