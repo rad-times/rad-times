@@ -4,8 +4,9 @@ import {Colors} from "@/constants/Colors";
 import PageTitle from "@/views/components/PageTitle";
 import ActiveUserDetails from '@/views/ActiveUserDetails'
 import StackLink from '@/views/StackLink'
+import {ReactNode} from "react";
 
-export default function SetupStack() {
+export default function SetupStack(): ReactNode {
   return (
     <View style={styles.container}>
       <PageTitle

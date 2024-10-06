@@ -1,6 +1,6 @@
 import {Colors} from "@/constants/Colors";
 import {Stack} from "expo-router";
-import {useCallback, useEffect, useState} from "react";
+import {ReactNode, useCallback, useEffect, useState} from "react";
 import {getActivePersonById} from "@/api/personApi";
 import { SplashScreen } from "expo-router";
 import {setActiveUser} from "@/state/activeUserSlice";
@@ -11,7 +11,7 @@ import {StyleSheet, View} from "react-native";
 SplashScreen.preventAutoHideAsync()
   .catch(err => console.log('error', err));
 
-export default function Layout() {
+export default function AppRoot(): ReactNode {
   const [appIsReady, setAppIsReady] = useState(false);
   const dispatch = useDispatch();
 

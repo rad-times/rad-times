@@ -5,9 +5,10 @@ import CrewSearchField from "@/views/CrewSearchField";
 import {useSelector} from "react-redux";
 import CrewListItem from "@/views/CrewListItem";
 import {CrewListState} from "@/state/crewSearchSlice";
+import {ReactNode} from "react";
 
 
-export default function crew() {
+export default function crew(): ReactNode {
   const currentCrewSearchTerm = useSelector((state: CrewListState) => state.crew.searchTerm);
   const crewList = useSelector((state: CrewListState) => state.crew.crewList);
 

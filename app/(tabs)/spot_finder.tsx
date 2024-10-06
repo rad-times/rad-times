@@ -7,9 +7,9 @@ import {useSelector} from "react-redux";
 import spotList, {SpotState} from "@/state/spotSlice";
 import SpotListingItem from "@/views/SpotListingItem";
 import SpotMapModalContent from "@/views/SpotMapModalContent";
+import {ReactNode} from "react";
 
-
-export default function SpotFinder() {
+export default function SpotFinder(): ReactNode {
   const searchResultsList = useSelector((state: SpotState) => state.spotList.spotListing);
   const spotLocationMapShown = useSelector((state: SpotState) => state.spotList.spotLocationMapShown);
 

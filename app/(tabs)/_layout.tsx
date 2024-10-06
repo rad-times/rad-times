@@ -1,7 +1,7 @@
 import { Tabs } from 'expo-router';
 import Icon from '@/views/components/Icon'
 import {Colors} from '@/constants/Colors';
-import setup from "@/app/(tabs)/setup";
+import {ReactNode} from "react";
 
 const baseTabOptions = {
   headerShown: false,
@@ -11,7 +11,7 @@ const baseTabOptions = {
   tabBarInactiveTintColor: Colors.LIGHT_GREY
 };
 
-export default function SpotCheckNavigationLayout() {
+export default function SpotCheckNavigationLayout(): ReactNode {
 
   return (
     <Tabs
