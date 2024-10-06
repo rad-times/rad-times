@@ -5,10 +5,11 @@ import PageTitle from "@/views/components/PageTitle";
 import ActiveUserDetails from '@/views/ActiveUserDetails'
 import StackLink from '@/views/StackLink'
 import {ReactNode} from "react";
+import PageWrapper from "@/views/components/PageWrapper";
 
 export default function Setup(): ReactNode {
   return (
-    <View style={styles.container}>
+    <PageWrapper>
       <PageTitle
         title={"MY CURRENT SETUP"}
       />
@@ -35,22 +36,16 @@ export default function Setup(): ReactNode {
           link={"/setup/Settings"}
         />
       </View>
-    </View>
+    </PageWrapper>
   );
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.BLACK
-  },
   spacer: {
     marginBottom: 25
   },
   setupWrapper: {
     display: 'flex',
     flexDirection: 'column',
-    flex: 1,
-    marginLeft: 20,
-    marginRight: 20
+    flex: 1
   }
 });

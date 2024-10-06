@@ -8,13 +8,14 @@ import {SpotState} from "@/state/spotSlice";
 import SpotListingItem from "@/views/SpotListingItem";
 import SpotMapModalContent from "@/views/SpotMapModalContent";
 import {ReactNode} from "react";
+import PageWrapper from "@/views/components/PageWrapper";
 
 export default function SpotFinder(): ReactNode {
   const searchResultsList = useSelector((state: SpotState) => state.spotList.spotListing);
   const spotLocationMapShown = useSelector((state: SpotState) => state.spotList.spotLocationMapShown);
 
   return (
-    <View style={styles.main}>
+    <PageWrapper>
       <PageTitle
         title={"SPOT CHECK"}
       />
@@ -23,9 +24,7 @@ export default function SpotFinder(): ReactNode {
         animationType="slide"
         transparent={false}
         visible={spotLocationMapShown}
-        onRequestClose={() => {
-          console.log('closing');
-        }}>
+      >
         <SpotMapModalContent />
       </Modal>
 
@@ -37,18 +36,13 @@ export default function SpotFinder(): ReactNode {
           keyExtractor={item => String(item.spot_id)}
         />
       </View>
-    </View>
+    </PageWrapper>
   );
 }
 
 const styles = StyleSheet.create({
-  main: {
-    display: 'flex',
-    flex: 1,
-    backgroundColor: Colors.BLACK
-  },
   resultsWrapper: {
-    margin: 20
+    marginTop: 20
   },
   spotModalRegionHidden: {
     display: 'none'

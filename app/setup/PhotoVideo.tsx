@@ -1,10 +1,11 @@
-import {View, Text} from "react-native";
+import {Text} from "react-native";
 import {ReactNode} from "react";
+import PageWrapper from "@/views/components/PageWrapper";
 
 export default function PhotoVideo(): ReactNode {
   return (
-    <View>
+    <PageWrapper>
       <Text>Photo & Video</Text>
-    </View>
+    </PageWrapper>
   );
 }

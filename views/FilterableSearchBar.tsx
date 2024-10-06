@@ -49,8 +49,6 @@ export default function FilterableSearchBar({
 const styles = StyleSheet.create({
   contentWrapper: {
     marginTop: 20,
-    marginRight: 20,
-    marginLeft: 20
   },
   inputCombo: {
     display: 'flex',

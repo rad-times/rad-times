@@ -6,14 +6,14 @@ import {useSelector} from "react-redux";
 import CrewListItem from "@/views/CrewListItem";
 import {CrewListState} from "@/state/crewSearchSlice";
 import {ReactNode} from "react";
-
+import PageWrapper from "@/views/components/PageWrapper";
 
 export default function Crew(): ReactNode {
   const currentCrewSearchTerm = useSelector((state: CrewListState) => state.crew.searchTerm);
   const crewList = useSelector((state: CrewListState) => state.crew.crewList);
 
   return (
-    <View style={styles.container}>
+    <PageWrapper>
       <PageTitle
         title={"THE CREW"}
       />
@@ -26,17 +26,12 @@ export default function Crew(): ReactNode {
         />
       </View>
 
-    </View>
+    </PageWrapper>
   );
 }
 const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    flex: 1,
-    backgroundColor: Colors.BLACK
-  },
   resultsWrapper: {
-    margin: 20
+    marginTop: 20
   },
   colorWhite: {
     color: Colors.WHITE

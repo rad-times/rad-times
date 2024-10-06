@@ -2,7 +2,6 @@ import { Tabs } from 'expo-router';
 import Icon from '@/views/components/Icon'
 import {Colors} from '@/constants/Colors';
 import {ReactNode} from "react";
-import Index from "@/app/(tabs)/index";
 
 const baseTabOptions = {
   headerShown: false,

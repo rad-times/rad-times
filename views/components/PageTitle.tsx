@@ -10,19 +10,14 @@ function PageTitle({
   title
 }: PageTitleProps): ReactNode {
   return (
-    <View style={styles.wrapper}>
+    <>
       <Text style={styles.pageTitle}>{title}</Text>
       <View style={styles.divider} />
-    </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    marginTop: 20,
-    marginLeft: 20,
-    marginRight: 20
-  },
   pageTitle: {
     fontSize: 24,
     fontWeight: 'bold',

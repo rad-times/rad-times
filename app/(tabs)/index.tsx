@@ -1,15 +1,16 @@
-import {View, StyleSheet} from "react-native";
+import {StyleSheet} from "react-native";
 import {Colors} from "@/constants/Colors";
 import PageTitle from "@/views/components/PageTitle";
 import {ReactNode} from "react";
+import PageWrapper from "@/views/components/PageWrapper";
 
 export default function Index(): ReactNode {
   return (
-    <View style={styles.container}>
+    <PageWrapper>
       <PageTitle
         title={"NEW HOTNESS"}
       />
-    </View>
+    </PageWrapper>
   );
 }
 const styles = StyleSheet.create({
