@@ -7,6 +7,7 @@ import {setSpotLocationMapShown, setCurrentSpotMapDetails, updateSpotFavorite} f
 import {useDispatch, useSelector} from "react-redux";
 import {toggleFavoriteSpot} from "@/api/spotApi";
 import {ActiveUserStateProp} from "@/state/activeUserSlice";
+import {ReactNode} from "react";
 
 type SpotListingItemProps = {
   spotDetails: Spot
@@ -14,7 +15,7 @@ type SpotListingItemProps = {
 
 function SpotListingItem({
   spotDetails
-}: SpotListingItemProps) {
+}: SpotListingItemProps): ReactNode {
   const dispatch = useDispatch();
   const activeUser = useSelector((state: ActiveUserStateProp) => state.activeUser.user);
 

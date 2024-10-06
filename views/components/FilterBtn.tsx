@@ -1,6 +1,7 @@
 import {SafeAreaView, StyleSheet, Pressable, PressableProps, Image} from "react-native";
 import {Colors} from "@/constants/Colors";
 import Icon from "@/views/components/Icon";
+import {ReactNode} from "react";
 
 export type FiltersBtnProps = {
   onPress: Function
@@ -8,7 +9,7 @@ export type FiltersBtnProps = {
 
 function FiltersBtn({
   onPress
-}: PressableProps) {
+}: PressableProps): ReactNode {
   return (
     <SafeAreaView>
       <Pressable

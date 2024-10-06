@@ -9,6 +9,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {ActiveUserStateProp} from "@/state/activeUserSlice";
 import {togglePersonFavorite} from "@/api/crewApi";
 import {updateFriendFavorite} from "@/state/crewSearchSlice";
+import {ReactNode} from "react";
 
 interface CrewListItemProps {
   personDetail: Person
@@ -16,7 +17,7 @@ interface CrewListItemProps {
 
 function CrewListItem({
   personDetail
-}: CrewListItemProps) {
+}: CrewListItemProps): ReactNode {
   const activeUser = useSelector((state: ActiveUserStateProp) => state.activeUser.user);
   const dispatch = useDispatch();
 

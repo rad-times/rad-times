@@ -2,6 +2,7 @@ import {Pressable, StyleSheet, TextInput, View} from "react-native";
 import Icon from "@/views/components/Icon";
 import {Colors} from "@/constants/Colors";
 import FiltersBtn from "@/views/components/FilterBtn";
+import {ReactNode} from "react";
 
 interface FilterableSearchBarProps {
   searchTerm: string,
@@ -13,7 +14,7 @@ export default function FilterableSearchBar({
   searchTerm,
   handleChange,
   clearSearchTerm
-}: FilterableSearchBarProps) {
+}: FilterableSearchBarProps): ReactNode {
   return (
     <View style={styles.contentWrapper}>
       <View style={styles.inputCombo}>

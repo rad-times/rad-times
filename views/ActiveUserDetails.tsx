@@ -2,10 +2,11 @@ import {View, Text, StyleSheet, Image} from "react-native";
 import {Colors} from "@/constants/Colors";
 import {useSelector} from "react-redux";
 import {ActiveUserStateProp} from '@/state/activeUserSlice';
+import {ReactNode} from "react";
 
 export type ActiveUserDetailProps = {};
 
-function ActiveUserDetails({}: ActiveUserDetailProps) {
+function ActiveUserDetails({}: ActiveUserDetailProps): ReactNode {
   const activeUser = useSelector((state: ActiveUserStateProp) => state.activeUser.user);
 
   return (

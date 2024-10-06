@@ -2,6 +2,7 @@ import { Tabs } from 'expo-router';
 import Icon from '@/views/components/Icon'
 import {Colors} from '@/constants/Colors';
 import {ReactNode} from "react";
+import Index from "@/app/(tabs)/index";
 
 const baseTabOptions = {
   headerShown: false,
@@ -36,7 +37,7 @@ export default function SpotCheckNavigationLayout(): ReactNode {
         }}
       />
       <Tabs.Screen
-        name="spot_finder"
+        name="SpotFinder"
         options={{
           ...baseTabOptions,
           tabBarLabel: "SPOTS",
@@ -44,7 +45,7 @@ export default function SpotCheckNavigationLayout(): ReactNode {
         }}
       />
       <Tabs.Screen
-        name="crew"
+        name="Crew"
         options={{
           ...baseTabOptions,
           tabBarLabel: "CREW",
@@ -52,7 +53,7 @@ export default function SpotCheckNavigationLayout(): ReactNode {
         }}
       />
       <Tabs.Screen
-        name="setup"
+        name="Setup"
         options={{
           ...baseTabOptions,
           tabBarLabel: "SETUP",

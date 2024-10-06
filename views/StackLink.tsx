@@ -2,6 +2,7 @@ import {Text, StyleSheet, View} from "react-native";
 import {Colors} from "@/constants/Colors";
 import Icon from "@/views/components/Icon";
 import {Link} from "expo-router";
+import {ReactNode} from "react";
 
 interface StackLinkProps {
   title: string
@@ -14,7 +15,7 @@ const STACK_BAR_HEIGHT = 45;
 export default function StackLink({
   title,
   link
-}: StackLinkProps) {
+}: StackLinkProps): ReactNode {
   return (
       <Link
         push

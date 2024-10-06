@@ -6,8 +6,9 @@ import {useDispatch, useSelector} from "react-redux";
 import Icon from "@/views/components/Icon";
 import _ from 'lodash';
 import {Maps} from "@/constants/Maps";
+import {ReactNode} from "react";
 
-export default function SpotMapModalContent() {
+export default function SpotMapModalContent(): ReactNode {
   const dispatch = useDispatch();
   const spotDetails = useSelector((state: SpotState) => state.spotList.currentSpotMapDetails);
 

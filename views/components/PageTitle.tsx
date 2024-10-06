@@ -1,5 +1,6 @@
 import {View, Text, StyleSheet, type TextProps} from "react-native";
 import {Colors} from "@/constants/Colors";
+import {ReactNode} from "react";
 
 export type PageTitleProps = TextProps & {
   title: string;
@@ -7,7 +8,7 @@ export type PageTitleProps = TextProps & {
 
 function PageTitle({
   title
-}: PageTitleProps) {
+}: PageTitleProps): ReactNode {
   return (
     <View style={styles.wrapper}>
       <Text style={styles.pageTitle}>{title}</Text>
