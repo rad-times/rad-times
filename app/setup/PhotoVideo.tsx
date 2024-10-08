@@ -4,7 +4,9 @@ import {
   setSearchInput,
   setSearchResults
 } from "@/state/googleLocationsSlice";
-import SearchablePicker from "@/views/components/SearchablePicker";
+import SearchablePicker, {
+  SelectResponse
+} from "@/views/components/SearchablePicker";
 import Spacer from "@/views/components/Spacer";
 import {ReactNode, useEffect} from "react";
 import PageWrapper from "@/views/components/PageWrapper";
@@ -34,8 +36,14 @@ export default function PhotoVideo(): ReactNode {
     return () => clearTimeout(debounceTimer);
   }, [locationSearchQuery]);
 
-  const onSelectLocation = async (locationId:string) => {
-    const fullLocation = await getLocationData(locationId);
+  const onSelectLocation = async (
+    {
+      id,
+      value
+    }: SelectResponse
+  ) => {
+    dispatch(setSearchInput(value));
+    const fullLocation = await getLocationData(id);
     console.log('fullLocation', fullLocation);
   }
 

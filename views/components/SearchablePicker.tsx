@@ -41,7 +41,12 @@ type SearchableDropdownItemProps = {
   // ID of the given option
   itemId: any
   // Callback when the user clicks on an option
-  onSelectOption: (e: GestureResponderEvent) => void
+  onSelectOption: (response: SelectResponse) => void
+}
+
+export interface SelectResponse {
+  id: any
+  value: string
 }
 
 /**
@@ -56,7 +61,8 @@ function SearchableDropdownItem(
   return (
     <Pressable
       style={styles.dropdownItemWrapper}
-      onPress={(e) => onSelectOption(itemId)}
+      onPress={(e) => onSelectOption({id: itemId, value: displayValue})
+      }
     >
       <Text style={styles.dropdownItemText}>{displayValue}</Text>
     </Pressable>
@@ -80,10 +86,10 @@ export default function SearchablePicker(
   const [pickerModalShown, showPickerModal] = useState(false);
   const [initialSearchValue, resetInitialSearchValue] = useState(searchValue);
 
-  const onSelectItem = (targetOptionId: any) => {
+  const onSelectItem = (selection: SelectResponse) => {
     showPickerModal(false);
-    resetInitialSearchValue(searchValue);
-    onSelectOption(targetOptionId);
+    resetInitialSearchValue(selection.value);
+    onSelectOption(selection);
   };
 
   const onClickCloseModal = (e: GestureResponderEvent) => {
@@ -97,7 +103,7 @@ export default function SearchablePicker(
           <FormLabel labelText={label} />
       }
       <FormInput
-        formValue={searchValue}
+        formValue={initialSearchValue}
         onFocus={() => showPickerModal(true)}
       />
       <Modal

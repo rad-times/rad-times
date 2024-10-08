@@ -4,12 +4,12 @@ import _ from 'lodash';
  * Get full details for a location
  */
 const getLocationData = async (placeId: string) => {
-  const response = await fetch(`https://places.googleapis.com/v1/places/${placeId}`, {
+  return await fetch(`https://places.googleapis.com/v1/places/${placeId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       'X-Goog-Api-Key': 'AIzaSyDWsX3AIFC8x2_uSTWDLoLG52MZpqr_-II',
-      'X-Goog-FieldMask': 'id,displayName'
+      'X-Goog-FieldMask': 'id,addressComponents,location'
     }
   })
     .then(response => response.json())
