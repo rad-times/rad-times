@@ -25,7 +25,6 @@ export default function Crew(): ReactNode {
           keyExtractor={item => String(item.id)}
         />
       </View>
-
     </PageWrapper>
   );
 }

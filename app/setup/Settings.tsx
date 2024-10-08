@@ -1,11 +1,13 @@
-import {Text} from "react-native";
 import {ReactNode} from "react";
 import PageWrapper from "@/views/components/PageWrapper";
+import PageTitle from "@/views/components/PageTitle";
 
 export default function Settings(): ReactNode {
   return (
     <PageWrapper>
-      <Text>Settings</Text>
+      <PageTitle
+        title={"Settings and Preferences"}
+      />
     </PageWrapper>
   );
 }

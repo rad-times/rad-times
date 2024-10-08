@@ -27,22 +27,24 @@ function ActiveUserDetails({}: ActiveUserDetailProps): ReactNode {
   );
 }
 
+const HEIGHT = 120;
 const styles = StyleSheet.create({
   mainWrapper: {
+    height: HEIGHT,
     marginTop: 20,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'flex-start'
   },
   detailsWrapper: {
-    height: 120,
+    height: HEIGHT,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
     flex: 1
   },
   profileImage: {
-    height: 120,
+    height: HEIGHT,
     width: 170,
     borderWidth: 2,
     borderColor: Colors.DARK_GREY,

@@ -1,6 +1,7 @@
 import {Geolocation} from "@/types/Geolocation";
+import {Href} from "expo-router";
 
-export interface Person {
+export type Person = {
   id: number
   first_name?: string
   last_name?: string
@@ -8,8 +9,15 @@ export interface Person {
   bio?: string
   profile_image?: string
   is_favorite?: boolean
+  socials?: SocialDetails[]
   location?: Geolocation
   crew?: Person[]
+}
+
+export type SocialDetails = {
+  id: number
+  social_type: string
+  url_link: Href
 }
 
 export const unknownUser: Person = {

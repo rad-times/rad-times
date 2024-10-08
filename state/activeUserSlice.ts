@@ -21,11 +21,8 @@ export const activeUserSlice = createSlice({
     setActiveUser: (state, action) => {
       return {
         ...state,
-        user: {
-          ...action.payload,
-          id: Number(action.payload.id)
-        }
-      }
+        user: action.payload
+      };
     }
   }
 });
@@ -34,6 +31,8 @@ export {
   ActiveUserStateProp
 }
 
-export const { setActiveUser } = activeUserSlice.actions;
+export const {
+  setActiveUser
+} = activeUserSlice.actions;
 
 export default activeUserSlice.reducer;

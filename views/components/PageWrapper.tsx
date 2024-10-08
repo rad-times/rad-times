@@ -1,5 +1,5 @@
 import {ReactNode} from "react";
-import {StyleSheet, View} from "react-native";
+import {StyleSheet, SafeAreaView, View} from "react-native";
 import {Colors} from "@/constants/Colors";
 
 interface PageWrapperProps {
@@ -8,18 +8,23 @@ interface PageWrapperProps {
 
 export default function PageWrapper({children}: PageWrapperProps): ReactNode {
   return (
-    <View style={styles.container}>
-      {children}
-    </View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.innerWrapper}>
+        {children}
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
     flex: 1,
-    backgroundColor: Colors.BLACK,
+    backgroundColor: Colors.BLACK
+  },
+  innerWrapper: {
     padding: 20,
-    color: Colors.WHITE
   }
 });

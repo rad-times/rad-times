@@ -1,3 +1,4 @@
+import Spacer from "@/views/components/Spacer";
 import {View, StyleSheet} from "react-native";
 
 import {Colors} from "@/constants/Colors";
@@ -15,22 +16,22 @@ export default function Setup(): ReactNode {
       />
       <View style={styles.setupWrapper}>
         <ActiveUserDetails />
-        <View style={styles.spacer}></View>
+        <Spacer margin={25} />
         <StackLink
           title={"Edit My Profile"}
           link={"/setup/EditProfile"}
         />
-        <View style={styles.spacer}></View>
+        <Spacer margin={25} />
         <StackLink
           title={"My Social Media Links"}
           link={"/setup/SocialLinks"}
         />
-        <View style={styles.spacer}></View>
+        <Spacer margin={25} />
         <StackLink
           title={"Session Photos / Videos"}
           link={"/setup/PhotoVideo"}
         />
-        <View style={styles.spacer}></View>
+        <Spacer margin={25} />
         <StackLink
           title={"Settings and Preferences"}
           link={"/setup/Settings"}
@@ -40,9 +41,6 @@ export default function Setup(): ReactNode {
   );
 }
 const styles = StyleSheet.create({
-  spacer: {
-    marginBottom: 25
-  },
   setupWrapper: {
     display: 'flex',
     flexDirection: 'column',

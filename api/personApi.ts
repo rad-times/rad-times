@@ -10,6 +10,11 @@ function getPersonByIdQuery(id: number) {
       last_name
       bio
       profile_image
+      socials {
+        id
+        url_link
+        social_type
+      }
       location {
         location_id
         city_name
@@ -28,6 +33,11 @@ function getActivePersonByIdQuery(id: number) {
       last_name
       email_address
       bio
+      socials {
+        id
+        url_link
+        social_type
+      }
       profile_image
       crew {
         id
