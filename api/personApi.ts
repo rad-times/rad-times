@@ -33,6 +33,7 @@ function getActivePersonByIdQuery(id: number) {
       last_name
       email_address
       bio
+      language_locale
       socials {
         id
         url_link

@@ -84,16 +84,16 @@ export default function SearchablePicker(
     itemIdKey
 }: SearchablePickerProps): ReactNode {
   const [pickerModalShown, showPickerModal] = useState(false);
-  const [initialSearchValue, resetInitialSearchValue] = useState(searchValue);
+  const [displayOnlySearchValue, setDisplayOnlySearchValue] = useState(searchValue);
 
   const onSelectItem = (selection: SelectResponse) => {
     showPickerModal(false);
-    resetInitialSearchValue(selection.value);
+    setDisplayOnlySearchValue(selection.value);
     onSelectOption(selection);
   };
 
   const onClickCloseModal = (e: GestureResponderEvent) => {
-   onChangeSearchText(initialSearchValue);
+   onChangeSearchText(displayOnlySearchValue);
    showPickerModal(false);
   };
 
@@ -103,7 +103,7 @@ export default function SearchablePicker(
           <FormLabel labelText={label} />
       }
       <FormInput
-        formValue={initialSearchValue}
+        formValue={displayOnlySearchValue}
         onFocus={() => showPickerModal(true)}
       />
       <Modal
@@ -132,7 +132,7 @@ export default function SearchablePicker(
                     <FlatList
                         data={searchResults}
                         renderItem={({item}) => <SearchableDropdownItem displayValue={item[itemDisplayValueKey]} itemId={item[itemIdKey]} onSelectOption={onSelectItem} />}
-                        keyExtractor={item => String(item.place_id)}
+                        keyExtractor={item => String(item[itemIdKey])}
                     />
                 </View>
             }
