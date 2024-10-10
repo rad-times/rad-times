@@ -10,6 +10,7 @@ export default function Index(): ReactNode {
       <PageTitle
         title={"NEW HOTNESS"}
       />
+
     </PageWrapper>
   );
 }

@@ -9,7 +9,7 @@ export type Person = {
   bio?: string
   profile_image?: string
   is_favorite?: boolean
-  language_locale?: string
+  language_code?: string
   socials?: SocialDetails[]
   location?: Geolocation
   crew?: Person[]

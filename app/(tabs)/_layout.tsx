@@ -1,7 +1,11 @@
+import {ActiveUserStateProp} from "@/state/activeUserSlice";
+import displayText, {DisplayTextStateProp} from "@/state/displayLanguageSlice";
+import {color} from "ansi-fragments";
 import { Tabs } from 'expo-router';
 import Icon from '@/views/components/Icon'
 import {Colors} from '@/constants/Colors';
 import {ReactNode} from "react";
+import {useSelector} from "react-redux";
 
 const baseTabOptions = {
   headerShown: false,
@@ -12,6 +16,7 @@ const baseTabOptions = {
 };
 
 export default function SpotCheckNavigationLayout(): ReactNode {
+  const displayText = useSelector((state: DisplayTextStateProp) => state.displayText.displayTextJson);
 
   return (
     <Tabs
@@ -31,7 +36,7 @@ export default function SpotCheckNavigationLayout(): ReactNode {
         name="index"
         options={{
           ...baseTabOptions,
-          tabBarLabel: "HOME",
+          tabBarLabel: displayText.tabs.home,
           tabBarIcon: ({ color }) => <Icon size={24} name="home-sharp" color={color} />
         }}
       />
@@ -39,7 +44,7 @@ export default function SpotCheckNavigationLayout(): ReactNode {
         name="SpotFinder"
         options={{
           ...baseTabOptions,
-          tabBarLabel: "SPOTS",
+          tabBarLabel: displayText.tabs.spots,
           tabBarIcon: ({ color }) => <Icon size={24} name="at-circle" color={color} />,
         }}
       />
@@ -47,7 +52,7 @@ export default function SpotCheckNavigationLayout(): ReactNode {
         name="Crew"
         options={{
           ...baseTabOptions,
-          tabBarLabel: "CREW",
+          tabBarLabel: displayText.tabs.crew,
           tabBarIcon: ({ color }) => <Icon size={24} name="people-circle" color={color} />,
         }}
       />
@@ -55,7 +60,7 @@ export default function SpotCheckNavigationLayout(): ReactNode {
         name="Setup"
         options={{
           ...baseTabOptions,
-          tabBarLabel: "SETUP",
+          tabBarLabel: displayText.tabs.setup,
           tabBarIcon: ({ color }) => <Icon size={24} name="settings" color={color} />,
         }}
       />

@@ -4,18 +4,19 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
-    "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "postinstall": "node postinstall.js"
   },
   "jest": {
     "preset": "jest-expo"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
+    "@preflower/react-native-web-maps": "^0.2.0",
     "@react-navigation/native": "^6.0.2",
     "@reduxjs/toolkit": "^2.2.7",
     "expo": "~51.0.28",
@@ -52,5 +53,10 @@
     "react-test-renderer": "18.2.0",
     "typescript": "~5.3.3"
   },
+  "platforms": [
+    "ios",
+    "android",
+    "web"
+  ],
   "private": true
 }

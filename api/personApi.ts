@@ -1,5 +1,6 @@
 import {Person, unknownUser} from "@/types/Person";
 import {commonGraphQlRequest} from "@/api/commonApiMethods";
+import id from "ajv/lib/vocabularies/core/id";
 import _ from "lodash";
 
 function getPersonByIdQuery(id: number) {
@@ -33,7 +34,7 @@ function getActivePersonByIdQuery(id: number) {
       last_name
       email_address
       bio
-      language_locale
+      language_code
       socials {
         id
         url_link
@@ -64,7 +65,6 @@ function getActivePersonByIdQuery(id: number) {
   }`;
 }
 
-
 export async function getPersonById(id: number): Promise<Person> {
   try {
     const queryResp = await commonGraphQlRequest({
@@ -94,5 +94,22 @@ export async function getActivePersonById(id: number): Promise<Person> {
     console.error(err);
     // @TODO Error handling
     return unknownUser;
+  }
+}
+
+export async function getUserLanguages(languageCode:string = 'en'): Promise<Object> {
+  try {
+    return await fetch(`http://localhost:8080/static/languages_${languageCode.toLowerCase()}.json`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      method: 'GET'
+    })
+      .then(resp => resp.json());
+  } catch (err) {
+    console.error(err);
+    // @TODO Error handling
+    return {};
   }
 }

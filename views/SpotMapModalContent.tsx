@@ -1,4 +1,6 @@
-import {Pressable, SafeAreaView, StyleSheet, Text, View} from "react-native";
+import {Spot} from "@/types/Spot";
+import {provider} from "@expo/config-plugins/build/plugins/createBaseMod";
+import {Pressable, SafeAreaView, StyleSheet, Text, View, Platform} from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import {Colors} from "@/constants/Colors";
 import {setCurrentSpotMapDetails, setSpotLocationMapShown, SpotState} from "@/state/spotSlice";
@@ -6,7 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import Icon from "@/views/components/Icon";
 import _ from 'lodash';
 import {Maps} from "@/constants/Maps";
-import {ReactNode} from "react";
+import {Component, ReactNode} from "react";
 
 export default function SpotMapModalContent(): ReactNode {
   const dispatch = useDispatch();
@@ -16,39 +18,55 @@ export default function SpotMapModalContent(): ReactNode {
     dispatch(setCurrentSpotMapDetails(null));
     dispatch(setSpotLocationMapShown(false));
   }
+
   const getMapContentView = () => {
     if (_.isNil(spotDetails) || _.isNil(spotDetails.location)) {
       return (
         <View style={styles.missingLocationWrapper}>
-          <Icon size={60} name="thumbs-down-outline" color={Colors.DARK_RED} />
+          <Icon size={60} name="thumbs-down-outline" color={Colors.DARK_RED}/>
           <Text style={styles.missingLocationText}>Location details are missing for this spot.</Text>
         </View>
       );
     }
     return (
-      <MapView
-        provider={PROVIDER_GOOGLE}
-        style={styles.map}
-        mapType={'standard'}
-        customMapStyle={Maps.customSetup}
-        initialRegion={{
-          latitude: spotDetails.location.lat,
-          longitude: spotDetails.location.lng,
-          latitudeDelta: Maps.delta,
-          longitudeDelta: Maps.delta,
-        }}
-      >
-        <Marker
-          coordinate={{
-            latitude: spotDetails.location.lat,
-            longitude: spotDetails.location.lng
-          }}
-          title={spotDetails.spot_name}
-          description={spotDetails.spot_description}
-          pinColor={Colors.DARK_RED}
-        />
-      </MapView>
-    );
+      <>
+        {getMapViewByPlatform()}
+      </>
+    )
+  }
+
+  const getMapViewByPlatform = () => {
+    return Platform.select({
+      native: () => {
+        return (
+          <MapView
+            provider={PROVIDER_GOOGLE}
+            style={styles.map}
+            mapType={'standard'}
+            customMapStyle={Maps.customSetup}
+            initialRegion={{
+              latitude: spotDetails?.location?.lat || 0,
+              longitude: spotDetails?.location?.lng || 0,
+              latitudeDelta: Maps.delta,
+              longitudeDelta: Maps.delta,
+            }}
+          >
+            <Marker
+              coordinate={{
+                latitude: spotDetails?.location?.lat || 0,
+                longitude: spotDetails?.location?.lng || 0
+              }}
+              title={spotDetails?.spot_name}
+              description={spotDetails?.spot_description}
+              pinColor={Colors.DARK_RED}
+            />
+          </MapView>
+        );
+      },
+      default: () => {
+        return <View></View>
+      }
+    })();
   }
 
   return (

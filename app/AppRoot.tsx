@@ -1,7 +1,8 @@
 import {Colors} from "@/constants/Colors";
+import {setDisplayText} from "@/state/displayLanguageSlice";
 import {Stack} from "expo-router";
 import {ReactNode, useCallback, useEffect, useState} from "react";
-import {getActivePersonById} from "@/api/personApi";
+import {getActivePersonById, getUserLanguages} from "@/api/personApi";
 import { SplashScreen } from "expo-router";
 import {setActiveUser} from "@/state/activeUserSlice";
 import {useDispatch} from "react-redux";
@@ -18,11 +19,12 @@ export default function AppRoot(): ReactNode {
   useEffect(() => {
     async function fetchAppLoadData() {
       try {
-        await getActivePersonById(1)
-          .then(personResp => {
-            dispatch(setActiveUser(personResp));
-            dispatch(setCrewList(personResp?.crew || []))
-          });
+        const personResp = await getActivePersonById(1)
+        dispatch(setActiveUser(personResp));
+        dispatch(setCrewList(personResp?.crew || []))
+
+        const displayText = await getUserLanguages(personResp.language_code);
+        dispatch(setDisplayText(displayText));
 
       } catch (e) {
         console.warn(e);

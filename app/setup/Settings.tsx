@@ -23,7 +23,7 @@ export default function Settings(): ReactNode {
       value: 'FR'
     }
   ];
-  const usersLanguage = languageSupportOptions.find(lang => lang.value === activeUser.language_locale)?.name || 'English';
+  const usersLanguage = languageSupportOptions.find(lang => lang.value === activeUser.language_code)?.name || 'English';
   const onSelectLanguage = () => {
 
   };
