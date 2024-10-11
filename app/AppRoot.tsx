@@ -8,7 +8,6 @@ import {setActiveUser} from "@/state/activeUserSlice";
 import {useDispatch} from "react-redux";
 import {setCrewList} from "@/state/crewSearchSlice";
 import {Platform, StyleSheet, View} from "react-native";
-import * as encoding from 'text-encoding';
 
 SplashScreen.preventAutoHideAsync()
   .catch(err => console.log('error', err));
