@@ -1,11 +1,13 @@
+import {ActiveUserStateProp} from "@/state/activeUserSlice";
 import _ from 'lodash';
 import {Spot} from '@/types/Spot';
-import {commonGraphQlRequest, commonGraphQlMutation} from '@/api/commonApiMethods';
-import {GenericResponse} from "@/types/GenericResponse";
+import {Person} from '@/types/Person';
+import {commonGraphQlRequest} from '@/api/commonApiMethods';
+import {useSelector} from "react-redux";
 
-function getSpotByNameQuery(inputName: String) {
+function getSpotByNameQuery(userId: number, inputName: String) {
   return `{
-    spotByName(nameToMatch: "${inputName}") {
+    spotByName(nameToMatch: "${inputName}", personId: ${userId}) {
       spot_id
       spot_name
       spot_image
@@ -60,10 +62,10 @@ function toggleSpotFavoriteQuery(spotId: number, personId: number, isFavorite: b
   }`;
 }
 
-export async function fetchSpotsByName(name: String): Promise<Spot[]> {
+export async function fetchSpotsByName(name: string, personId: number): Promise<Spot[]> {
   try {
     const queryResp = await commonGraphQlRequest({
-      queryBody:  getSpotByNameQuery(name),
+      queryBody:  getSpotByNameQuery(personId, name),
       errorMessage: "Error fetching spot data by name"
     });
 

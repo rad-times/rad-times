@@ -1,4 +1,4 @@
-const chalk = require('chalk');
+
 const { readFile, writeFile, copyFile } = require('fs').promises;
 
 async function reactNativeMaps() {

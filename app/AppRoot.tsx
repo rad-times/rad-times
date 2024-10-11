@@ -7,7 +7,8 @@ import { SplashScreen } from "expo-router";
 import {setActiveUser} from "@/state/activeUserSlice";
 import {useDispatch} from "react-redux";
 import {setCrewList} from "@/state/crewSearchSlice";
-import {StyleSheet, View} from "react-native";
+import {Platform, StyleSheet, View} from "react-native";
+import * as encoding from 'text-encoding';
 
 SplashScreen.preventAutoHideAsync()
   .catch(err => console.log('error', err));
@@ -19,7 +20,9 @@ export default function AppRoot(): ReactNode {
   useEffect(() => {
     async function fetchAppLoadData() {
       try {
-        const personResp = await getActivePersonById(1)
+        // Let me see different users between web and iOS simulator
+        const userToFetch:number = Platform.OS === 'ios' ? 1 : 2;
+        const personResp = await getActivePersonById(userToFetch)
         dispatch(setActiveUser(personResp));
         dispatch(setCrewList(personResp?.crew || []))
 

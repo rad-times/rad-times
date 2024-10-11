@@ -10,7 +10,7 @@ interface StackLinkProps {
 }
 
 const FONT_SIZE = 20;
-const STACK_BAR_HEIGHT = 45;
+const STACK_BAR_HEIGHT = 50;
 
 export default function StackLink({
   title,
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    height: STACK_BAR_HEIGHT + 5,
+    height: STACK_BAR_HEIGHT,
     paddingRight: 10,
     paddingLeft: 10,
     lineHeight: FONT_SIZE
