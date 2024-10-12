@@ -5,7 +5,7 @@ import Spacer from "@/views/components/Spacer";
 import {GestureResponderEvent, StyleSheet, View, Text} from "react-native";
 import {Colors} from "@/constants/Colors";
 import PageTitle from "@/views/components/PageTitle";
-import {ReactNode, useEffect, useRef, useState} from "react";
+import {ReactNode, useRef, useState} from "react";
 import PageWrapper from "@/views/components/PageWrapper";
 import {useSelector} from "react-redux";
 
@@ -13,23 +13,41 @@ export default function Index(): ReactNode {
   const displayText = useSelector((state: DisplayTextStateProp) => state.displayText.displayTextJson);
   const socket = useRef(new WebSocket('ws://localhost:8080/socket')).current;
   const [friendsActive, setFriendsActive] = useState(0);
+  const [activeUserIsCheckedIn, setActiveUserIsCheckedIn] = useState(false);
 
-  socket.onopen = () => {
+  socket.onopen = (e: Event) => {
     console.log('open');
   };
-  socket.onclose = (e) => {
+  socket.onclose = (e: Event) => {
     console.log('close');
   };
-  socket.onerror = (e) => {
+  socket.onerror = (e: Event) => {
     console.log('error', e);
   };
-  socket.onmessage = (e) => {
-    console.log('received', e);
-    setFriendsActive(friendsActive + 1);
+  socket.onmessage = (payload: MessageEvent<any>) => {
+    const message = JSON.parse(payload.data);
+    switch (message.msg) {
+      case 'checkin':
+        setFriendsActive(friendsActive + 1);
+        break;
+      case 'checkout':
+        setFriendsActive(friendsActive - 1);
+        break;
+      default:
+        console.log('message', message);
+        break;
+    }
   };
 
   const onClickCheckIn = (e: GestureResponderEvent) => {
-    socket.send('activate');
+    if (activeUserIsCheckedIn) {
+      socket.send(JSON.stringify({msg: 'checkout'}));
+      setActiveUserIsCheckedIn(false);
+      return;
+    }
+
+    socket.send(JSON.stringify({msg: 'checkin'}));
+    setActiveUserIsCheckedIn(true);
   };
 
   return (
@@ -43,10 +61,10 @@ export default function Index(): ReactNode {
           <Text style={styles.infoText}>{displayText.index.friendsActive}</Text>
           <Text style={styles.infoCount}>({friendsActive})</Text>
         </View>
-        <Icon size={24} name="chevron-forward-circle-outline" color={Colors.WHITE} />
+        <Icon size={24} name="chevron-forward-circle-outline" color={Colors.DARK_GREY} />
       </View>
       <Spacer />
-      <ActionButton onClickBtn={onClickCheckIn} btnDisplayText={displayText.index.checkInBtn} />
+      <ActionButton onClickBtn={onClickCheckIn} btnDisplayText={activeUserIsCheckedIn ? displayText.index.checkOutBtn : displayText.index.checkInBtn} />
     </PageWrapper>
   );
 }
