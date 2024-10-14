@@ -4,6 +4,7 @@ import spotList from "@/state/spotSlice";
 import crew from "@/state/crewSearchSlice";
 import googleLocationSearch from '@/state/googleLocationsSlice';
 import displayText from '@/state/displayLanguageSlice';
+import activeFriends from '@/state/activeFriendsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     spotList,
     crew,
     googleLocationSearch,
-    displayText
+    displayText,
+    activeFriends
   }
 });

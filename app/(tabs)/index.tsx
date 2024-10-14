@@ -1,53 +1,58 @@
+import {
+  IActiveFriendsState,
+  setActiveUserIsCheckedIn,
+  setNumActiveFriends
+} from "@/state/activeFriendsSlice";
+import {ActiveUserStateProp} from "@/state/activeUserSlice";
 import {DisplayTextStateProp} from "@/state/displayLanguageSlice";
+import {createSocketMessage} from "@/utils/createSocketMessage";
+
 import ActionButton from "@/views/components/ActionButton";
 import Icon from "@/views/components/Icon";
 import Spacer from "@/views/components/Spacer";
 import {GestureResponderEvent, StyleSheet, View, Text} from "react-native";
 import {Colors} from "@/constants/Colors";
 import PageTitle from "@/views/components/PageTitle";
-import {ReactNode, useRef, useState} from "react";
+import {ReactNode, useContext, useEffect} from "react";
 import PageWrapper from "@/views/components/PageWrapper";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import { WebSocketContext } from '@/context/WebSocketContext';
+import {CHECK_IN, CHECK_OUT} from "@/constants/SocketTypes";
 
 export default function Index(): ReactNode {
+  const activeUser = useSelector((state: ActiveUserStateProp) => state.activeUser.user);
   const displayText = useSelector((state: DisplayTextStateProp) => state.displayText.displayTextJson);
-  const socket = useRef(new WebSocket('ws://localhost:8080/socket')).current;
-  const [friendsActive, setFriendsActive] = useState(0);
-  const [activeUserIsCheckedIn, setActiveUserIsCheckedIn] = useState(false);
+  const numFriendsActive = useSelector((state: IActiveFriendsState) => state.activeFriends.numFriendsActive);
+  const activeUserIsCheckedIn = useSelector((state: IActiveFriendsState) => state.activeFriends.activeUserIsCheckedIn);
+  const dispatch = useDispatch();
 
-  socket.onopen = (e: Event) => {
-    console.log('open');
-  };
-  socket.onclose = (e: Event) => {
-    console.log('close');
-  };
-  socket.onerror = (e: Event) => {
-    console.log('error', e);
-  };
-  socket.onmessage = (payload: MessageEvent<any>) => {
-    const message = JSON.parse(payload.data);
-    switch (message.msg) {
-      case 'checkin':
-        setFriendsActive(friendsActive + 1);
-        break;
-      case 'checkout':
-        setFriendsActive(friendsActive - 1);
-        break;
-      default:
-        console.log('message', message);
-        break;
+  // @ts-ignore
+  const [subscribe, unsubscribe, sendMessage] = useContext(WebSocketContext);
+
+  useEffect(() => {
+    subscribe(CHECK_IN, () => {
+      dispatch(setNumActiveFriends(numFriendsActive + 1));
+    });
+
+    subscribe(CHECK_OUT, () => {
+      dispatch(setNumActiveFriends(numFriendsActive - 1));
+    });
+
+    return () => {
+      unsubscribe(CHECK_IN);
+      unsubscribe(CHECK_OUT);
     }
-  };
+  }, [subscribe, unsubscribe, numFriendsActive]);
 
   const onClickCheckIn = (e: GestureResponderEvent) => {
     if (activeUserIsCheckedIn) {
-      socket.send(JSON.stringify({msg: 'checkout'}));
-      setActiveUserIsCheckedIn(false);
+      sendMessage(createSocketMessage(CHECK_OUT, activeUser.id));
+      dispatch(setActiveUserIsCheckedIn(false));
       return;
     }
 
-    socket.send(JSON.stringify({msg: 'checkin'}));
-    setActiveUserIsCheckedIn(true);
+    sendMessage(createSocketMessage(CHECK_IN, activeUser.id));
+    dispatch(setActiveUserIsCheckedIn(true));
   };
 
   return (
@@ -56,10 +61,11 @@ export default function Index(): ReactNode {
         title={displayText.index.title}
       />
       <Spacer />
+
       <View style={styles.infoBox}>
         <View style={styles.info}>
           <Text style={styles.infoText}>{displayText.index.friendsActive}</Text>
-          <Text style={styles.infoCount}>({friendsActive})</Text>
+          <Text style={styles.infoCount}>({numFriendsActive})</Text>
         </View>
         <Icon size={24} name="chevron-forward-circle-outline" color={Colors.DARK_GREY} />
       </View>
@@ -68,6 +74,7 @@ export default function Index(): ReactNode {
     </PageWrapper>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     display: 'flex',
