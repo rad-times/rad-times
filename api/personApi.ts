@@ -17,7 +17,7 @@ function getPersonByIdQuery(id: number) {
         social_type
       }
       location {
-        location_id
+        id
         city_name
         state_name
         country_name
@@ -32,7 +32,6 @@ function getActivePersonByIdQuery(id: number) {
       id
       first_name
       last_name
-      email_address
       bio
       language_code
       socials {
@@ -49,14 +48,14 @@ function getActivePersonByIdQuery(id: number) {
         is_favorite
         profile_image
         location {
-          location_id
+          id
           city_name
           state_name
           country_name
         }
       }
       location {
-        location_id
+        id
         city_name
         state_name
         country_name

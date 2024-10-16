@@ -20,7 +20,6 @@ export const googleLocationSearchSlice = createSlice({
   initialState,
   reducers: {
     setSearchInput: (state, action) => {
-      console.log('setting locationSearchTerm', action.payload);
       return {
         ...state,
         locationSearchTerm: action.payload

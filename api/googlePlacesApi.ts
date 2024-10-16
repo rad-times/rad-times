@@ -31,7 +31,7 @@ const searchGooglePlaces = async (searchValue:string) => {
     },
     body: JSON.stringify({
       "input": searchValue,
-      "includedPrimaryTypes": ['locality', 'postal_code']
+      "includedPrimaryTypes": ['neighborhood', 'locality', 'postal_code']
     })
   })
     .then(response => response.json())
