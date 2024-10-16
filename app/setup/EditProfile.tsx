@@ -12,7 +12,6 @@ import PageWrapper from "@/views/components/PageWrapper";
 import PageTitle from "@/views/components/PageTitle";
 import {StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from "react-redux";
-import _ from 'lodash';
 
 interface EditProfileProps {}
 
@@ -51,7 +50,7 @@ const FormElementBlock = (
 export default function EditProfile({}: EditProfileProps): ReactNode {
   const dispatch = useDispatch();
 
-  const locationSearchQuery = useSelector((state: GoogleLocationStateProps) => state.googleLocationSearch.locationSearchTerm);
+  const locationSearchTerm = useSelector((state: GoogleLocationStateProps) => state.googleLocationSearch.locationSearchTerm);
   const searchResults = useSelector((state: GoogleLocationStateProps) => state.googleLocationSearch.locationSearchResults);
   const activeUser = useSelector((state: ActiveUserStateProp) => state.activeUser.user);
   const [editedUser, setEditedUser] = useState(activeUser);
@@ -91,22 +90,22 @@ export default function EditProfile({}: EditProfileProps): ReactNode {
   };
 
   useEffect(() => {
-    if (locationSearchQuery === '') {
+    console.log('locationSearchTerm use effect', locationSearchTerm);
+    if (locationSearchTerm === '') {
       dispatch(setSearchResults([]));
       return;
     }
 
     const debounceTimer = setTimeout(() => {
-      searchGooglePlaces(locationSearchQuery)
+      searchGooglePlaces(locationSearchTerm)
         .then(res => dispatch(setSearchResults(res)))
     }, 500);
     return () => clearTimeout(debounceTimer);
-  }, [locationSearchQuery]);
+  }, [locationSearchTerm]);
 
   const onSelectLocation = async (
     {
-      id,
-      value
+      id
     }: SelectResponse
   ) => {
     const fullLocation = await getLocationData(id);

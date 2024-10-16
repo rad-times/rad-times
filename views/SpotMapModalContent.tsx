@@ -1,6 +1,5 @@
-import {Spot} from "@/types/Spot";
-import {provider} from "@expo/config-plugins/build/plugins/createBaseMod";
-import {Pressable, SafeAreaView, StyleSheet, Text, View, Platform} from "react-native";
+import CommonModalContentWrapper from "@/views/components/CommonModalContentWrapper";
+import {StyleSheet, Text, View, Platform} from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import {Colors} from "@/constants/Colors";
 import {setCurrentSpotMapDetails, setSpotLocationMapShown, SpotState} from "@/state/spotSlice";
@@ -8,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import Icon from "@/views/components/Icon";
 import _ from 'lodash';
 import {Maps} from "@/constants/Maps";
-import {Component, ReactNode} from "react";
+import {ReactNode} from "react";
 
 export default function SpotMapModalContent(): ReactNode {
   const dispatch = useDispatch();
@@ -70,36 +69,18 @@ export default function SpotMapModalContent(): ReactNode {
   }
 
   return (
-    <SafeAreaView style={styles.mapWrapper}>
-      <View style={styles.spotModalTopBar}>
-        <Text style={styles.spotModalTopBarName}>{spotDetails?.spot_name}</Text>
-        <Pressable
-          onPress={closeSpotMap}>
-          <Icon size={30} name="close-circle-outline" color={Colors.WHITE} />
-        </Pressable>
-      </View>
+    <CommonModalContentWrapper
+      onTapCloseModal={closeSpotMap}
+      nameToShow={'Check In'}
+    >
       <View style={styles.spotModalMap}>
         {getMapContentView()}
       </View>
-    </SafeAreaView>
+    </CommonModalContentWrapper>
   );
 }
 
 const styles = StyleSheet.create({
-  spotModalTopBar: {
-    height: 50,
-    backgroundColor: Colors.DARK_GREY,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingLeft: 10,
-    paddingRight: 10
-  },
-  spotModalTopBarName: {
-    color: Colors.WHITE,
-    fontSize: 18
-  },
   spotModalMap: {
     backgroundColor: Colors.LIGHT_GREY,
     flex: 1
@@ -116,10 +97,6 @@ const styles = StyleSheet.create({
     color: Colors.DARK_RED,
     textAlign: 'center',
     marginTop: 10
-  },
-  mapWrapper: {
-    flex: 1,
-    flexDirection: 'column'
   },
   map: {
     ...StyleSheet.absoluteFillObject,

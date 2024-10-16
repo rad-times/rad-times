@@ -1,5 +1,4 @@
 import {ActiveUserStateProp} from "@/state/activeUserSlice";
-import {setSearchInput} from "@/state/googleLocationsSlice";
 import SearchablePicker from "@/views/components/SearchablePicker";
 import Spacer from "@/views/components/Spacer";
 import {ReactNode} from "react";
@@ -24,9 +23,7 @@ export default function Settings(): ReactNode {
     }
   ];
   const usersLanguage = languageSupportOptions.find(lang => lang.value === activeUser.language_code)?.name || 'English';
-  const onSelectLanguage = () => {
-
-  };
+  const onSelectLanguage = () => {};
 
   return (
     <PageWrapper>

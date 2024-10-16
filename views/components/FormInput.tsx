@@ -33,14 +33,14 @@ export default function FormInput(
       <View style={styles.inputCombo}>
         <TextInput
           multiline={true}
-          numberOfLines = {4}
+          numberOfLines={4}
           style={[styles.input, styles.multiLineInput]}
           onChangeText={(val) => {
             onChangeInput && onChangeInput(val)
           }}
           value={formValue}
           maxLength={maxLength}
-          editable={!disabled}
+          readOnly={disabled}
           autoCorrect={autoCorrect}
           autoFocus={autoFocus}
         />
@@ -65,7 +65,7 @@ export default function FormInput(
         onFocus={onFocus}
         value={formValue}
         maxLength={maxLength}
-        editable={!disabled}
+        readOnly={disabled}
         autoCorrect={autoCorrect}
         autoFocus={autoFocus}
       />

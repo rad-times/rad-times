@@ -4,7 +4,6 @@ import Icon from "@/views/components/Icon";
 import Spacer from "@/views/components/Spacer";
 import EditSocialLinkForm from "@/views/EditSocialLinkForm";
 import SocialMediaLink from "@/views/SocialMediaLink";
-import SpotMapModalContent from "@/views/SpotMapModalContent";
 import {ReactNode, useState} from "react";
 import PageWrapper from "@/views/components/PageWrapper";
 import PageTitle from "@/views/components/PageTitle";
