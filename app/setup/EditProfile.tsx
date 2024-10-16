@@ -24,15 +24,14 @@ interface FormElementBlockProps {
   autoCorrect?: boolean
 }
 
-const FormElementBlock = (
-  {
+const FormElementBlock = ({
     label,
     value = '',
     onChange,
     isMultiline = false,
     maxLength,
     autoCorrect = false
-  }: FormElementBlockProps) => {
+}: FormElementBlockProps) => {
   return (
     <>
       <FormLabel labelText={label} />
@@ -89,8 +88,12 @@ export default function EditProfile({}: EditProfileProps): ReactNode {
     });
   };
 
+  // Set initial state
   useEffect(() => {
-    console.log('locationSearchTerm use effect', locationSearchTerm);
+    dispatch(setSearchInput(`${editedUser.location?.city_name}, ${editedUser.location?.state_name}, ${editedUser.location?.country_name}`));
+  }, []);
+
+  useEffect(() => {
     if (locationSearchTerm === '') {
       dispatch(setSearchResults([]));
       return;
@@ -103,6 +106,9 @@ export default function EditProfile({}: EditProfileProps): ReactNode {
     return () => clearTimeout(debounceTimer);
   }, [locationSearchTerm]);
 
+  const setLocationSearchValue = (val: string) => {
+    dispatch(setSearchInput(val));
+  }
   const onSelectLocation = async (
     {
       id
@@ -129,8 +135,6 @@ export default function EditProfile({}: EditProfileProps): ReactNode {
   const saveChanges = () => {
     console.log('saving');
   }
-
-  const locationDisplay = `${editedUser.location?.city_name}, ${editedUser.location?.state_name}, ${editedUser.location?.country_name}`;
 
   return (
     <PageWrapper>
@@ -161,11 +165,11 @@ export default function EditProfile({}: EditProfileProps): ReactNode {
       <Spacer />
       <SearchablePicker
         label={"Location"}
-        searchValue={locationDisplay}
+        searchValue={locationSearchTerm}
         searchResults={searchResults}
-        onChangeSearchText={(val: string) => dispatch(setSearchInput(val))}
+        onChangeSearchText={(val: string) => setLocationSearchValue(val)}
         onSelectOption={onSelectLocation}
-        clearSearchValue={() => dispatch(setSearchInput(''))}
+        clearSearchValue={() => setLocationSearchValue('')}
         itemDisplayValueKey={'location_name'}
         itemIdKey={'place_id'}
       />
