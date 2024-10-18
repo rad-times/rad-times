@@ -1,6 +1,5 @@
 import {Person, unknownUser} from "@/types/Person";
 import {commonGraphQlRequest} from "@/api/commonApiMethods";
-import id from "ajv/lib/vocabularies/core/id";
 import _ from "lodash";
 
 function getPersonByIdQuery(id: number) {

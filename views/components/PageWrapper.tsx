@@ -26,5 +26,6 @@ const styles = StyleSheet.create({
   },
   innerWrapper: {
     padding: 20,
+    flex: 1
   }
 });

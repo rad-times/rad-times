@@ -1,9 +1,8 @@
-import {Colors} from "@/constants/Colors";
 import {IActiveFriendsState} from "@/state/activeFriendsSlice";
 import {DisplayTextStateProp} from "@/state/displayLanguageSlice";
-import Icon from "@/views/components/Icon";
+import PressableBox from "@/views/components/PressableBox";
 import {ReactNode} from "react";
-import {Pressable, StyleSheet, Text, View} from "react-native";
+import {StyleSheet, Text, View} from "react-native";
 import {useSelector} from "react-redux";
 
 export function FriendsActiveBox({}): ReactNode {
@@ -15,33 +14,19 @@ export function FriendsActiveBox({}): ReactNode {
   };
 
   return (
-    <Pressable
-      onPress={loadActiveFriendsModal}
-      style={styles.infoBox}
+    <PressableBox
+      boxDisabled={false}
+      onSelectBox={loadActiveFriendsModal}
     >
       <View style={styles.info}>
         <Text style={styles.infoText}>{displayText.index.friendsActive}</Text>
         <Text style={styles.infoCount}>({numFriendsActive})</Text>
       </View>
-      <Icon size={24} name="chevron-forward-circle-outline" color={Colors.DARK_GREY} />
-    </Pressable>
+    </PressableBox>
   );
 }
 
 const styles = StyleSheet.create({
-  infoBox: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingLeft: 10,
-    paddingRight: 10,
-    backgroundColor: Colors.LIGHT_GREY,
-    borderRadius: 5,
-    borderColor: Colors.WHITE,
-    borderWidth: 2,
-    height: 50
-  },
   info: {
     display: 'flex',
     flexDirection: 'row',
