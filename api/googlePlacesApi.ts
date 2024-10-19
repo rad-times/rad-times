@@ -1,6 +1,22 @@
 import _ from 'lodash';
 
 /**
+ * Takes lat / lng coordinates and returns the city location
+ */
+const getLocationByLatLng = async (lat: number, lng: number): Promise<google.maps.GeocoderResult> => {
+  const resp = await fetch(`https://maps.googleapis.com/maps/api/geocode/json` +
+    `?latlng=${lat},${lng}` +
+    `&result_type=neighborhood|park` +
+    `&key=AIzaSyDWsX3AIFC8x2_uSTWDLoLG52MZpqr_-II`
+  , {
+    method: 'GET'
+  })
+    .then(resp => resp.json())
+    .catch(err => console.log(err));
+
+  return resp.results[0];
+}
+/**
  * Get full details for a location
  */
 const getLocationData = async (placeId: string) => {
@@ -22,7 +38,6 @@ const getLocationData = async (placeId: string) => {
  * Autocomplete when searching for a location
  */
 const searchGooglePlaces = async (searchValue:string) => {
-
   return await fetch('https://places.googleapis.com/v1/places:autocomplete', {
     method: 'POST',
     headers: {
@@ -61,5 +76,6 @@ const searchGooglePlaces = async (searchValue:string) => {
 
 export {
   searchGooglePlaces,
+  getLocationByLatLng,
   getLocationData
 };

@@ -3,7 +3,7 @@ import Spacer from "@/views/components/Spacer";
 import {FriendsActiveBox} from "@/views/FriendsActiveBox";
 import {StyleSheet} from "react-native";
 import PageTitle from "@/views/components/PageTitle";
-import {CheckInBtn} from "@/views/CheckInBtn";
+import {CheckInBtn} from "@/views/checkIn/CheckInBtn";
 import {ReactNode} from "react";
 import PageWrapper from "@/views/components/PageWrapper";
 import {useSelector} from "react-redux";

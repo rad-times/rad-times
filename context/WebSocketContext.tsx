@@ -55,7 +55,7 @@ function WebSocketProvider({children}:IWebSocketProvider): ReactNode {
 
   return (
     // @ts-ignore
-    <WebSocketContext.Provider value={[subscribe, unsubscribe, sendMessage]}>
+    <WebSocketContext.Provider value={{subscribe, unsubscribe, sendMessage}}>
       {children}
     </WebSocketContext.Provider>
   );

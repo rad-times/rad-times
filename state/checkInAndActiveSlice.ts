@@ -2,7 +2,8 @@ import {createSlice} from "@reduxjs/toolkit";
 
 type ActiveFriendsState = {
   numFriendsActive: number,
-  activeUserIsCheckedIn: boolean
+  activeUserIsCheckedIn: boolean,
+  checkInModalOpen: boolean
 }
 
 interface IActiveFriendsState {
@@ -11,10 +12,11 @@ interface IActiveFriendsState {
 
 const initialState: ActiveFriendsState = {
   numFriendsActive: 0,
-  activeUserIsCheckedIn: false
+  activeUserIsCheckedIn: false,
+  checkInModalOpen: false
 };
 
-export const activeFriendsSlice = createSlice({
+export const checkInAndActiveSlice = createSlice({
   name: "activeFriends",
   initialState,
   reducers: {
@@ -29,6 +31,12 @@ export const activeFriendsSlice = createSlice({
         ...state,
         activeUserIsCheckedIn: action.payload
       }
+    },
+    setCheckInModalOpen: (state, action) => {
+      return {
+        ...state,
+        checkInModalOpen: action.payload
+      }
     }
   }
 });
@@ -39,7 +47,8 @@ export {
 
 export const {
   setNumActiveFriends,
-  setActiveUserIsCheckedIn
-} = activeFriendsSlice.actions;
+  setActiveUserIsCheckedIn,
+  setCheckInModalOpen
+} = checkInAndActiveSlice.actions;
 
-export default activeFriendsSlice.reducer;
+export default checkInAndActiveSlice.reducer;

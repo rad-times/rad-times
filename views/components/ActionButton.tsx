@@ -41,5 +41,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: Colors.DARK_GREY,
     fontSize: 18,
+    paddingLeft: 30,
+    paddingRight: 30
   }
 })

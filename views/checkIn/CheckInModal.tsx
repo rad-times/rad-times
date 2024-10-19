@@ -1,30 +1,22 @@
 import {fetchSpotsByLatLng} from "@/api/spotApi";
+import {getLocationByLatLng} from '@/api/googlePlacesApi';
 import {Colors} from "@/constants/Colors";
 import useCurrentLocation from "@/hooks/useCurrentLocation";
 import {ActiveUserStateProp} from "@/state/activeUserSlice";
+import {setCheckInModalOpen} from "@/state/checkInAndActiveSlice";
 import {Spot} from "@/types/Spot";
+import CheckInSpotOption from "@/views/checkIn/CheckInSpotOption";
 import ActionButton from "@/views/components/ActionButton";
 import CommonModalContentWrapper from "@/views/components/CommonModalContentWrapper";
-import PageTitle from "@/views/components/PageTitle";
+import HeaderText from "@/views/components/HeaderText";
 import PageWrapper from "@/views/components/PageWrapper";
-import PressableBox from "@/views/components/PressableBox";
 import Spacer from "@/views/components/Spacer";
-import {LocationObject} from "expo-location";
 import {ReactNode, useEffect, useState} from "react";
 import {FlatList, GestureResponderEvent, StyleSheet, Text, View} from "react-native";
-import {useSelector} from "react-redux";
-
-
-interface ICheckInModalContent {
-  showCheckInModal: (arg0: boolean) => void
-}
-
-interface ISpotOption {
-  spotDetails: Spot
-}
+import {useDispatch, useSelector} from "react-redux";
 
 interface ILocationPickerContent {
-  usersLocation: LocationObject
+  usersLocation: string
   spotList: Spot[]
 }
 interface IErrorGettingLocation {
@@ -48,27 +40,6 @@ function ErrorGettingLocation({
 /**
  *
  */
-function SpotOption({
-                      spotDetails
-}:ISpotOption): ReactNode {
-
-  const showSpot = () => {
-    console.log('show');
-  }
-
-  return (
-    <PressableBox
-      boxDisabled={false}
-      onSelectBox={showSpot}
-    >
-      <Text style={styles.spotNameText}>{spotDetails.spot_name}</Text>
-    </PressableBox>
-  );
-}
-
-/**
- *
- */
 function LocationPickerContent({
                                  usersLocation,
                                  spotList
@@ -81,13 +52,13 @@ function LocationPickerContent({
     <PageWrapper>
       <View style={styles.pageWrapper}>
         <View>
-          <PageTitle
-            title={"Nearby spots"}
+          <HeaderText
+            text={`Spots near ${usersLocation}`}
           />
           <Spacer />
           <FlatList
             data={spotList}
-            renderItem={({item}) => <SpotOption spotDetails={item} />}
+            renderItem={({item}) => <CheckInSpotOption spotDetails={item} />}
             keyExtractor={item => String(item.spot_id)}
           />
           <Spacer margin={30} />
@@ -101,14 +72,15 @@ function LocationPickerContent({
 /**
  *
  */
-export default function CheckInModalContent({
-                               showCheckInModal
-}:ICheckInModalContent): ReactNode {
+export default function CheckInModalContent({}): ReactNode {
   const [spotsReady, setSpotsReady] = useState<boolean>(false);
   const [loadingErrorMsg, setLoadingErrorMsg] = useState<string>('');
   const [spotList, setSpotList] = useState<Spot[]|[]>([]);
+  const [currentLocationName, setLocationName] = useState<string>('');
   const [location, errorMsg, usersLocationLoaded] = useCurrentLocation();
   const activeUser = useSelector((state: ActiveUserStateProp) => state.activeUser.user);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function fetchLocations(): Promise<void> {
@@ -120,9 +92,15 @@ export default function CheckInModalContent({
       } = location;
       try {
         const closestSpots = await fetchSpotsByLatLng(latitude, longitude, 1, activeUser.id);
+        const locationData = await getLocationByLatLng(latitude, longitude);
+
+        const locationName = `${locationData.address_components[0].long_name} (${locationData.address_components[1].long_name})`;
+
         setSpotList(closestSpots);
+        setLocationName(locationName);
         setSpotsReady(true);
       } catch (err) {
+        console.error(err);
         setLoadingErrorMsg('Error getting local spots');
         setSpotsReady(true);
       }
@@ -142,7 +120,7 @@ export default function CheckInModalContent({
 
   return (
     <CommonModalContentWrapper
-      onTapCloseModal={() => showCheckInModal(false)}
+      onTapCloseModal={() => dispatch(setCheckInModalOpen(false))}
       nameToShow={'Check In'}
     >
       {!spotsReady &&
@@ -152,7 +130,7 @@ export default function CheckInModalContent({
       }
       {spotsReady &&
           <>
-            {loadingErrorMsg ? <ErrorGettingLocation errorTypeMessage={loadingErrorMsg}/> : <LocationPickerContent spotList={spotList} usersLocation={location} />}
+            {loadingErrorMsg ? <ErrorGettingLocation errorTypeMessage={loadingErrorMsg}/> : <LocationPickerContent spotList={spotList} usersLocation={currentLocationName} />}
           </>
       }
     </CommonModalContentWrapper>
@@ -184,9 +162,5 @@ const styles = StyleSheet.create({
     color: Colors.WHITE,
     paddingTop: 10,
     fontSize: 16
-  },
-  spotNameText: {
-    color: Colors.DARK_GREY,
-    fontSize: 18
   }
 });

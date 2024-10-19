@@ -1,4 +1,4 @@
-import {IActiveFriendsState} from "@/state/activeFriendsSlice";
+import {IActiveFriendsState} from "@/state/checkInAndActiveSlice";
 import {DisplayTextStateProp} from "@/state/displayLanguageSlice";
 import PressableBox from "@/views/components/PressableBox";
 import {ReactNode} from "react";
