@@ -27,7 +27,7 @@ interface IErrorGettingLocation {
  *
  */
 function ErrorGettingLocation({
-                                errorTypeMessage
+  errorTypeMessage
 }: IErrorGettingLocation): ReactNode {
   return (
     <View style={styles.centeredTextWrapper}>
@@ -41,10 +41,11 @@ function ErrorGettingLocation({
  *
  */
 function LocationPickerContent({
-                                 usersLocation,
-                                 spotList
+  usersLocation,
+  spotList
 }: ILocationPickerContent): ReactNode {
   const createNewLocation = (e: GestureResponderEvent) => {
+    // @TODO create new spot
     console.log('create new');
   }
 

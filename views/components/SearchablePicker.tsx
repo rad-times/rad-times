@@ -1,5 +1,5 @@
 import {Colors} from "@/constants/Colors";
-import FormInput from "@/views/components/FormInput";
+import FormInput_OLD from "@/views/components/FormInput_OLD";
 import FormLabel from "@/views/components/FormLabel";
 import Icon from "@/views/components/Icon";
 import PageWrapper from "@/views/components/PageWrapper";
@@ -102,7 +102,7 @@ export default function SearchablePicker(
       {!_.isNil(label) &&
           <FormLabel labelText={label} />
       }
-      <FormInput
+      <FormInput_OLD
         formValue={displayOnlySearchValue}
         onFocus={() => showPickerModal(true)}
       />
@@ -120,7 +120,7 @@ export default function SearchablePicker(
             </Pressable>
           </View>
           <PageWrapper>
-            <FormInput
+            <FormInput_OLD
               onChangeInput={onChangeSearchText}
               formValue={searchValue}
               autoCorrect={false}

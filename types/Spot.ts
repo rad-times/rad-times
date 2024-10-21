@@ -8,6 +8,7 @@ export interface Spot {
   last_check_in?: string
   is_public?: boolean
   is_favorite?: boolean
+  is_private?: boolean
   keywords?: Keyword[]
   location?: Geolocation
 }

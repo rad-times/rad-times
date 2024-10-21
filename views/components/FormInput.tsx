@@ -1,12 +1,12 @@
 import {Colors} from "@/constants/Colors";
-import Icon from "@/views/components/Icon";
+import _ from "lodash";
 import {ReactNode} from "react";
-import {NativeSyntheticEvent, Pressable, StyleSheet, TextInput, TextInputFocusEventData, View} from "react-native";
-import _ from 'lodash';
+import {NativeSyntheticEvent, TextInput, Text, StyleSheet, TextInputFocusEventData, View} from "react-native";
 
 interface FormInputProps {
+  label: string;
   formValue: string | undefined
-  onChangeInput?: Function
+  onChangeInput?: (text: string) => void
   onFocus?: (e: NativeSyntheticEvent<TextInputFocusEventData>) => void
   isMultiline?: boolean
   maxLength?: number
@@ -18,102 +18,75 @@ interface FormInputProps {
 
 export default function FormInput(
   {
+    label,
     formValue = '',
     onChangeInput,
     onFocus = _.noop,
     isMultiline = false,
     maxLength = 50,
-    clearField,
     disabled = false,
     autoCorrect = true,
     autoFocus = false
-}: FormInputProps): ReactNode {
-  if (isMultiline) {
-    return (
-      <View style={styles.inputCombo}>
-        <TextInput
-          multiline={true}
-          numberOfLines={4}
-          style={[styles.input, styles.multiLineInput]}
-          onChangeText={(val) => {
-            onChangeInput && onChangeInput(val)
-          }}
-          value={formValue}
-          maxLength={maxLength}
-          readOnly={disabled}
-          autoCorrect={autoCorrect}
-          autoFocus={autoFocus}
-        />
-        {_.isFunction(clearField) &&
-            <Pressable
-                style={styles.iconContainer}
-                onPress={() => clearField()}
-            >
-                <Icon size={24} name="close" color={Colors.DARK_GREY} />
-            </Pressable>
-        }
-      </View>
-    );
-  }
+  }: FormInputProps): ReactNode {
   return (
-    <View style={styles.inputCombo}>
-      <TextInput
-        style={styles.input}
-        onChangeText={(val) => {
-          onChangeInput && onChangeInput(val);
-        }}
-        onFocus={onFocus}
-        value={formValue}
-        maxLength={maxLength}
-        readOnly={disabled}
-        autoCorrect={autoCorrect}
-        autoFocus={autoFocus}
-      />
-
-      {_.isFunction(clearField) &&
-          <Pressable
-              style={styles.iconContainer}
-              onPress={() => clearField()}
-          >
-              <Icon size={24} name="close" color={Colors.DARK_GREY} />
-          </Pressable>
+    <View style={styles.formInputWrapper}>
+      <Text style={styles.formLabel}>{label}</Text>
+      {isMultiline &&
+          <TextInput
+              style={[styles.input, styles.multiLineInput]}
+              value={formValue}
+              onChangeText={onChangeInput}
+              maxLength={maxLength}
+              readOnly={disabled}
+              autoCorrect={autoCorrect}
+              autoFocus={autoFocus}
+              onFocus={onFocus}
+              multiline={true}
+              numberOfLines={4}
+          />
       }
-
+      {!isMultiline &&
+          <TextInput
+              style={styles.input}
+              value={formValue}
+              onChangeText={onChangeInput}
+              maxLength={maxLength}
+              readOnly={disabled}
+              autoCorrect={autoCorrect}
+              autoFocus={autoFocus}
+              onFocus={onFocus}
+          />
+      }
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  formInputWrapper: {
+    marginTop: 5,
+    marginBottom: 15
+  },
   input: {
-    flex: 1,
-    height: 40,
-    padding: 5,
-    backgroundColor: Colors.LIGHT_GREY,
     borderColor: Colors.WHITE,
-    borderWidth: 2,
-    borderRightColor: Colors.LIGHT_GREY,
-    fontSize: 18
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingTop: 15,
+    paddingBottom: 15,
+    paddingLeft: 10,
+    paddingRight: 10,
+    marginTop: -5
   },
   multiLineInput: {
     height: 100
   },
-  inputCombo: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  iconContainer: {
-    height: 40,
-    width: 30,
-    backgroundColor: Colors.LIGHT_GREY,
-    borderColor: Colors.WHITE,
-    borderWidth: 2,
-    borderLeftColor: Colors.LIGHT_GREY,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'center'
+  formLabel: {
+    backgroundColor: Colors.BLACK,
+    alignSelf: 'flex-start',
+    marginLeft: 10,
+    paddingLeft: 5,
+    paddingRight: 5,
+    fontSize: 14,
+    color: Colors.WHITE,
+    zIndex: 100
   }
 });

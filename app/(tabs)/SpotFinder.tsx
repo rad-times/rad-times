@@ -1,18 +1,27 @@
+import {Spot} from "@/types/Spot";
+import ActionButton from "@/views/components/ActionButton";
+import CreateNewSpotForm from "@/views/spots/CreateNewSpotForm";
 import {View, FlatList, StyleSheet, Modal} from "react-native";
 
 import PageTitle from "@/views/components/PageTitle";
-import {Colors} from "@/constants/Colors";
-import SpotSearchField from "@/views/SpotSearchField";
-import {useSelector} from "react-redux";
-import {SpotState} from "@/state/spotSlice";
-import SpotListingItem from "@/views/SpotListingItem";
-import SpotMapModalContent from "@/views/SpotMapModalContent";
+import SpotSearchField from "@/views/spots/SpotSearchField";
+import {useDispatch, useSelector} from "react-redux";
+import {setCreateNewSpotModalShown, SpotState} from "@/state/spotSlice";
+import SpotListingItem from "@/views/spots/SpotListingItem";
+import SpotMapModalContent from "@/views/spots/SpotMapModalContent";
 import {ReactNode} from "react";
 import PageWrapper from "@/views/components/PageWrapper";
 
 export default function SpotFinder(): ReactNode {
-  const searchResultsList = useSelector((state: SpotState) => state.spotList.spotListing);
-  const spotLocationMapShown = useSelector((state: SpotState) => state.spotList.spotLocationMapShown);
+  const searchResultsList: Spot[] = useSelector((state: SpotState) => state.spotList.spotListing);
+  const spotLocationMapShown: boolean = useSelector((state: SpotState) => state.spotList.spotLocationMapShown);
+  const createNewSpotModalShown: boolean = useSelector((state: SpotState) => state.spotList.createNewSpotModalShown);
+
+  const dispatch = useDispatch();
+
+  const createNewSpot = () => {
+    dispatch(setCreateNewSpotModalShown(true));
+  };
 
   return (
     <PageWrapper>
@@ -28,13 +37,25 @@ export default function SpotFinder(): ReactNode {
         <SpotMapModalContent />
       </Modal>
 
-      <SpotSearchField />
-      <View style={styles.resultsWrapper}>
-        <FlatList
-          data={searchResultsList}
-          renderItem={({item}) => <SpotListingItem spotDetails={item} />}
-          keyExtractor={item => String(item.spot_id)}
-        />
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={createNewSpotModalShown}
+      >
+        <CreateNewSpotForm />
+      </Modal>
+      <View style={styles.spotResultContent}>
+        <View>
+          <SpotSearchField />
+          <View style={styles.resultsWrapper}>
+            <FlatList
+              data={searchResultsList}
+              renderItem={({item}) => <SpotListingItem spotDetails={item} />}
+              keyExtractor={item => String(item.spot_id)}
+            />
+          </View>
+        </View>
+        <ActionButton onClickBtn={createNewSpot} btnDisplayText={'Add a spot'} />
       </View>
     </PageWrapper>
   );
@@ -51,5 +72,11 @@ const styles = StyleSheet.create({
     display: 'none',
     height: '90%',
     width: '90%'
+  },
+  spotResultContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    flex: 1
   }
 });

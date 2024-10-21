@@ -3,7 +3,7 @@ import {Colors} from "@/constants/Colors";
 import {ActiveUserStateProp} from "@/state/activeUserSlice";
 import {GoogleLocationStateProps, setSearchInput, setSearchResults} from "@/state/googleLocationsSlice";
 import ActionButton from "@/views/components/ActionButton";
-import FormInput from "@/views/components/FormInput";
+import FormInput_OLD from "@/views/components/FormInput_OLD";
 import FormLabel from "@/views/components/FormLabel";
 import SearchablePicker, {SelectResponse} from "@/views/components/SearchablePicker";
 import Spacer from "@/views/components/Spacer";
@@ -35,7 +35,7 @@ const FormElementBlock = ({
   return (
     <>
       <FormLabel labelText={label} />
-      <FormInput
+      <FormInput_OLD
         formValue={value}
         onChangeInput={onChange}
         isMultiline={isMultiline}
