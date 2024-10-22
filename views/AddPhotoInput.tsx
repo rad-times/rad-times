@@ -2,8 +2,7 @@ import {Colors} from "@/constants/Colors";
 import Icon from "@/views/components/Icon";
 import BottomSheet from '@/views/components/BotttomSheet';
 import {ReactNode, useState} from "react";
-import {Pressable, StyleSheet, Text, View} from "react-native";
-import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
+import {Pressable, StyleSheet, Text} from "react-native";
 
 interface IAddPhotoInput {
 }
@@ -21,8 +20,6 @@ export default function AddPhotoInput({
   }
 
   const clickTakeAPhoto = () => {
-    const [facing, setFacing] = useState<CameraType>('back');
-    const [permission, requestPermission] = useCameraPermissions();
   };
 
   const clickUploadPhoto = () => {
@@ -57,7 +54,6 @@ export default function AddPhotoInput({
           <Text style={styles.optionText}>{'Upload a photo.'}</Text>
         </Pressable>
       </BottomSheet>
-
     </>
   );
 }
