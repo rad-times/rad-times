@@ -17,14 +17,6 @@ export default function CreateNewSpotForm({} ): ReactNode {
   const dispatch = useDispatch();
   const [isPrivate, setIsPrivate] = useState(false);
 
-  /*
-    spot name
-    description
-    photo
-    location data
-    is private
-    keywords
-   */
   return (
     <CommonModalContentWrapper
       onTapCloseModal={() =>  dispatch(setCreateNewSpotModalShown(false))}

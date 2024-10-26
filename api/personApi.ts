@@ -1,3 +1,4 @@
+import {URL_ROOT} from "@/constants/System";
 import {Person, unknownUser} from "@/types/Person";
 import {commonGraphQlRequest} from "@/api/commonApiMethods";
 import _ from "lodash";
@@ -97,14 +98,16 @@ export async function getActivePersonById(id: number): Promise<Person> {
 
 export async function getUserLanguages(languageCode:string = 'en'): Promise<Object> {
   try {
-    return await fetch(`http://localhost:8080/static/languages_${languageCode.toLowerCase()}.json`, {
+    return await fetch(`${URL_ROOT}/static/languages_${languageCode.toLowerCase()}.json`, {
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json"
       },
       method: 'GET'
     })
-      .then(resp => resp.json());
+      .then(resp => {
+        return resp.json();
+      });
   } catch (err) {
     console.error(err);
     // @TODO Error handling

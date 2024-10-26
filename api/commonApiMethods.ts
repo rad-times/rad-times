@@ -1,3 +1,4 @@
+import {URL_ROOT} from "@/constants/System";
 import _ from "lodash";
 
 interface CommonGraphQlRequestProps {
@@ -14,7 +15,7 @@ export async function commonGraphQlRequest({
   queryBody,
   errorMessage
 }: CommonGraphQlRequestProps): Promise<any> {
-  return await fetch('http://localhost:8080/graphql', {
+  return await fetch(`${URL_ROOT}/graphql`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -41,7 +42,7 @@ export async function commonGraphQlMutation({
   errorMessage
 }: CommonGraphQlMutationProps): Promise<any> {
 
-  return await fetch('http://localhost:8080/graphql', {
+  return await fetch(`${URL_ROOT}/graphql`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

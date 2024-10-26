@@ -1,3 +1,4 @@
+import {URL_ROOT} from "@/constants/System";
 import {useEffect, createContext, useRef, ReactNode} from 'react';
 import {
   IChannels,
@@ -29,7 +30,7 @@ function WebSocketProvider({children}:IWebSocketProvider): ReactNode {
   };
 
   useEffect(() => {
-    socket = new WebSocket('ws://localhost:8080/socket');
+    socket = new WebSocket(`ws://${URL_ROOT}/socket`);
     socket.onopen = () => {
       console.log('Socket open');
     }
