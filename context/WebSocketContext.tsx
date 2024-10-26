@@ -1,4 +1,4 @@
-import {URL_ROOT} from "@/constants/System";
+import {WS_ROOT} from "@/constants/System";
 import {useEffect, createContext, useRef, ReactNode} from 'react';
 import {
   IChannels,
@@ -30,13 +30,20 @@ function WebSocketProvider({children}:IWebSocketProvider): ReactNode {
   };
 
   useEffect(() => {
-    socket = new WebSocket(`ws://${URL_ROOT}/socket`);
+    socket = new WebSocket(`${WS_ROOT}/socket`);
+
     socket.onopen = () => {
       console.log('Socket open');
     }
+
     socket.onclose = () => {
       console.log('Socket closed');
     }
+
+    socket.onerror = (err ) => {
+      console.error(err);
+    }
+
     socket.onmessage = (messageEvent) => {
       const {
         type,
