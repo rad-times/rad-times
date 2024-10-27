@@ -30,6 +30,7 @@ export default function BottomSheet({
     }
   }, [shown]);
 
+  // @TODO - use the height of the container to determine how much it needs to scroll up
   containerRef.current && containerRef.current.measure((x,y,width,height) => {
     setContainerHeight(height);
   });
@@ -78,9 +79,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     top: 0,
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center'
+    height: '100%'
   },
   backgroundDimmer: {
     height: '100%',
@@ -95,11 +94,11 @@ const styles = StyleSheet.create({
     display: 'none',
   },
   bottomSheetBox: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
     backgroundColor: Colors.DARK_GREY,
-    marginBottom: 0,
-    marginRight: 5,
-    marginLeft: 5,
-    borderRadius: 20
+    borderRadius: 10
   },
   bottomSheetTopBar: {
     display: 'flex',
@@ -120,11 +119,10 @@ const styles = StyleSheet.create({
     marginLeft: 6,
     marginRight: 6,
     marginBottom: 6,
-    borderTopRightRadius: 13,
-    borderTopLeftRadius: 13,
-    borderBottomRightRadius: 15,
-    borderBottomLeftRadius: 15,
-    paddingBottom: 30,
+    borderTopRightRadius: 8,
+    borderTopLeftRadius: 8,
+    borderBottomRightRadius: 5,
+    borderBottomLeftRadius: 5,
     backgroundColor: Colors.GREY,
     padding: 8
   }

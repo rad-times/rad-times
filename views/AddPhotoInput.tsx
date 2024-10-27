@@ -1,9 +1,13 @@
 import {Colors} from "@/constants/Colors";
+import ActionButton from "@/views/components/ActionButton";
 import Icon from "@/views/components/Icon";
 import BottomSheet from '@/views/components/BotttomSheet';
+import InPageModal from "@/views/components/InPageModal";
+import PageWrapper from "@/views/components/PageWrapper";
 import {useNavigation} from "expo-router";
 import {ReactNode, useState} from "react";
-import {Pressable, StyleSheet, Text} from "react-native";
+import {Button, Modal, Pressable, SafeAreaView, StyleSheet, Text, View} from "react-native";
+import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 
 interface IAddPhotoInput {
 }
@@ -12,6 +16,10 @@ export default function AddPhotoInput({
 
 }: IAddPhotoInput):ReactNode {
   const [imageTypePickerOpen, toggleImageTypePicker] = useState<boolean>(false);
+  const [facing, setFacing] = useState<CameraType>('back');
+  const [permissionsModalShown, showPermissionsModal] = useState(false);
+  const [permission, requestPermission] = useCameraPermissions();
+
   const navigation = useNavigation();
 
   const closeImageTypePicker = () => {
@@ -28,15 +36,39 @@ export default function AddPhotoInput({
     toggleImageTypePicker(true);
   }
 
-  const clickTakeAPhoto = () => {
+  const pressTakeAPhoto = () => {
+    closeImageTypePicker();
+    if (!permission || !permission.granted) {
+      showPermissionsModal(true);
+    }
   };
 
-  const clickUploadPhoto = () => {
-
-  };
+  const pressUploadPhoto = () => {};
 
   return (
     <>
+      <InPageModal
+        closeModal={() => {
+          showPermissionsModal(false);
+        }}
+        visible={permissionsModalShown}
+      >
+        <Text style={{
+          color: Colors.WHITE,
+          fontSize: 18,
+          marginBottom: 20
+        }}>We need your permission to show the camera</Text>
+        <ActionButton
+          onClickBtn={() => {
+            requestPermission()
+              .finally(() => {
+                showPermissionsModal(false);
+              });
+          }}
+          btnDisplayText="grant permission"
+        />
+      </InPageModal>
+
       <Pressable
         style={styles.addPhotoWrapper}
         onPress={openImageTypePicker}
@@ -50,14 +82,14 @@ export default function AddPhotoInput({
       >
         <Pressable
           style={styles.optionRow}
-          onPress={clickTakeAPhoto}
+          onPress={pressTakeAPhoto}
         >
           <Icon size={24} name="camera-outline" color={Colors.WHITE} />
           <Text style={styles.optionText}>{'Take a photo.'}</Text>
         </Pressable>
         <Pressable
           style={styles.optionRow}
-          onPress={clickTakeAPhoto}
+          onPress={pressUploadPhoto}
         >
           <Icon size={24} name="cloud-upload-outline" color={Colors.WHITE} />
           <Text style={styles.optionText}>{'Upload a photo.'}</Text>
@@ -87,11 +119,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    padding: 10
+    paddingTop: 12,
+    paddingBottom: 12,
+    paddingLeft: 10,
+    paddingRight: 10
   },
   optionText: {
     fontSize: 18,
     color: Colors.LIGHT_GREY,
     paddingLeft: 10
+  },
+  permissionsModal: {
+    marginLeft: 20,
+    marginRight: 20,
+    backgroundColor: Colors.WHITE
   }
 });
