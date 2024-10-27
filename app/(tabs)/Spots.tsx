@@ -1,6 +1,6 @@
 import {Spot} from "@/types/Spot";
 import ActionButton from "@/views/components/ActionButton";
-import CreateNewSpotForm from "@/views/spots/CreateNewSpotForm";
+import CreateNewSpot from "@/app/spots/CreateNewSpot";
 import {View, FlatList, StyleSheet, Modal} from "react-native";
 
 import PageTitle from "@/views/components/PageTitle";
@@ -12,16 +12,12 @@ import SpotMapModalContent from "@/views/spots/SpotMapModalContent";
 import {ReactNode} from "react";
 import PageWrapper from "@/views/components/PageWrapper";
 
-export default function SpotFinder(): ReactNode {
+export default function Spots(): ReactNode {
   const searchResultsList: Spot[] = useSelector((state: SpotState) => state.spotList.spotListing);
   const spotLocationMapShown: boolean = useSelector((state: SpotState) => state.spotList.spotLocationMapShown);
   const createNewSpotModalShown: boolean = useSelector((state: SpotState) => state.spotList.createNewSpotModalShown);
 
   const dispatch = useDispatch();
-
-  const createNewSpot = () => {
-    dispatch(setCreateNewSpotModalShown(true));
-  };
 
   return (
     <PageWrapper>
@@ -42,7 +38,7 @@ export default function SpotFinder(): ReactNode {
         transparent={false}
         visible={createNewSpotModalShown}
       >
-        <CreateNewSpotForm />
+        <CreateNewSpot />
       </Modal>
       <View style={styles.spotResultContent}>
         <View>
@@ -55,7 +51,7 @@ export default function SpotFinder(): ReactNode {
             />
           </View>
         </View>
-        <ActionButton onClickBtn={createNewSpot} btnDisplayText={'Add a spot'} />
+        <ActionButton link={'/spots/CreateNewSpot'} btnDisplayText={'Add a spot'} />
       </View>
     </PageWrapper>
   );

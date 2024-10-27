@@ -3,11 +3,17 @@ import {Colors} from "@/constants/Colors";
 import {Spot} from "@/types/Spot";
 import Icon from "@/views/components/Icon";
 import _ from 'lodash';
-import {setSpotLocationMapShown, setCurrentSpotMapDetails, updateSpotFavorite} from "@/state/spotSlice";
+import {
+  setSpotLocationMapShown,
+  setCurrentSpotMapDetails,
+  updateSpotFavorite,
+  setSpotDetailsPageContent
+} from "@/state/spotSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {toggleFavoriteSpot} from "@/api/spotApi";
 import {ActiveUserStateProp} from "@/state/activeUserSlice";
-import {ReactNode} from "react";
+import {ReactNode, useEffect} from "react";
+import {useNavigation, usePathname, useRouter, useSegments} from "expo-router";
 
 type SpotListingItemProps = {
   spotDetails: Spot
@@ -17,6 +23,8 @@ function SpotListingItem({
   spotDetails
 }: SpotListingItemProps): ReactNode {
   const dispatch = useDispatch();
+  const router = useRouter();
+
   const activeUser = useSelector((state: ActiveUserStateProp) => state.activeUser.user);
 
   const onPressFavorite = async () => {
@@ -35,6 +43,11 @@ function SpotListingItem({
   const onPressMap = () => {
     dispatch(setCurrentSpotMapDetails(spotDetails));
     dispatch(setSpotLocationMapShown(true));
+  }
+
+  const loadSpotDetailsPage = () => {
+    dispatch(setSpotDetailsPageContent(spotDetails));
+    router.push('/spots/SpotDetails');
   }
 
   const getSpotImageContent = (imagePath = '') => {
@@ -60,10 +73,14 @@ function SpotListingItem({
   return (
     <View style={styles.mainWrapper}>
       {getSpotImageContent(spotDetails.spot_image)}
-      <View style={styles.spotInformationBlock}>
+
+      <Pressable
+        style={styles.spotInformationBlock}
+        onPress={loadSpotDetailsPage}
+      >
         <Text style={styles.spotNameText}>{spotDetails.spot_name}</Text>
         <Text style={styles.spotDescriptionText}>{spotDetails.spot_description}</Text>
-      </View>
+      </Pressable>
 
       <View style={styles.iconBlock}>
         <Pressable

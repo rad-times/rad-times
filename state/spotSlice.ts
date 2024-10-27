@@ -6,12 +6,14 @@ type SpotListing = {
   spotLocationMapShown: boolean,
   currentSpotMapDetails: Spot | null
   createNewSpotModalShown: boolean
+  spotDetailsPageContent: Spot | null
 }
 const initialState: SpotListing = {
   spotListing: [],
   spotLocationMapShown: false,
   currentSpotMapDetails: null,
-  createNewSpotModalShown: false
+  createNewSpotModalShown: false,
+  spotDetailsPageContent: null
 };
 
 type SpotState = {
@@ -59,6 +61,12 @@ export const spotSlice = createSlice({
         ...state,
         createNewSpotModalShown: action.payload
       };
+    },
+    setSpotDetailsPageContent: (state, action) => {
+      return {
+        ...state,
+        spotDetailsPageContent: action.payload
+      }
     }
   }
 });
@@ -72,7 +80,8 @@ export const {
   setCurrentSpotMapDetails,
   setSpotLocationMapShown,
   updateSpotFavorite,
-  setCreateNewSpotModalShown
+  setCreateNewSpotModalShown,
+  setSpotDetailsPageContent
 } = spotSlice.actions;
 
 export default spotSlice.reducer;

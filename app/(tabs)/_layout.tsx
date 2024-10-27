@@ -41,7 +41,7 @@ export default function SpotCheckNavigationLayout(): ReactNode {
         }}
       />
       <Tabs.Screen
-        name="SpotFinder"
+        name="Spots"
         options={{
           ...baseTabOptions,
           tabBarLabel: displayText.tabs.spots,

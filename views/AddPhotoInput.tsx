@@ -1,6 +1,7 @@
 import {Colors} from "@/constants/Colors";
 import Icon from "@/views/components/Icon";
 import BottomSheet from '@/views/components/BotttomSheet';
+import {useNavigation} from "expo-router";
 import {ReactNode, useState} from "react";
 import {Pressable, StyleSheet, Text} from "react-native";
 
@@ -11,11 +12,19 @@ export default function AddPhotoInput({
 
 }: IAddPhotoInput):ReactNode {
   const [imageTypePickerOpen, toggleImageTypePicker] = useState<boolean>(false);
+  const navigation = useNavigation();
+
   const closeImageTypePicker = () => {
+    navigation.setOptions({
+      headerBackVisible: true,
+    });
     toggleImageTypePicker(false);
   };
 
   const openImageTypePicker = () => {
+    navigation.setOptions({
+      headerBackVisible: false
+    });
     toggleImageTypePicker(true);
   }
 
@@ -53,6 +62,7 @@ export default function AddPhotoInput({
           <Icon size={24} name="cloud-upload-outline" color={Colors.WHITE} />
           <Text style={styles.optionText}>{'Upload a photo.'}</Text>
         </Pressable>
+
       </BottomSheet>
     </>
   );

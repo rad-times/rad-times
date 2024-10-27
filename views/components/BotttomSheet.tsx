@@ -1,10 +1,10 @@
 import {Colors} from "@/constants/Colors";
 import Icon from "@/views/components/Icon";
-import {ReactNode} from "react";
-import {GestureResponderEvent, Pressable, StyleSheet, Text, View} from "react-native";
+import {ElementRef, ReactNode, useEffect, useRef, useState} from "react";
+import {Animated, Pressable, ScrollView, StyleSheet, Text, TextInput, View} from "react-native";
 
 interface IBottomSheet {
-  closeSheet: (e: GestureResponderEvent) => void;
+  closeSheet: () => void;
   shown: boolean;
   label?: string;
   children: ReactNode|ReactNode[]
@@ -16,38 +16,69 @@ export default function BottomSheet({
   label,
   children
 }:IBottomSheet): ReactNode {
+  const translation = useRef(new Animated.Value(200)).current;
+  const containerRef = useRef<View|null>(null)
+  const [containerHeight, setContainerHeight] = useState(0);
+
+  useEffect(() => {
+    if (shown) {
+      Animated.timing(translation, {
+        toValue: 0,
+        duration: 250,
+        useNativeDriver: true
+      }).start();
+    }
+  }, [shown]);
+
+  containerRef.current && containerRef.current.measure((x,y,width,height) => {
+    setContainerHeight(height);
+  });
+
+  const onPressCloseSheet = ()=> {
+    Animated.timing(translation, {
+      toValue: 200,
+      duration: 150,
+      useNativeDriver: true
+    }).start(() => {
+      closeSheet();
+    });
+  }
 
   return (
     <View style={[styles.bottomSheetWrapper, shown ? styles.shown : styles.hidden]}>
       <View style={styles.backgroundDimmer} />
-
-      <View style={styles.bottomSheetBox}>
-        <View style={styles.bottomSheetTopBar}>
-          <View></View>
-          <Text style={styles.bottomSheetLabel}>{label}</Text>
-          <Pressable
-            onPress={closeSheet}>
-            <Icon size={30} name="close-circle-outline" color={Colors.LIGHT_GREY} />
-          </Pressable>
+      <Animated.View
+        style={{
+          width: '100%',
+          transform: [{ translateY: translation }],
+        }}
+      >
+        <View ref={containerRef} style={styles.bottomSheetBox}>
+          <View style={styles.bottomSheetTopBar}>
+            <View></View>
+            <Text style={styles.bottomSheetLabel}>{label}</Text>
+            <Pressable
+              onPress={onPressCloseSheet}>
+              <Icon size={30} name="close-circle-outline" color={Colors.LIGHT_GREY} />
+            </Pressable>
+          </View>
+          <ScrollView style={styles.bottomSheetContentWrapper}>
+            {children}
+          </ScrollView>
         </View>
-        <View style={styles.bottomSheetContentWrapper}>
-          {children}
-        </View>
-      </View>
+      </Animated.View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   bottomSheetWrapper: {
-    // @ts-ignore
-    position: 'fixed',
+    position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
     top: 0,
     height: '100%',
-    width: '100%',
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -55,26 +86,20 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
     backgroundColor: Colors.BLACK,
-    opacity: .7
-  },
-  bottomSheetBox: {
-    backgroundColor: Colors.DARK_GREY,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    marginBottom: 10,
-    marginRight: 10,
-    marginLeft: 10,
-    borderRadius: 20,
-    minHeight: 150,
-    overflow: "hidden"
+    opacity: .8
   },
   shown: {
     display: 'flex',
   },
   hidden: {
     display: 'none',
+  },
+  bottomSheetBox: {
+    backgroundColor: Colors.DARK_GREY,
+    marginBottom: 0,
+    marginRight: 5,
+    marginLeft: 5,
+    borderRadius: 20
   },
   bottomSheetTopBar: {
     display: 'flex',
@@ -95,11 +120,11 @@ const styles = StyleSheet.create({
     marginLeft: 6,
     marginRight: 6,
     marginBottom: 6,
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
+    borderTopRightRadius: 13,
+    borderTopLeftRadius: 13,
     borderBottomRightRadius: 15,
     borderBottomLeftRadius: 15,
-    flex: 1,
+    paddingBottom: 30,
     backgroundColor: Colors.GREY,
     padding: 8
   }
