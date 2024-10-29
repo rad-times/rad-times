@@ -3,11 +3,12 @@ import ActionButton from "@/views/components/ActionButton";
 import Icon from "@/views/components/Icon";
 import BottomSheet from '@/views/components/BotttomSheet';
 import InPageModal from "@/views/components/InPageModal";
-import PageWrapper from "@/views/components/PageWrapper";
+import Camera from '@/views/Camera';
 import {useNavigation} from "expo-router";
 import {ReactNode, useState} from "react";
-import {Button, Modal, Pressable, SafeAreaView, StyleSheet, Text, View} from "react-native";
-import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
+import {Image, Pressable, StyleSheet, Text, View} from "react-native";
+import { useCameraPermissions } from 'expo-camera';
+import * as ImagePicker from 'expo-image-picker';
 
 interface IAddPhotoInput {
 }
@@ -16,9 +17,16 @@ export default function AddPhotoInput({
 
 }: IAddPhotoInput):ReactNode {
   const [imageTypePickerOpen, toggleImageTypePicker] = useState<boolean>(false);
-  const [facing, setFacing] = useState<CameraType>('back');
-  const [permissionsModalShown, showPermissionsModal] = useState(false);
-  const [permission, requestPermission] = useCameraPermissions();
+  const [cameraPermissionsModalShown, showCameraPermissionsModal] = useState(false);
+  const [showCamera, toggleShowCamera] = useState(false);
+  const [cameraPermission, requestCameraPermission] = useCameraPermissions();
+
+  const [photoLibraryPermissionsModalShown, showPhotoLibraryPermissionsModal] = useState(false);
+  const [showPhotoLibrary, toggleShowPhotoLibrary] = useState(false);
+  const [photoLibraryPermission, requestPhotoLibraryPermission] = ImagePicker.useMediaLibraryPermissions();
+
+  const [image, setImage] = useState<string | null>(null);
+  const [imageSelected, setImageSelected] = useState<boolean>(false);
 
   const navigation = useNavigation();
 
@@ -38,20 +46,51 @@ export default function AddPhotoInput({
 
   const pressTakeAPhoto = () => {
     closeImageTypePicker();
-    if (!permission || !permission.granted) {
-      showPermissionsModal(true);
+    // @TODO move all camera code to the Camera component / hooks
+    if (!cameraPermission || !cameraPermission.granted) {
+      showCameraPermissionsModal(true);
+      return;
     }
+    toggleShowCamera(true);
   };
 
-  const pressUploadPhoto = () => {};
+  const pressUploadPhoto = () => {
+    closeImageTypePicker();
+
+    if (!photoLibraryPermission || !photoLibraryPermission.granted) {
+      console.log('permissions  NOT YET granted');
+      requestPhotoLibraryPermission()
+        .then(permissionResponse => {
+          if (permissionResponse.granted) {
+            pressUploadPhoto();
+          }
+        })
+      return;
+    }
+    console.log('permissions granted');
+    // No permissions request is necessary for launching the image library
+    // let result = await ImagePicker.launchImageLibraryAsync({
+    //   mediaTypes: ImagePicker.MediaTypeOptions.All,
+    //   allowsEditing: true,
+    //   aspect: [4, 3],
+    //   quality: 1,
+    // });
+    //
+    // console.log(result);
+    //
+    // if (!result.canceled) {
+    //   setImage(result.assets[0].uri);
+    //   setImageSelected(true);
+    // }
+  };
 
   return (
     <>
       <InPageModal
         closeModal={() => {
-          showPermissionsModal(false);
+          showCameraPermissionsModal(false);
         }}
-        visible={permissionsModalShown}
+        visible={cameraPermissionsModalShown}
       >
         <Text style={{
           color: Colors.WHITE,
@@ -60,14 +99,25 @@ export default function AddPhotoInput({
         }}>We need your permission to show the camera</Text>
         <ActionButton
           onClickBtn={() => {
-            requestPermission()
+            requestCameraPermission()
               .finally(() => {
-                showPermissionsModal(false);
+                showCameraPermissionsModal(false);
               });
           }}
           btnDisplayText="grant permission"
         />
       </InPageModal>
+
+      <Camera
+        cameraShown={showCamera}
+        toggleCameraShown={toggleShowCamera}
+      />
+
+      <View style={[styles.imageContainer, {
+        display: imageSelected ? 'flex' : 'none'
+      }]}>
+        {image && <Image source={{ uri: image }} style={styles.image} />}
+      </View>
 
       <Pressable
         style={styles.addPhotoWrapper}
@@ -101,6 +151,15 @@ export default function AddPhotoInput({
 }
 
 const styles = StyleSheet.create({
+  imageContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  image: {
+    width: 200,
+    height: 200,
+  },
   addPhotoWrapper: {
     height: 50,
     width: 50,

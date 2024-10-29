@@ -6,23 +6,38 @@ import {GestureResponderEvent, Pressable, SafeAreaView, StyleSheet, Text, View} 
 interface IModalTopBar {
   children: ReactNode | ReactNode[]
   onTapCloseModal: (e: GestureResponderEvent) => void
-  nameToShow: string
+  nameToShow: string,
+  topBarShown?: boolean
 }
 
 export default function CommonModalContentWrapper({
   children,
   onTapCloseModal,
-  nameToShow
+  nameToShow,
+  topBarShown = true
 }: IModalTopBar):ReactNode {
   return (
     <SafeAreaView style={styles.mapWrapper}>
-      <View style={styles.topBar}>
-        <Text style={styles.topBarName}>{nameToShow}</Text>
-        <Pressable
-          onPress={onTapCloseModal}>
-          <Icon size={30} name="close-circle-outline" color={Colors.WHITE} />
-        </Pressable>
-      </View>
+      {topBarShown &&
+          <View style={styles.topBar}>
+              <Text style={styles.topBarName}>{nameToShow}</Text>
+              <Pressable
+                  onPress={onTapCloseModal}>
+                  <Icon size={30} name="close-circle-outline" color={Colors.WHITE} />
+              </Pressable>
+          </View>
+      }
+      {!topBarShown &&
+          <View style={styles.topBarInvisible}>
+              <Pressable
+                  style={styles.topBarInvisibleClose}
+                  onPress={onTapCloseModal}
+              >
+                  <Icon size={40} name="close-circle-outline" color={Colors.BLACK} />
+              </Pressable>
+          </View>
+      }
+
       {children}
     </SafeAreaView>
   );
@@ -47,5 +62,19 @@ const styles = StyleSheet.create({
   topBarName: {
     color: Colors.WHITE,
     fontSize: 18
+  },
+  topBarInvisible: {
+    height: 50,
+    width: '100%',
+    position: 'absolute',
+    top: 10,
+    left: 0,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    zIndex: 1
+  },
+  topBarInvisibleClose: {
+    height: 50,
+    width: 50
   }
 });
