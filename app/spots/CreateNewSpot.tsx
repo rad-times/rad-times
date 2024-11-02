@@ -1,6 +1,9 @@
 import useCurrentLocation, {
   ICurrentLocationResp
 } from "@/hooks/useCurrentLocation";
+import {
+  LABEL_TEXT
+} from "@/constants/Styles";
 import {setSearchInput} from "@/state/googleLocationsSlice";
 import {CreateNewSpotStateProp, setNewSpotModelData} from "@/state/newSpotSlice";
 import {Geolocation} from "@/types/Geolocation";
@@ -14,7 +17,7 @@ import Spacer from "@/views/components/Spacer";
 import LocationSearch from "@/views/LocationSearch";
 import PageLoading from "@/views/PageLoading";
 import {ReactNode, useEffect, useState} from "react";
-import {Keyboard, StyleSheet, TouchableWithoutFeedback, ActivityIndicator, View} from "react-native";
+import {Keyboard, StyleSheet, TouchableWithoutFeedback, View} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
 
 export default function CreateNewSpot({} ): ReactNode {
@@ -81,12 +84,6 @@ export default function CreateNewSpot({} ): ReactNode {
                 maxLength={200}
               />
               <Checkbox
-                isChecked={isPrivate}
-                onCheck={(checked) => setIsPrivate(checked)}
-                label={'Private spot?'}
-              />
-
-              <Checkbox
                 isChecked={usingCurrentLocation}
                 onCheck={(checked) => setUseCurrentLocation(checked)}
                 label={'Use current location?'}
@@ -97,6 +94,12 @@ export default function CreateNewSpot({} ): ReactNode {
               />
               <Spacer />
               <AddPhotoInput />
+              <Spacer />
+              <Checkbox
+                isChecked={isPrivate}
+                onCheck={(checked) => setIsPrivate(checked)}
+                label={'Private spot?'}
+              />
             </View>
             <ActionButton
               btnDisplayText={"Submit Spot"}

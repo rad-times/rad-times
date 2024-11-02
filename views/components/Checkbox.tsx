@@ -1,4 +1,5 @@
 import {Colors} from "@/constants/Colors";
+import {LABEL_TEXT} from "@/constants/Styles";
 import {ReactNode} from "react";
 import ExpoCheckbox from 'expo-checkbox';
 import {GestureResponderEvent, Pressable, StyleSheet, Text, View} from 'react-native';
@@ -32,7 +33,7 @@ export default function Checkbox({
         style={styles.pressableText}
         onPress={toggleCheckbox}
       >
-        <Text style={styles.checkboxLabel}>{label}</Text>
+        <Text style={LABEL_TEXT}>{label}</Text>
       </Pressable>
     </View>
   );
@@ -46,14 +47,10 @@ const styles = StyleSheet.create({
     marginTop: 3,
     marginBottom: 15,
   },
-  checkboxLabel: {
-    fontSize: 16,
-    color: Colors.WHITE,
-    paddingLeft: 10
-  },
   pressableText: {
     paddingTop: 10,
     paddingBottom: 10,
-    paddingRight: 30
+    paddingRight: 30,
+    paddingLeft: 15
   }
 });

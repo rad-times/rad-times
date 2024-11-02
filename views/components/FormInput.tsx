@@ -33,7 +33,7 @@ export default function FormInput(
       <Text style={styles.formLabel}>{label}</Text>
       {isMultiline &&
           <TextInput
-              style={[styles.input, styles.multiLineInput]}
+              style={[styles.input, styles.multiLineInput, disabled ? styles.inputDisabled : {}]}
               value={formValue}
               onChangeText={onChangeInput}
               maxLength={maxLength}
@@ -47,7 +47,7 @@ export default function FormInput(
       }
       {!isMultiline &&
           <TextInput
-              style={styles.input}
+              style={[styles.input, disabled ? styles.inputDisabled : {}]}
               value={formValue}
               onChangeText={onChangeInput}
               maxLength={maxLength}
@@ -76,6 +76,10 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     marginTop: -5
+  },
+  inputDisabled: {
+    borderColor: Colors.GREY,
+    color: Colors.GREY,
   },
   multiLineInput: {
     height: 100

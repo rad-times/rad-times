@@ -1,4 +1,7 @@
 import {Colors} from "@/constants/Colors";
+import {
+  LABEL_TEXT
+} from "@/constants/Styles";
 import ActionButton from "@/views/components/ActionButton";
 import Icon from "@/views/components/Icon";
 import BottomSheet from '@/views/components/BotttomSheet';
@@ -89,6 +92,7 @@ export default function AddPhotoInput({
 
   return (
     <>
+      {/* Get user permission to access camera */}
       <InPageModal
         closeModal={() => {
           showCameraPermissionsModal(false);
@@ -111,6 +115,7 @@ export default function AddPhotoInput({
         />
       </InPageModal>
 
+      {/* Ugly camera */}
       <Camera
         cameraShown={showCamera}
         toggleCameraShown={toggleShowCamera}
@@ -134,12 +139,16 @@ export default function AddPhotoInput({
       {/* No image yet taken or selected */}
       {!imageSelected &&
           <>
-              <Pressable
-                  style={styles.addPhotoWrapper}
-                  onPress={openImageTypePicker}
-              >
-                  <Icon size={24} name="camera-outline" color={Colors.WHITE}/>
-              </Pressable>
+              <View style={styles.addAPhotoInputWrapper}>
+                  <Pressable
+                      style={styles.addPhotoBtn}
+                      onPress={openImageTypePicker}
+                  >
+                      <Icon size={24} name="camera-outline" color={Colors.WHITE}/>
+                  </Pressable>
+                  <Text style={LABEL_TEXT}>{"Add a photo"}</Text>
+              </View>
+
               <BottomSheet
                   closeSheet={closeImageTypePicker}
                   shown={imageTypePickerOpen}
@@ -149,17 +158,16 @@ export default function AddPhotoInput({
                       style={styles.optionRow}
                       onPress={pressTakeAPhoto}
                   >
-                      <Icon size={24} name="camera-outline" color={Colors.WHITE} />
-                      <Text style={styles.optionText}>{'Take a photo.'}</Text>
+                      <Icon size={24} name="camera-outline" color={Colors.WHITE} style={{paddingRight: 10}} />
+                      <Text style={LABEL_TEXT}>{'Take a photo.'}</Text>
                   </Pressable>
                   <Pressable
                       style={styles.optionRow}
                       onPress={pressUploadPhoto}
                   >
-                      <Icon size={24} name="cloud-upload-outline" color={Colors.WHITE} />
-                      <Text style={styles.optionText}>{'Upload a photo.'}</Text>
+                      <Icon size={24} name="cloud-upload-outline" color={Colors.WHITE} style={{paddingRight: 10}} />
+                      <Text style={LABEL_TEXT}>{'Upload a photo.'}</Text>
                   </Pressable>
-
               </BottomSheet>
           </>
       }
@@ -190,7 +198,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.LIGHT_GREY,
     borderBottomLeftRadius: 10
   },
-  addPhotoWrapper: {
+  addAPhotoInputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start'
+  },
+  addPhotoBtn: {
     height: 50,
     width: 50,
     paddingBottom: 5,
@@ -201,8 +214,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 5,
-    marginBottom: 15
+    marginRight: 15
   },
   optionRow: {
     flexDirection: 'row',
@@ -212,11 +224,6 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     paddingLeft: 10,
     paddingRight: 10
-  },
-  optionText: {
-    fontSize: 18,
-    color: Colors.LIGHT_GREY,
-    paddingLeft: 10
   },
   permissionsModal: {
     marginLeft: 20,
