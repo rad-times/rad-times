@@ -6,7 +6,7 @@ import InPageModal from "@/views/components/InPageModal";
 import Camera from '@/views/Camera';
 import {useNavigation} from "expo-router";
 import {ReactNode, useState} from "react";
-import {Image, Pressable, StyleSheet, Text, View} from "react-native";
+import {Image, Pressable, ActivityIndicator, StyleSheet, Text, View} from "react-native";
 import { useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -16,6 +16,7 @@ interface IAddPhotoInput {
 export default function AddPhotoInput({
 
 }: IAddPhotoInput):ReactNode {
+
   const [imageTypePickerOpen, toggleImageTypePicker] = useState<boolean>(false);
   const [cameraPermissionsModalShown, showCameraPermissionsModal] = useState(false);
   const [showCamera, toggleShowCamera] = useState(false);
@@ -54,11 +55,15 @@ export default function AddPhotoInput({
     toggleShowCamera(true);
   };
 
+  const removeImage = () => {
+    setImage(null);
+    setImageSelected(false);
+  }
+
   const pressUploadPhoto = () => {
     closeImageTypePicker();
 
     if (!photoLibraryPermission || !photoLibraryPermission.granted) {
-      console.log('permissions  NOT YET granted');
       requestPhotoLibraryPermission()
         .then(permissionResponse => {
           if (permissionResponse.granted) {
@@ -67,21 +72,19 @@ export default function AddPhotoInput({
         })
       return;
     }
-    console.log('permissions granted');
-    // No permissions request is necessary for launching the image library
-    // let result = await ImagePicker.launchImageLibraryAsync({
-    //   mediaTypes: ImagePicker.MediaTypeOptions.All,
-    //   allowsEditing: true,
-    //   aspect: [4, 3],
-    //   quality: 1,
-    // });
-    //
-    // console.log(result);
-    //
-    // if (!result.canceled) {
-    //   setImage(result.assets[0].uri);
-    //   setImageSelected(true);
-    // }
+
+    ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.8,
+      base64: true
+    })
+      .then(result => {
+        if (!result.canceled) {
+          setImage(result.assets[0].uri);
+          setImageSelected(true);
+        }
+      });
   };
 
   return (
@@ -113,52 +116,79 @@ export default function AddPhotoInput({
         toggleCameraShown={toggleShowCamera}
       />
 
-      <View style={[styles.imageContainer, {
-        display: imageSelected ? 'flex' : 'none'
-      }]}>
-        {image && <Image source={{ uri: image }} style={styles.image} />}
-      </View>
+      {/* After user has picked or taken an image */}
+      {imageSelected &&
+          <View style={styles.imageContainer}>
+              {image &&
+                  <Image source={{ uri: image }} style={styles.image} />
+              }
+              <Pressable
+                  onPress={removeImage}
+                  style={styles.removeImage}
+              >
+                  <Icon size={24} name="close-circle-sharp" color={Colors.BLACK}/>
+              </Pressable>
+          </View>
+      }
 
-      <Pressable
-        style={styles.addPhotoWrapper}
-        onPress={openImageTypePicker}
-      >
-        <Icon size={24} name="camera-outline" color={Colors.WHITE}/>
-      </Pressable>
-      <BottomSheet
-        closeSheet={closeImageTypePicker}
-        shown={imageTypePickerOpen}
-        label={'Add a location photo'}
-      >
-        <Pressable
-          style={styles.optionRow}
-          onPress={pressTakeAPhoto}
-        >
-          <Icon size={24} name="camera-outline" color={Colors.WHITE} />
-          <Text style={styles.optionText}>{'Take a photo.'}</Text>
-        </Pressable>
-        <Pressable
-          style={styles.optionRow}
-          onPress={pressUploadPhoto}
-        >
-          <Icon size={24} name="cloud-upload-outline" color={Colors.WHITE} />
-          <Text style={styles.optionText}>{'Upload a photo.'}</Text>
-        </Pressable>
+      {/* No image yet taken or selected */}
+      {!imageSelected &&
+          <>
+              <Pressable
+                  style={styles.addPhotoWrapper}
+                  onPress={openImageTypePicker}
+              >
+                  <Icon size={24} name="camera-outline" color={Colors.WHITE}/>
+              </Pressable>
+              <BottomSheet
+                  closeSheet={closeImageTypePicker}
+                  shown={imageTypePickerOpen}
+                  label={'Add a location photo'}
+              >
+                  <Pressable
+                      style={styles.optionRow}
+                      onPress={pressTakeAPhoto}
+                  >
+                      <Icon size={24} name="camera-outline" color={Colors.WHITE} />
+                      <Text style={styles.optionText}>{'Take a photo.'}</Text>
+                  </Pressable>
+                  <Pressable
+                      style={styles.optionRow}
+                      onPress={pressUploadPhoto}
+                  >
+                      <Icon size={24} name="cloud-upload-outline" color={Colors.WHITE} />
+                      <Text style={styles.optionText}>{'Upload a photo.'}</Text>
+                  </Pressable>
 
-      </BottomSheet>
+              </BottomSheet>
+          </>
+      }
     </>
   );
 }
 
 const styles = StyleSheet.create({
   imageContainer: {
-    flex: 1,
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
-  },
-  image: {
     width: 200,
     height: 200,
+  },
+  image: {
+    borderWidth: 1,
+    borderColor: Colors.LIGHT_GREY,
+    borderRadius: 5,
+    height: '100%',
+    width: '100%'
+  },
+  removeImage: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    height: 25,
+    width: 25,
+    backgroundColor: Colors.LIGHT_GREY,
+    borderBottomLeftRadius: 10
   },
   addPhotoWrapper: {
     height: 50,

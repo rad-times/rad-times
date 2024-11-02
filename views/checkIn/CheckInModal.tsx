@@ -1,7 +1,8 @@
 import {fetchSpotsByLatLng} from "@/api/spotApi";
-import {getLocationByLatLng} from '@/api/googlePlacesApi';
 import {Colors} from "@/constants/Colors";
-import useCurrentLocation from "@/hooks/useCurrentLocation";
+import useCurrentLocation, {
+  ICurrentLocationResp
+} from "@/hooks/useCurrentLocation";
 import {ActiveUserStateProp} from "@/state/activeUserSlice";
 import {setCheckInModalOpen} from "@/state/checkInAndActiveSlice";
 import {Spot} from "@/types/Spot";
@@ -77,8 +78,8 @@ export default function CheckInModalContent({}): ReactNode {
   const [spotsReady, setSpotsReady] = useState<boolean>(false);
   const [loadingErrorMsg, setLoadingErrorMsg] = useState<string>('');
   const [spotList, setSpotList] = useState<Spot[]|[]>([]);
-  const [currentLocationName, setLocationName] = useState<string>('');
-  const [location, errorMsg, usersLocationLoaded] = useCurrentLocation();
+
+  const {locationObj, locationDisplayString, errorMsg, usersLocationLoaded}: ICurrentLocationResp = useCurrentLocation();
   const activeUser = useSelector((state: ActiveUserStateProp) => state.activeUser.user);
 
   const dispatch = useDispatch();
@@ -90,16 +91,13 @@ export default function CheckInModalContent({}): ReactNode {
           latitude,
           longitude
         }
-      } = location;
+      } = locationObj;
       try {
         const closestSpots = await fetchSpotsByLatLng(latitude, longitude, 1, activeUser.id);
-        const locationData = await getLocationByLatLng(latitude, longitude);
-
-        const locationName = `${locationData.address_components[0].long_name} (${locationData.address_components[1].long_name})`;
 
         setSpotList(closestSpots);
-        setLocationName(locationName);
         setSpotsReady(true);
+
       } catch (err) {
         console.error(err);
         setLoadingErrorMsg('Error getting local spots');
@@ -131,7 +129,7 @@ export default function CheckInModalContent({}): ReactNode {
       }
       {spotsReady &&
           <>
-            {loadingErrorMsg ? <ErrorGettingLocation errorTypeMessage={loadingErrorMsg}/> : <LocationPickerContent spotList={spotList} usersLocation={currentLocationName} />}
+            {loadingErrorMsg ? <ErrorGettingLocation errorTypeMessage={loadingErrorMsg}/> : <LocationPickerContent spotList={spotList} usersLocation={locationDisplayString} />}
           </>
       }
     </CommonModalContentWrapper>

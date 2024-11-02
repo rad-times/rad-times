@@ -3,10 +3,12 @@ import {Colors} from "@/constants/Colors";
 import {ActiveUserStateProp} from "@/state/activeUserSlice";
 import {GoogleLocationStateProps, setSearchInput, setSearchResults} from "@/state/googleLocationsSlice";
 import ActionButton from "@/views/components/ActionButton";
+import FormInput from "@/views/components/FormInput";
 import FormInput_OLD from "@/views/components/FormInput_OLD";
 import FormLabel from "@/views/components/FormLabel";
 import SearchablePicker, {SelectResponse} from "@/views/components/SearchablePicker";
 import Spacer from "@/views/components/Spacer";
+import _ from "lodash";
 import {ReactNode, useEffect, useState} from "react";
 import PageWrapper from "@/views/components/PageWrapper";
 import PageTitle from "@/views/components/PageTitle";
@@ -14,37 +16,6 @@ import {StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from "react-redux";
 
 interface EditProfileProps {}
-
-interface FormElementBlockProps {
-  label: string
-  value: string | undefined
-  onChange: Function
-  isMultiline?: boolean
-  maxLength?: number
-  autoCorrect?: boolean
-}
-
-const FormElementBlock = ({
-    label,
-    value = '',
-    onChange,
-    isMultiline = false,
-    maxLength,
-    autoCorrect = false
-}: FormElementBlockProps) => {
-  return (
-    <>
-      <FormLabel labelText={label} />
-      <FormInput_OLD
-        formValue={value}
-        onChangeInput={onChange}
-        isMultiline={isMultiline}
-        maxLength={maxLength}
-        autoCorrect={autoCorrect}
-      />
-    </>
-  );
-};
 
 export default function EditProfile({}: EditProfileProps): ReactNode {
   const dispatch = useDispatch();
@@ -109,6 +80,7 @@ export default function EditProfile({}: EditProfileProps): ReactNode {
   const setLocationSearchValue = (val: string) => {
     dispatch(setSearchInput(val));
   }
+
   const onSelectLocation = async (
     {
       id
@@ -142,27 +114,24 @@ export default function EditProfile({}: EditProfileProps): ReactNode {
         title={"Edit My Profile"}
       />
       <Spacer />
-      <FormElementBlock
+      <FormInput
         label={'First Name'}
-        value={editedUser.first_name}
-        onChange={onChangeFirstName}
+        formValue={editedUser.first_name}
+        onChangeInput={onChangeFirstName}
       />
-      <Spacer />
-      <FormElementBlock
+      <FormInput
         label={'Last Name'}
-        value={editedUser.last_name}
-        onChange={onChangeLastName}
+        formValue={editedUser.last_name}
+        onChangeInput={onChangeLastName}
       />
-      <Spacer />
-      <FormElementBlock
+      <FormInput
         label={'Bio'}
-        value={editedUser.bio}
-        onChange={onChangeBio}
+        formValue={editedUser.bio}
+        onChangeInput={onChangeBio}
         isMultiline={true}
         maxLength={255}
         autoCorrect={true}
       />
-      <Spacer />
       <SearchablePicker
         label={"Location"}
         searchValue={locationSearchTerm}

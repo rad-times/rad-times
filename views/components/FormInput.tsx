@@ -67,6 +67,7 @@ const styles = StyleSheet.create({
     marginBottom: 15
   },
   input: {
+    color: Colors.WHITE,
     borderColor: Colors.WHITE,
     borderWidth: 1,
     borderRadius: 5,
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     paddingRight: 5,
     fontSize: 14,
-    color: Colors.WHITE,
+    color: Colors.GREY,
     zIndex: 100
   }
 });

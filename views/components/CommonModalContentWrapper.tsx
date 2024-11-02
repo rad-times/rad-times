@@ -33,7 +33,7 @@ export default function CommonModalContentWrapper({
                   style={styles.topBarInvisibleClose}
                   onPress={onTapCloseModal}
               >
-                  <Icon size={40} name="close-circle-outline" color={Colors.BLACK} />
+                  <Icon size={40} name="close-circle-outline" color={Colors.WHITE} />
               </Pressable>
           </View>
       }
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     height: 50,
     width: '100%',
     position: 'absolute',
-    top: 10,
+    top: 70,
     left: 0,
     alignItems: 'flex-end',
     justifyContent: 'center',

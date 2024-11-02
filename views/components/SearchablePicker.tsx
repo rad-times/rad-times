@@ -1,4 +1,6 @@
 import {Colors} from "@/constants/Colors";
+import {setNewSpotModelData} from "@/state/newSpotSlice";
+import FormInput from "@/views/components/FormInput";
 import FormInput_OLD from "@/views/components/FormInput_OLD";
 import FormLabel from "@/views/components/FormLabel";
 import Icon from "@/views/components/Icon";
@@ -19,6 +21,7 @@ import _ from 'lodash';
 type SearchablePickerProps = {
   // Form Label
   label?: string
+  disabled?: boolean
   // The value the user entered into the input field (from state)
   searchValue: string
   // List of results to show in the dropdown
@@ -75,6 +78,7 @@ function SearchableDropdownItem(
 export default function SearchablePicker(
   {
     label,
+    disabled = false,
     searchValue,
     searchResults,
     onChangeSearchText,
@@ -99,12 +103,12 @@ export default function SearchablePicker(
 
   return (
     <View>
-      {!_.isNil(label) &&
-          <FormLabel labelText={label} />
-      }
-      <FormInput_OLD
+      <FormInput
+        label={_.isNil(label) ? '' : label}
         formValue={displayOnlySearchValue}
         onFocus={() => showPickerModal(true)}
+        maxLength={50}
+        disabled={disabled}
       />
       <Modal
         animationType="slide"
@@ -115,7 +119,8 @@ export default function SearchablePicker(
           <View style={styles.topBar}>
             <Text style={styles.searchableModalTopBarText}>{label || ''}</Text>
             <Pressable
-              onPress={onClickCloseModal}>
+              onPress={onClickCloseModal}
+            >
               <Icon size={30} name="close-circle-outline" color={Colors.WHITE} />
             </Pressable>
           </View>

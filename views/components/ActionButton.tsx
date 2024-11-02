@@ -40,12 +40,15 @@ export default function ActionButton(
       disabled={btnDisabled}
       style={({pressed}) => [
         {
-          backgroundColor: pressed ? Colors.LIGHT_GREY : Colors.WHITE,
+          backgroundColor: pressed ? Colors.DARK_RED : Colors.LIGHT_RED,
         },
         styles.button
       ]}
     >
-      <Text style={styles.buttonText}>{btnDisplayText}</Text>
+      <Text style={[
+        styles.buttonText,
+        btnDisabled ? styles.disabled : styles.enabled
+      ]}>{btnDisplayText}</Text>
     </Pressable>
   );
 }
@@ -57,6 +60,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: 40,
+    width: '100%',
     borderRadius: 25
   },
   link: {
@@ -64,9 +68,14 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   buttonText: {
-    color: Colors.DARK_GREY,
     fontSize: 18,
     paddingLeft: 30,
     paddingRight: 30
-  }
+  },
+  disabled: {
+    color: Colors.DARK_RED,
+  },
+  enabled: {
+    color: Colors.LIGHT_GREY,
+  },
 })
