@@ -10,7 +10,7 @@ export type ISocketMessage = {
 }
 
 export interface IWebSocketProvider {
-  children: Array<ReactNode>
+  children: ReactNode|ReactNode[]
 }
 
 export interface IChannels {

@@ -1,7 +1,7 @@
 import {Colors} from "@/constants/Colors";
 import Icon from "@/views/components/Icon";
 import {ReactNode} from "react";
-import {GestureResponderEvent, Pressable, SafeAreaView, StyleSheet, Text, View} from "react-native";
+import {GestureResponderEvent, Pressable, StyleSheet, Text, View} from "react-native";
 
 interface IModalTopBar {
   children: ReactNode | ReactNode[]
@@ -17,7 +17,7 @@ export default function CommonModalContentWrapper({
   topBarShown = true
 }: IModalTopBar):ReactNode {
   return (
-    <SafeAreaView style={styles.mapWrapper}>
+    <View style={styles.mapWrapper}>
       {topBarShown &&
           <View style={styles.topBar}>
               <Text style={styles.topBarName}>{nameToShow}</Text>
@@ -39,7 +39,7 @@ export default function CommonModalContentWrapper({
       }
 
       {children}
-    </SafeAreaView>
+    </View>
   );
 }
 

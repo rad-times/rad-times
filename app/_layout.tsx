@@ -1,17 +1,20 @@
 import { store } from "@/state/store";
-import {Provider} from "react-redux";
+import {Provider as ReduxProvider} from "react-redux";
 import { WebSocketProvider } from '@/context/WebSocketContext';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import AppRoot from '@/app/AppRoot';
 import { StatusBar } from 'expo-status-bar';
 import {ReactNode} from "react";
 
 export default function Layout(): ReactNode {
   return (
-    <Provider store={store}>
+    <ReduxProvider store={store}>
       <WebSocketProvider>
-        <StatusBar style='light' />
-        <AppRoot />
+        <SafeAreaProvider>
+          <StatusBar style='light' />
+          <AppRoot />
+        </SafeAreaProvider>
       </WebSocketProvider>
-    </Provider>
+    </ReduxProvider>
   );
 }
