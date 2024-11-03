@@ -1,5 +1,6 @@
-# rad-times
-React Native application
+# Rad Times
+Social skateboarding.
+React Native application.
 
 ## Get started
 
