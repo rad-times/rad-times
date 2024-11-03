@@ -1,18 +1,20 @@
 import {Colors} from "@/constants/Colors";
 import CommonModalContentWrapper from "@/views/components/CommonModalContentWrapper";
 import Icon from "@/views/components/Icon";
-import {CameraType, CameraView} from "expo-camera";
+import {CameraCapturedPicture, CameraType, CameraView} from "expo-camera";
 import {createRef, Dispatch, ReactNode, SetStateAction, useState} from "react";
 import {StyleSheet, TouchableOpacity, Text, View, Modal} from "react-native";
 
 interface ICamera {
   cameraShown: boolean
   toggleCameraShown: Dispatch<SetStateAction<boolean>>
+  setPhotoData: (arg0: string) => void
 }
 
 export default function Camera({
   cameraShown,
-  toggleCameraShown
+  toggleCameraShown,
+  setPhotoData
 }:ICamera): ReactNode {
   const [facing, setFacing] = useState<CameraType>('back');
   const [flashOn, toggleFlash] = useState(false);
@@ -23,7 +25,7 @@ export default function Camera({
   }
 
   const pressFlashToggle = () => {
-    toggleFlash(flashOn ? false : true);
+    toggleFlash(!flashOn);
   }
 
   const takePhoto = async () => {
@@ -32,7 +34,9 @@ export default function Camera({
       base64: true
     });
 
-    console.log('photo', photo);
+    if (photo && photo.base64) {
+      setPhotoData(photo.base64);
+    }
   }
 
   return (

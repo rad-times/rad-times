@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {Spot} from '@/types/Spot';
+import _ from 'lodash';
 
 type SpotListing = {
   spotListing: Spot[],
@@ -7,13 +8,15 @@ type SpotListing = {
   currentSpotMapDetails: Spot | null
   createNewSpotModalShown: boolean
   spotDetailsPageContent: Spot | null
+  newSpot: Spot
 }
 const initialState: SpotListing = {
   spotListing: [],
   spotLocationMapShown: false,
   currentSpotMapDetails: null,
   createNewSpotModalShown: false,
-  spotDetailsPageContent: null
+  spotDetailsPageContent: null,
+  newSpot: {} as Spot
 };
 
 type SpotState = {
@@ -67,6 +70,25 @@ export const spotSlice = createSlice({
         ...state,
         spotDetailsPageContent: action.payload
       }
+    },
+    setNewSpotModelData: (state, action) => {
+
+      if (_.isUndefined(action.payload.propertyKey)) {
+        return {
+          ...state,
+          newSpot: action.payload
+        };
+      }
+
+      const newSpot = {
+        ...state.newSpot,
+        [action.payload.propertyKey]: action.payload.value
+      };
+
+      return {
+        ...state,
+        newSpot: newSpot
+      };
     }
   }
 });
@@ -81,7 +103,8 @@ export const {
   setSpotLocationMapShown,
   updateSpotFavorite,
   setCreateNewSpotModalShown,
-  setSpotDetailsPageContent
+  setSpotDetailsPageContent,
+  setNewSpotModelData
 } = spotSlice.actions;
 
 export default spotSlice.reducer;

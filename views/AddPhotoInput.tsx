@@ -14,10 +14,11 @@ import { useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 
 interface IAddPhotoInput {
+  setPhotoData: (arg0: string) => void
 }
 
 export default function AddPhotoInput({
-
+  setPhotoData
 }: IAddPhotoInput):ReactNode {
 
   const [imageTypePickerOpen, toggleImageTypePicker] = useState<boolean>(false);
@@ -25,8 +26,6 @@ export default function AddPhotoInput({
   const [showCamera, toggleShowCamera] = useState(false);
   const [cameraPermission, requestCameraPermission] = useCameraPermissions();
 
-  const [photoLibraryPermissionsModalShown, showPhotoLibraryPermissionsModal] = useState(false);
-  const [showPhotoLibrary, toggleShowPhotoLibrary] = useState(false);
   const [photoLibraryPermission, requestPhotoLibraryPermission] = ImagePicker.useMediaLibraryPermissions();
 
   const [image, setImage] = useState<string | null>(null);
@@ -85,6 +84,7 @@ export default function AddPhotoInput({
       .then(result => {
         if (!result.canceled) {
           setImage(result.assets[0].uri);
+          setPhotoData(result.assets[0].uri);
           setImageSelected(true);
         }
       });
@@ -117,6 +117,7 @@ export default function AddPhotoInput({
 
       {/* Ugly camera */}
       <Camera
+        setPhotoData={setPhotoData}
         cameraShown={showCamera}
         toggleCameraShown={toggleShowCamera}
       />
@@ -179,8 +180,8 @@ const styles = StyleSheet.create({
   imageContainer: {
     alignItems: 'flex-start',
     justifyContent: 'center',
-    width: 200,
-    height: 200,
+    width: 150,
+    height: 150,
   },
   image: {
     borderWidth: 1,

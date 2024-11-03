@@ -9,14 +9,14 @@ import {useEffect, useState} from "react";
 import _ from 'lodash';
 
 export interface ICurrentLocationResp {
-  locationObj: LocationObject;
+  locationObj: google.maps.GeocoderResult;
   locationDisplayString: string;
   errorMsg: string;
   usersLocationLoaded: boolean;
 }
 
 export default function useCurrentLocation(): ICurrentLocationResp {
-  const [locationObj, setLocation] = useState({} as LocationObject);
+  const [locationObj, setLocation] = useState({} as google.maps.GeocoderResult);
   const [locationDisplayString, setLocationDisplayString] = useState<string>('');
   const [errorMsg, setErrorMsg] = useState('');
   const [usersLocationLoaded, setUsersLocationLoaded] = useState(false);
@@ -30,6 +30,7 @@ export default function useCurrentLocation(): ICurrentLocationResp {
     } = location;
     try {
       const locationData = await getLocationByLatLng(latitude, longitude);
+      setLocation(locationData);
       setLocationDisplayString(`${locationData.address_components[0].long_name} (${locationData.address_components[1].long_name})`);
 
     } catch (err) {
@@ -53,7 +54,6 @@ export default function useCurrentLocation(): ICurrentLocationResp {
         return;
       }
 
-      setLocation(location);
       await fetchLocations(location);
       setUsersLocationLoaded(true);
     })();

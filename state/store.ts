@@ -5,7 +5,6 @@ import crew from "@/state/crewSearchSlice";
 import googleLocationSearch from '@/state/googleLocationsSlice';
 import displayText from '@/state/displayLanguageSlice';
 import activeFriends from '@/state/checkInAndActiveSlice';
-import createNewSpot from "@/state/newSpotSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,7 +13,6 @@ export const store = configureStore({
     crew,
     googleLocationSearch,
     displayText,
-    activeFriends,
-    createNewSpot
+    activeFriends
   }
 });
