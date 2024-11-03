@@ -4,7 +4,7 @@ import {ReactNode} from "react";
 import {NativeSyntheticEvent, TextInput, Text, StyleSheet, TextInputFocusEventData, View} from "react-native";
 
 interface FormInputProps {
-  label: string;
+  label?: string;
   formValue: string | undefined
   onChangeInput?: (text: string) => void
   onFocus?: (e: NativeSyntheticEvent<TextInputFocusEventData>) => void
@@ -30,7 +30,9 @@ export default function FormInput(
   }: FormInputProps): ReactNode {
   return (
     <View style={styles.formInputWrapper}>
-      <Text style={styles.formLabel}>{label}</Text>
+      {label &&
+          <Text style={styles.formLabel}>{label}</Text>
+      }
       {isMultiline &&
           <TextInput
               style={[styles.input, styles.multiLineInput, disabled ? styles.inputDisabled : {}]}

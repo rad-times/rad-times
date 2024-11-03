@@ -12,10 +12,9 @@ import HeaderText from "@/views/components/HeaderText";
 import AddPhotoInput from "@/views/AddPhotoInput";
 import PageWrapper from "@/views/components/PageWrapper";
 import Spacer from "@/views/components/Spacer";
-import LocationSearch from "@/views/LocationSearch";
 import PageLoading from "@/views/PageLoading";
 import {ReactNode, useEffect, useState} from "react";
-import {Keyboard, ScrollView, StyleSheet, TouchableWithoutFeedback, View} from "react-native";
+import {Keyboard, ScrollView, StyleSheet, Modal, View, TouchableWithoutFeedback} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
 import _ from 'lodash';
 
@@ -24,7 +23,7 @@ export default function CreateNewSpot({} ): ReactNode {
   const newSpot = useSelector((state: SpotState) => state.spotList.newSpot);
   const dispatch = useDispatch();
 
-  const [usingCurrentLocation, setUseCurrentLocation] = useState(true);
+  const [showSpotMapModal, setShowSpotMapModal] = useState<boolean>(false);
   const [formReady, setFormReady] = useState(false);
   const {locationObj, locationDisplayString, errorMsg, usersLocationLoaded}: ICurrentLocationResp = useCurrentLocation();
 
@@ -111,63 +110,71 @@ export default function CreateNewSpot({} ): ReactNode {
     Keyboard.dismiss();
   };
 
+  const openSpotLocationMap = () => {
+    setShowSpotMapModal(true);
+  }
+
   return (
     <PageWrapper>
       {!formReady &&
         <PageLoading />
       }
       {formReady &&
-        <TouchableWithoutFeedback
-          onPress={handleBlur}
-        >
-          <View style={styles.newSpotFormWrapper}>
-            <View style={{
-              width: '100%'
-            }}>
-              <HeaderText text={"Enter spot details"}/>
-              <Spacer />
-                <ScrollView>
-                    <FormInput
-                        label={'Spot Name'}
-                        formValue={newSpot.spot_name || ''}
-                        onChangeInput={(val:string) => dispatch(setNewSpotModelData({propertyKey: 'spot_name', value: val}))}
-                        maxLength={50}
-                    />
-                    <FormInput
-                        label={'Spot Description'}
-                        formValue={newSpot.spot_description || ''}
-                        isMultiline={true}
-                        onChangeInput={(val:string) => dispatch(setNewSpotModelData({propertyKey: 'spot_description', value: val}))}
-                        maxLength={200}
-                    />
-                    <Checkbox
-                        isChecked={usingCurrentLocation}
-                        onCheck={(checked) => setUseCurrentLocation(checked)}
-                        label={'Use current location?'}
-                    />
-                    <LocationSearch
-                        onSelectLocation={setLocation}
-                        disabled={usingCurrentLocation}
-                    />
-                    <Spacer />
-                    <AddPhotoInput
-                        setPhotoData={setPhoto}
-                    />
-                    <Spacer />
-                    <Checkbox
-                        isChecked={newSpot.is_private || false}
-                        onCheck={(checked) => dispatch(setNewSpotModelData({propertyKey: 'is_private', value: !newSpot.is_private}))}
-                        label={'Private spot?'}
-                    />
-                </ScrollView>
-            </View>
-            <ActionButton
-              btnDisplayText={"Submit Spot"}
-              onClickBtn={submitSpot}
-              btnDisabled={submitDisabled}
-            />
-          </View>
-        </TouchableWithoutFeedback>
+          <>
+              <Modal
+                  animationType="slide"
+                  transparent={false}
+                  visible={showSpotMapModal}
+              >
+              </Modal>
+
+              <TouchableWithoutFeedback
+                  onPress={handleBlur}
+              >
+                  <View style={styles.newSpotFormWrapper}>
+                      <View style={{
+                        width: '100%'
+                      }}>
+                          <HeaderText text={"Enter spot details"}/>
+                          <Spacer />
+                          <ScrollView>
+                              <FormInput
+                                  label={'Spot Name'}
+                                  formValue={newSpot.spot_name || ''}
+                                  onChangeInput={(val:string) => dispatch(setNewSpotModelData({propertyKey: 'spot_name', value: val}))}
+                                  maxLength={50}
+                              />
+                              <FormInput
+                                  label={'Spot Description'}
+                                  formValue={newSpot.spot_description || ''}
+                                  isMultiline={true}
+                                  onChangeInput={(val:string) => dispatch(setNewSpotModelData({propertyKey: 'spot_description', value: val}))}
+                                  maxLength={200}
+                              />
+                              <ActionButton
+                                  onClickBtn={openSpotLocationMap}
+                                  btnDisplayText={'Set spot location'}
+                              />
+                              <Spacer />
+                              <AddPhotoInput
+                                  setPhotoData={setPhoto}
+                              />
+                              <Spacer />
+                              <Checkbox
+                                  isChecked={newSpot.is_private || false}
+                                  onCheck={(checked) => dispatch(setNewSpotModelData({propertyKey: 'is_private', value: !newSpot.is_private}))}
+                                  label={'Private spot?'}
+                              />
+                          </ScrollView>
+                      </View>
+                      <ActionButton
+                          btnDisplayText={"Submit Spot"}
+                          onClickBtn={submitSpot}
+                          btnDisabled={submitDisabled}
+                      />
+                  </View>
+              </TouchableWithoutFeedback>
+          </>
       }
     </PageWrapper>
   )

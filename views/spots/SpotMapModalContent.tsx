@@ -71,7 +71,7 @@ export default function SpotMapModalContent(): ReactNode {
   return (
     <CommonModalContentWrapper
       onTapCloseModal={closeSpotMap}
-      nameToShow={'Check In'}
+      nameToShow={''}
     >
       <View style={styles.spotModalMap}>
         {getMapContentView()}

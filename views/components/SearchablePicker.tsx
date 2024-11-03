@@ -1,19 +1,16 @@
 import {Colors} from "@/constants/Colors";
-import {setNewSpotModelData} from "@/state/newSpotSlice";
 import FormInput from "@/views/components/FormInput";
-import FormInput_OLD from "@/views/components/FormInput_OLD";
-import FormLabel from "@/views/components/FormLabel";
 import Icon from "@/views/components/Icon";
 import PageWrapper from "@/views/components/PageWrapper";
 import {ReactNode, useState} from "react";
 import {
   FlatList,
   GestureResponderEvent,
-  Modal,
+  Modal, NativeSyntheticEvent,
   Pressable,
   SafeAreaView,
   StyleSheet,
-  Text,
+  Text, TextInputFocusEventData,
   View
 } from "react-native";
 import _ from 'lodash';
@@ -125,11 +122,12 @@ export default function SearchablePicker(
             </Pressable>
           </View>
           <PageWrapper>
-            <FormInput_OLD
-              onChangeInput={onChangeSearchText}
+            <FormInput
+              label={''}
               formValue={searchValue}
-              autoCorrect={false}
+              onChangeInput={onChangeSearchText}
               clearField={clearSearchValue}
+              autoCorrect={false}
               autoFocus={true}
             />
             {searchResults.length > 0 &&
