@@ -1,5 +1,7 @@
-import {URL_ROOT} from "@/constants/System";
+import Constants from 'expo-constants';
 import _ from "lodash";
+
+const API_URL = Constants.expoConfig?.extra?.API_URL_ROOT || '';
 
 interface CommonGraphQlRequestProps {
   queryBody: string
@@ -15,7 +17,7 @@ export async function commonGraphQlRequest({
   queryBody,
   errorMessage
 }: CommonGraphQlRequestProps): Promise<any> {
-  return await fetch(`${URL_ROOT}/graphql`, {
+  return await fetch(`${API_URL}/graphql`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -42,7 +44,7 @@ export async function commonGraphQlMutation({
   errorMessage
 }: CommonGraphQlMutationProps): Promise<any> {
 
-  return await fetch(`${URL_ROOT}/graphql`, {
+  return await fetch(`${API_URL}/graphql`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

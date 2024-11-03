@@ -80,7 +80,9 @@
     "extra": {
       "eas": {
         "projectId": ""
-      }
+      },
+      "API_URL_ROOT": "",
+      "WS_ROOT": ""
     }
   }
 }

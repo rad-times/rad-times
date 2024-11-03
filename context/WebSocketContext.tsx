@@ -1,10 +1,12 @@
-import {WS_ROOT} from "@/constants/System";
+import Constants from "expo-constants";
 import {useEffect, createContext, useRef, ReactNode} from 'react';
 import {
   IChannels,
   ISocketMessage,
   IWebSocketProvider
 } from '@/types/SocketMessage';
+
+const WS_URL = Constants.expoConfig?.extra?.WS_ROOT || '';
 
 const WebSocketContext = createContext(null);
 
@@ -30,7 +32,7 @@ function WebSocketProvider({children}:IWebSocketProvider): ReactNode {
   };
 
   useEffect(() => {
-    socket = new WebSocket(`${WS_ROOT}/socket`);
+    socket = new WebSocket(`${WS_URL}/socket`);
 
     socket.onopen = () => {
       console.log('Socket open');

@@ -1,7 +1,9 @@
-import {URL_ROOT} from "@/constants/System";
 import {Person, unknownUser} from "@/types/Person";
 import {commonGraphQlRequest} from "@/api/commonApiMethods";
+import Constants from "expo-constants";
 import _ from "lodash";
+
+const API_URL = Constants.expoConfig?.extra?.API_URL_ROOT || '';
 
 function getPersonByIdQuery(id: number) {
   return `{
@@ -98,7 +100,7 @@ export async function getActivePersonById(id: number): Promise<Person> {
 
 export async function getUserLanguages(languageCode:string = 'en'): Promise<Object> {
   try {
-    return await fetch(`${URL_ROOT}/static/languages_${languageCode.toLowerCase()}.json`, {
+    return await fetch(`${API_URL}/static/languages_${languageCode.toLowerCase()}.json`, {
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json"
