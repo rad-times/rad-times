@@ -1,6 +1,7 @@
 import {Colors} from "@/constants/Colors";
 import Icon from "@/views/components/Icon";
 import {ReactNode} from "react";
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import {GestureResponderEvent, Pressable, StyleSheet, Text, View} from "react-native";
 
 interface IModalTopBar {
@@ -17,29 +18,30 @@ export default function CommonModalContentWrapper({
   topBarShown = true
 }: IModalTopBar):ReactNode {
   return (
-    <View style={styles.mapWrapper}>
-      {topBarShown &&
-          <View style={styles.topBar}>
-              <Text style={styles.topBarName}>{nameToShow}</Text>
-              <Pressable
-                  onPress={onTapCloseModal}>
-                  <Icon size={30} name="close-circle-outline" color={Colors.WHITE} />
-              </Pressable>
-          </View>
-      }
-      {!topBarShown &&
-          <View style={styles.topBarInvisible}>
-              <Pressable
-                  style={styles.topBarInvisibleClose}
-                  onPress={onTapCloseModal}
-              >
-                  <Icon size={40} name="close-circle-outline" color={Colors.WHITE} />
-              </Pressable>
-          </View>
-      }
-
-      {children}
-    </View>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.mapWrapper}>
+        {topBarShown &&
+            <View style={styles.topBar}>
+                <Text style={styles.topBarName}>{nameToShow}</Text>
+                <Pressable
+                    onPress={onTapCloseModal}>
+                    <Icon size={30} name="close-circle-outline" color={Colors.WHITE} />
+                </Pressable>
+            </View>
+        }
+        {!topBarShown &&
+            <View style={styles.topBarInvisible}>
+                <Pressable
+                    style={styles.topBarInvisibleClose}
+                    onPress={onTapCloseModal}
+                >
+                    <Icon size={40} name="close-circle-outline" color={Colors.WHITE} />
+                </Pressable>
+            </View>
+        }
+        {children}
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 

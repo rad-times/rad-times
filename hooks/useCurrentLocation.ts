@@ -10,6 +10,7 @@ import _ from 'lodash';
 
 export interface ICurrentLocationResp {
   locationObj: google.maps.GeocoderResult;
+  latLngCoords: LocationObject;
   locationDisplayString: string;
   errorMsg: string;
   usersLocationLoaded: boolean;
@@ -17,6 +18,7 @@ export interface ICurrentLocationResp {
 
 export default function useCurrentLocation(): ICurrentLocationResp {
   const [locationObj, setLocation] = useState({} as google.maps.GeocoderResult);
+  const [latLngCoords, setLatLngCoords] = useState({} as LocationObject);
   const [locationDisplayString, setLocationDisplayString] = useState<string>('');
   const [errorMsg, setErrorMsg] = useState('');
   const [usersLocationLoaded, setUsersLocationLoaded] = useState(false);
@@ -53,11 +55,11 @@ export default function useCurrentLocation(): ICurrentLocationResp {
         setErrorMsg('Returned location data is invalid');
         return;
       }
-
+      setLatLngCoords(location);
       await fetchLocations(location);
       setUsersLocationLoaded(true);
     })();
   }, []);
 
-  return {locationObj, locationDisplayString, errorMsg, usersLocationLoaded};
+  return {locationObj, latLngCoords, locationDisplayString, errorMsg, usersLocationLoaded};
 }

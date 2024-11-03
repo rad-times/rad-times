@@ -79,7 +79,7 @@ export default function CheckInModalContent({}): ReactNode {
   const [loadingErrorMsg, setLoadingErrorMsg] = useState<string>('');
   const [spotList, setSpotList] = useState<Spot[]|[]>([]);
 
-  const {locationObj, locationDisplayString, errorMsg, usersLocationLoaded}: ICurrentLocationResp = useCurrentLocation();
+  const {locationObj, latLngCoords, locationDisplayString, errorMsg, usersLocationLoaded}: ICurrentLocationResp = useCurrentLocation();
   const activeUser = useSelector((state: ActiveUserStateProp) => state.activeUser.user);
 
   const dispatch = useDispatch();
@@ -91,7 +91,7 @@ export default function CheckInModalContent({}): ReactNode {
           latitude,
           longitude
         }
-      } = locationObj;
+      } = latLngCoords;
       try {
         const closestSpots = await fetchSpotsByLatLng(latitude, longitude, 1, activeUser.id);
 

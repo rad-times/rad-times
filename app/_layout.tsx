@@ -4,7 +4,7 @@ import { WebSocketProvider } from '@/context/WebSocketContext';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import AppRoot from '@/app/AppRoot';
-import { StatusBar } from 'expo-status-bar';
+import { StatusBar } from 'react-native';
 import {ReactNode} from "react";
 
 export default function Layout(): ReactNode {
@@ -13,7 +13,9 @@ export default function Layout(): ReactNode {
       <WebSocketProvider>
         <GestureHandlerRootView>
           <SafeAreaProvider>
-            <StatusBar style='light' />
+            <StatusBar
+              barStyle={'light-content'}
+            />
             <AppRoot />
           </SafeAreaProvider>
         </GestureHandlerRootView>
