@@ -1,5 +1,5 @@
 import {CHECK_IN, CHECK_OUT} from "@/constants/SocketTypes";
-import {WebSocketContext} from "@/context/WebSocketContext";
+import {WebSocketProvider} from "@/context/WebSocketProvider";
 import {
   IActiveFriendsState,
   setActiveUserIsCheckedIn,
@@ -26,7 +26,7 @@ export function CheckInBtn({}): ReactNode {
   const checkInModalShown = useSelector((state: IActiveFriendsState) => state.activeFriends.checkInModalOpen);
 
   // @ts-ignore
-  const {subscribe, unsubscribe, sendMessage} = useContext(WebSocketContext);
+  const {subscribe, unsubscribe, sendMessage} = useContext(WebSocketProvider);
   const dispatch = useDispatch();
 
   useEffect(() => {

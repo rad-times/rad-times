@@ -3,7 +3,7 @@ import {CHECK_IN} from "@/constants/SocketTypes";
 import {setActiveUserIsCheckedIn, setCheckInModalOpen} from "@/state/checkInAndActiveSlice";
 import {ActiveUserStateProp} from "@/state/activeUserSlice";
 import {Spot} from "@/types/Spot";
-import { WebSocketContext } from '@/context/WebSocketContext';
+import { WebSocketContext } from '@/context/WebSocketProvider';
 import {createSocketMessage} from "@/utils/createSocketMessage";
 import ActionButton from "@/views/components/ActionButton";
 import ExpandableBox from "@/views/components/ExpandableBox";
