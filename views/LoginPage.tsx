@@ -8,28 +8,49 @@ import {
   Pressable
 } from 'react-native';
 import React, {useState, useContext, ReactNode} from 'react';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {GoogleSignin, isErrorWithCode, isSuccessResponse, statusCodes} from '@react-native-google-signin/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '@/context/AuthProvider';
 
 const API_URL = Constants.expoConfig?.extra?.API_URL_ROOT || '';
 
 GoogleSignin.configure({
-  webClientId:
-    '270430905807-km29dfj7ncfkrh59h7km322d9c4c8hpa.apps.googleusercontent.com',
-  iosClientId:
-    '270430905807-6mt3kqb3705v493r7usosihpc945c77a.apps.googleusercontent.com',
+  webClientId: '270430905807-km29dfj7ncfkrh59h7km322d9c4c8hpa.apps.googleusercontent.com',
   scopes: ['profile', 'email'],
+  offlineAccess: true,
+  forceCodeForRefreshToken: true,
+  accountName: '',
+  iosClientId: '270430905807-6mt3kqb3705v493r7usosihpc945c77a.apps.googleusercontent.com',
 });
 
 export default function LoginScreen (): ReactNode {
   const {token, setToken} = useContext(AuthContext);
 
-  const GoogleLogin = async () => {
-    await GoogleSignin.hasPlayServices();
-    const userInfo = await GoogleSignin.signIn();
-    console.log('u', userInfo);
-    return userInfo;
+  const signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const response = await GoogleSignin.signIn();
+      if (isSuccessResponse(response)) {
+        return response;
+      } else {
+        // sign in was cancelled by user
+      }
+    } catch (error) {
+      if (isErrorWithCode(error)) {
+        switch (error.code) {
+          case statusCodes.IN_PROGRESS:
+            console.log('error 1', error);
+            break;
+          case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+            console.log('error 2', error);
+            break;
+          default:
+            console.log('error 3', error);
+        }
+      } else {
+        console.log('error 4', error);
+      }
+    }
   };
 
   const [loading, setLoading] = useState(false);
@@ -37,7 +58,8 @@ export default function LoginScreen (): ReactNode {
   const handleGoogleLogin = async () => {
     setLoading(true);
     try {
-      const response = await GoogleLogin();
+      const response = await signIn();
+      if (!response) return;
       // @ts-ignore
       const {idToken} = response; // Check if idToken is directly available
 
