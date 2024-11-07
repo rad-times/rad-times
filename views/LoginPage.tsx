@@ -1,11 +1,11 @@
+import {Colors} from "@/constants/Colors";
 import Constants from "expo-constants";
 import {
   StyleSheet,
   Text,
   View,
   SafeAreaView,
-  Pressable,
-  Image,
+  Pressable
 } from 'react-native';
 import React, {useState, useContext, ReactNode} from 'react';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
@@ -16,9 +16,9 @@ const API_URL = Constants.expoConfig?.extra?.API_URL_ROOT || '';
 
 GoogleSignin.configure({
   webClientId:
-    'yourID',
+    '270430905807-km29dfj7ncfkrh59h7km322d9c4c8hpa.apps.googleusercontent.com',
   iosClientId:
-    'yourID',
+    '270430905807-6mt3kqb3705v493r7usosihpc945c77a.apps.googleusercontent.com',
   scopes: ['profile', 'email'],
 });
 
@@ -79,14 +79,7 @@ export default function LoginScreen (): ReactNode {
 
   return (
     <SafeAreaView>
-      <View style={{marginTop: 30, alignItems: 'center'}}>
-        <Image
-          style={{width: 240, height: 80, resizeMode: 'contain'}}
-          source={{uri: 'https://wanderlog.com/assets/logoWithText.png'}}
-        />
-      </View>
-
-      <View style={{marginTop: 70}}>
+      <View style={{}}>
         <Pressable
           onPress={handleGoogleLogin}
           style={{
@@ -102,14 +95,8 @@ export default function LoginScreen (): ReactNode {
             position: 'relative',
             marginTop: 20,
           }}>
-          <Text style={{textAlign: 'center', fontSize: 15, fontWeight: '500'}}>
+          <Text style={{textAlign: 'center', fontSize: 15, color: Colors.WHITE, fontWeight: '500'}}>
             Sign Up With Google
-          </Text>
-        </Pressable>
-
-        <Pressable style={{marginTop: 12}}>
-          <Text style={{textAlign: 'center', fontSize: 15, color: 'gray'}}>
-            Already have an account? Sign In
           </Text>
         </Pressable>
       </View>

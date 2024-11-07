@@ -17,10 +17,15 @@ const AuthProvider = ({children}:{children: ReactNode}): ReactNode => {
   useEffect(() => {
     const fetchUser = async () => {
       const token = await AsyncStorage.getItem('authToken');
-      const decodedToken = jwtDecode(token || '');
-      // @ts-ignore
-      const userId = decodedToken.userId;
-      setUserId(userId);
+
+      if (token) {
+        const decodedToken = jwtDecode(token || '');
+        // @ts-ignore
+        const userId = decodedToken.userId;
+        setUserId(userId);
+      } else {
+        setUserId('');
+      }
     };
 
     fetchUser();

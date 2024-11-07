@@ -72,6 +72,12 @@
           "photosPermission": "Allow $(PRODUCT_NAME) access to your photo library?",
           "cameraPermission": "Allow $(PRODUCT_NAME) access to your camera?"
         }
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.270430905807-6mt3kqb3705v493r7usosihpc945c77a "
+        }
       ]
     ],
     "experiments": {
