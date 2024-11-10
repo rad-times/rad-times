@@ -1,10 +1,12 @@
+import {AuthContext} from "@/context/AuthProvider";
 import Constants from "expo-constants";
-import {useEffect, createContext, useRef, ReactNode} from 'react';
+import {useEffect, createContext, useRef, ReactNode, useContext} from 'react';
 import {
   IChannels,
   ISocketMessage,
   IWebSocketProvider
 } from '@/types/SocketMessage';
+import _ from 'lodash';
 
 const WS_URL = Constants.expoConfig?.extra?.WS_ROOT || '';
 
@@ -13,6 +15,7 @@ const WebSocketContext = createContext(null);
 function WebSocketProvider({children}:IWebSocketProvider): ReactNode {
   const ws = useRef<WebSocket>({} as WebSocket);
   let socket:WebSocket = ws.current;
+  const {userId} = useContext(AuthContext);
 
   const channelsRef = useRef<IChannels>({} as IChannels);
   const channels = channelsRef.current;
@@ -32,6 +35,10 @@ function WebSocketProvider({children}:IWebSocketProvider): ReactNode {
   };
 
   useEffect(() => {
+    if (userId === "" || _.isNil(userId)) {
+      return;
+    }
+
     socket = new WebSocket(`${WS_URL}/socket`);
 
     socket.onopen = () => {
@@ -61,7 +68,7 @@ function WebSocketProvider({children}:IWebSocketProvider): ReactNode {
     }
 
     return ():void => {socket.close()}
-  }, []);
+  }, [userId]);
 
   return (
     // @ts-ignore

@@ -5,10 +5,17 @@ import {
   Text,
   View,
   SafeAreaView,
-  Pressable
+  Pressable,
+  ActivityIndicator
 } from 'react-native';
 import React, {useState, useContext, ReactNode} from 'react';
-import {GoogleSignin, isErrorWithCode, isSuccessResponse, statusCodes} from '@react-native-google-signin/google-signin';
+import {
+  GoogleSignin,
+  isErrorWithCode,
+  isSuccessResponse,
+  statusCodes,
+  User
+} from '@react-native-google-signin/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '@/context/AuthProvider';
 
@@ -25,15 +32,14 @@ GoogleSignin.configure({
 
 export default function LoginScreen (): ReactNode {
   const {token, setToken} = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
 
   const signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
       const response = await GoogleSignin.signIn();
       if (isSuccessResponse(response)) {
-        return response;
-      } else {
-        // sign in was cancelled by user
+        return response.data;
       }
     } catch (error) {
       if (isErrorWithCode(error)) {
@@ -53,40 +59,25 @@ export default function LoginScreen (): ReactNode {
     }
   };
 
-  const [loading, setLoading] = useState(false);
-
   const handleGoogleLogin = async () => {
     setLoading(true);
     try {
-      const response = await signIn();
-      if (!response) return;
-      // @ts-ignore
-      const {idToken} = response; // Check if idToken is directly available
+      const authData: User|undefined = await signIn();
+      if (!authData) return;
 
-      console.log('idToken:', idToken); // Log idToken to check if it's retrieved
+      const {idToken} = authData;
 
-      // If idToken is not directly available, get it from response.data.idToken
-      const extractedIdToken = idToken || response?.data?.idToken;
-      console.log('Extracted idToken from data:', extractedIdToken); // Log the extracted idToken
-
-      if (extractedIdToken) {
-        const backendResponse = await fetch(`${API_URL}/google-login`, {
-          method: "POST",
+      if (idToken) {
+        const userToken = await fetch(`${API_URL}/login`, {
+          method: "GET",
           headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-          },
-          body: JSON.stringify({idToken: extractedIdToken})
-        });
+            "Authorization": `Bearer ${idToken}`
+          }
+        })
+          .then(res => res.json());
 
-        // @ts-ignore
-        const data = backendResponse.data;
-        // @ts-ignore
-        console.log('Backend Response:', backendResponse.data);
-
-        await AsyncStorage.setItem('authToken', data.token);
-
-        setToken(data.token);
+        await AsyncStorage.setItem('authToken', userToken);
+        setToken(userToken);
 
         // Update auth state (if using context or state)
         // setIsAuthenticated(true); // Navigate to the main screen
@@ -101,27 +92,35 @@ export default function LoginScreen (): ReactNode {
 
   return (
     <SafeAreaView>
-      <View style={{}}>
-        <Pressable
-          onPress={handleGoogleLogin}
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            padding: 10,
-            justifyContent: 'center',
-            borderColor: '#E0E0E0',
-            margin: 12,
-            borderWidth: 1,
-            gap: 30,
-            borderRadius: 25,
-            position: 'relative',
-            marginTop: 20,
-          }}>
-          <Text style={{textAlign: 'center', fontSize: 15, color: Colors.WHITE, fontWeight: '500'}}>
-            Sign Up With Google
-          </Text>
-        </Pressable>
-      </View>
+      {loading &&
+        <View style={{flex: 1}}>
+          <ActivityIndicator />
+        </View>
+      }
+
+      {!loading &&
+        <View style={{}}>
+          <Pressable
+            onPress={handleGoogleLogin}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              padding: 10,
+              justifyContent: 'center',
+              borderColor: '#E0E0E0',
+              margin: 12,
+              borderWidth: 1,
+              gap: 30,
+              borderRadius: 25,
+              position: 'relative',
+              marginTop: 20,
+            }}>
+            <Text style={{textAlign: 'center', fontSize: 15, color: Colors.WHITE, fontWeight: '500'}}>
+              Sign In With Google
+            </Text>
+          </Pressable>
+        </View>
+      }
     </SafeAreaView>
   );
 };

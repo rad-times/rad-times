@@ -7,6 +7,7 @@
     "start": "expo start -c",
     "android": "expo run:android",
     "ios": "expo run:ios",
+    "ios:dev": "ENVIRONMENT=dev expo run:ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "expo lint",

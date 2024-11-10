@@ -1,7 +1,8 @@
 import {Colors} from "@/constants/Colors";
+import {AuthContext} from "@/context/AuthProvider";
 import {setDisplayText} from "@/state/displayLanguageSlice";
 import {Stack} from "expo-router";
-import {ReactNode, useCallback, useEffect, useState} from "react";
+import {ReactNode, useCallback, useContext, useEffect, useState} from "react";
 import {getActivePersonById, getUserLanguages} from "@/api/personApi";
 import { SplashScreen } from "expo-router";
 import {setActiveUser} from "@/state/activeUserSlice";
@@ -15,9 +16,18 @@ SplashScreen.preventAutoHideAsync()
 export default function AppRoot(): ReactNode {
   const [appIsReady, setAppIsReady] = useState(false);
   const dispatch = useDispatch();
+  const {userId} = useContext(AuthContext);
 
+  // @TODO Rebuild this once auth is done. It needs to not do any of this shit until the user has authenticated
   useEffect(() => {
     async function fetchAppLoadData() {
+      if (userId === "") {
+        const displayText = await getUserLanguages("EN");
+        dispatch(setDisplayText(displayText));
+        setAppIsReady(true);
+        return;
+      }
+
       try {
         // Let me see different users between web and iOS simulator
         const userToFetch:number = Platform.OS === 'ios' ? 1 : 2;
@@ -40,7 +50,7 @@ export default function AppRoot(): ReactNode {
         // @TODO handle error
         console.error(err);
       });
-  }, []);
+  }, [userId]);
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
