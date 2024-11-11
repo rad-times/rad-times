@@ -98,7 +98,7 @@ export async function getActivePersonById(id: number): Promise<Person> {
   }
 }
 
-export async function getUserLanguages(languageCode:string = 'en'): Promise<Object> {
+export async function getUserLanguages(languageCode:string = 'en'): Promise<object> {
   try {
     return await fetch(`${API_URL}/static/languages_${languageCode.toLowerCase()}.json`, {
       headers: {

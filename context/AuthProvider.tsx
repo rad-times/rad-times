@@ -5,18 +5,20 @@ import {createContext, ReactNode, useEffect, useState, Dispatch, SetStateAction}
 interface IAuthProvider {
   token: string;
   setToken: Dispatch<SetStateAction<string>>;
-  userId: string;
-  setUserId: Dispatch<SetStateAction<string>>;
+  userId: number;
+  setUserId: Dispatch<SetStateAction<number>>;
 }
 
 const AuthContext = createContext({} as IAuthProvider);
 
 const AuthProvider = ({children}:{children: ReactNode}): ReactNode => {
-  const [token, setToken] = useState('');
-  const [userId, setUserId] = useState('');
+  const [token, setToken] = useState<string>('');
+  const [userId, setUserId] = useState<number>(-1);
+
   useEffect(() => {
     const fetchUser = async () => {
       const token = await AsyncStorage.getItem('authToken');
+      console.log("token from storage", token);
 
       if (token) {
         const decodedToken = jwtDecode(token || '');
@@ -24,13 +26,13 @@ const AuthProvider = ({children}:{children: ReactNode}): ReactNode => {
         const userId = decodedToken.userId;
         setUserId(userId);
       } else {
-        setUserId('');
+        setUserId(-1);
       }
     };
 
     fetchUser();
   }, []);
-
+  console.log('AuthProvider changing from token set');
   return (
     <AuthContext.Provider
       value={{

@@ -8,7 +8,7 @@ import { SplashScreen } from "expo-router";
 import {setActiveUser} from "@/state/activeUserSlice";
 import {useDispatch} from "react-redux";
 import {setCrewList} from "@/state/crewSearchSlice";
-import {Platform, StyleSheet, View} from "react-native";
+import {StyleSheet, View} from "react-native";
 
 SplashScreen.preventAutoHideAsync()
   .catch(err => console.log('error', err));
@@ -18,20 +18,21 @@ export default function AppRoot(): ReactNode {
   const dispatch = useDispatch();
   const {userId} = useContext(AuthContext);
 
-  // @TODO Rebuild this once auth is done. It needs to not do any of this shit until the user has authenticated
+  // @TODO Rebuild this once auth is done.
+  // We need to get some initial data before we even try to load the app and catch / handle errors if we can't.
+  // E.G. if the server is down and we cant fetch messages, it should not crash and hang on the loading screen.
   useEffect(() => {
     async function fetchAppLoadData() {
-      if (userId === "") {
-        const displayText = await getUserLanguages("EN");
-        dispatch(setDisplayText(displayText));
-        setAppIsReady(true);
-        return;
-      }
-
       try {
-        // Let me see different users between web and iOS simulator
-        const userToFetch:number = Platform.OS === 'ios' ? 1 : 2;
-        const personResp = await getActivePersonById(userToFetch)
+        console.log('appRoot useEffect with userId: ', userId);
+        if (userId === -1) {
+          const displayText = await getUserLanguages("EN");
+          dispatch(setDisplayText(displayText));
+          setAppIsReady(true);
+          return;
+        }
+
+        const personResp = await getActivePersonById(userId)
         dispatch(setActiveUser(personResp));
         dispatch(setCrewList(personResp?.crew || []))
 
@@ -59,6 +60,7 @@ export default function AppRoot(): ReactNode {
       // loading its initial state and rendering its first pixels. So instead,
       // we hide the splash screen once we know the root view has already
       // performed layout.
+      console.log("hiding splash");
       await SplashScreen.hideAsync();
     }
   }, [appIsReady]);
@@ -66,7 +68,7 @@ export default function AppRoot(): ReactNode {
   if (!appIsReady) {
     return null;
   }
-
+  console.log('AppRoot changing');
   return (
     <View
       style={styles.rootWrapper}

@@ -31,7 +31,8 @@ GoogleSignin.configure({
 });
 
 export default function LoginScreen (): ReactNode {
-  const {token, setToken} = useContext(AuthContext);
+  const {setToken} = useContext(AuthContext);
+  const {setUserId} = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
 
   const signIn = async () => {
@@ -68,24 +69,29 @@ export default function LoginScreen (): ReactNode {
       const {idToken} = authData;
 
       if (idToken) {
-        const userToken = await fetch(`${API_URL}/login`, {
+        const response = await fetch(`${API_URL}/login`, {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${idToken}`
           }
         })
-          .then(res => res.json());
+          .then(res => {
+            return res.json()
+          });
 
-        await AsyncStorage.setItem('authToken', userToken);
-        setToken(userToken);
+        const {
+          activeUser,
+          token
+        } = response;
 
-        // Update auth state (if using context or state)
-        // setIsAuthenticated(true); // Navigate to the main screen
-        // Handle JWT token and user data here
+        await AsyncStorage.setItem('authToken', token);
+        setToken(token);
+        setUserId(activeUser.id);
       }
     } catch (error) {
       console.log('Login Error:', error);
     } finally {
+      console.log('removing login page loader');
       setLoading(false);
     }
   };

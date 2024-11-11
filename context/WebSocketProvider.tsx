@@ -35,7 +35,7 @@ function WebSocketProvider({children}:IWebSocketProvider): ReactNode {
   };
 
   useEffect(() => {
-    if (userId === "" || _.isNil(userId)) {
+    if (userId === -1 || _.isNil(userId)) {
       return;
     }
 
