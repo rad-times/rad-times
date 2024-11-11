@@ -78,7 +78,8 @@
         {
           "iosUrlScheme": "com.googleusercontent.apps.270430905807-6mt3kqb3705v493r7usosihpc945c77a"
         }
-      ]
+      ],
+      "react-native-fbsdk-next"
     ],
     "experiments": {
       "typedRoutes": true

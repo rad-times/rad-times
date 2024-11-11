@@ -1,6 +1,4 @@
-import {ActiveUserStateProp} from "@/state/activeUserSlice";
 import displayText, {DisplayTextStateProp} from "@/state/displayLanguageSlice";
-import {color} from "ansi-fragments";
 import { Tabs } from 'expo-router';
 import Icon from '@/views/components/Icon'
 import {Colors} from '@/constants/Colors';
@@ -15,7 +13,7 @@ const baseTabOptions = {
   tabBarInactiveTintColor: Colors.LIGHT_GREY
 };
 
-export default function SpotCheckNavigationLayout(): ReactNode {
+export default function RadTimesNavigationLayout(): ReactNode {
   const displayText = useSelector((state: DisplayTextStateProp) => state.displayText.displayTextJson);
 
   return (

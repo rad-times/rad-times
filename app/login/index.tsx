@@ -1,21 +1,11 @@
 import {Colors} from "@/constants/Colors";
+import Icon from "@/views/components/Icon";
+import PageWrapper from "@/views/components/PageWrapper";
 import Constants from "expo-constants";
-import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  Pressable,
-  ActivityIndicator
-} from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import {StyleSheet, Text, View, Pressable, ActivityIndicator, GestureResponderEvent} from 'react-native';
 import React, {useState, useContext, ReactNode} from 'react';
-import {
-  GoogleSignin,
-  isErrorWithCode,
-  isSuccessResponse,
-  statusCodes,
-  User
-} from '@react-native-google-signin/google-signin';
+import {GoogleSignin, isErrorWithCode, isSuccessResponse, statusCodes, User} from '@react-native-google-signin/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '@/providers/AuthProvider';
 
@@ -29,6 +19,48 @@ GoogleSignin.configure({
   accountName: '',
   iosClientId: '270430905807-6mt3kqb3705v493r7usosihpc945c77a.apps.googleusercontent.com',
 });
+
+interface ISocialLoginBtn {
+  onBtnPress: (e: GestureResponderEvent) => void;
+  logoName: keyof typeof Ionicons.glyphMap;
+  btnText: string;
+}
+/*
+ * individual button
+ */
+const SocialLoginBtn = ({
+  onBtnPress,
+  logoName,
+  btnText
+}: ISocialLoginBtn):ReactNode => {
+  return (
+    <Pressable
+      onPress={onBtnPress}
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 10,
+        justifyContent: 'center',
+        borderColor: '#E0E0E0',
+        margin: 12,
+        borderWidth: 1,
+        gap: 30,
+        borderRadius: 25,
+        position: 'relative',
+        marginTop: 20,
+      }}>
+      <View style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+      }}>
+        <Icon size={24} name={logoName} color={Colors.WHITE} />
+        <Text style={{textAlign: 'center', fontSize: 15, paddingLeft: 10, color: Colors.WHITE, fontWeight: '500'}}>
+          {btnText}
+        </Text>
+      </View>
+    </Pressable>
+  );
+}
 
 export default function LoginScreen (): ReactNode {
   const {setToken} = useContext(AuthContext);
@@ -96,8 +128,12 @@ export default function LoginScreen (): ReactNode {
     }
   };
 
+  const handleFacebookLogin = async() => {
+    console.log('TODO');
+  }
+
   return (
-    <SafeAreaView>
+    <PageWrapper>
       {loading &&
         <View style={{flex: 1}}>
           <ActivityIndicator />
@@ -106,28 +142,19 @@ export default function LoginScreen (): ReactNode {
 
       {!loading &&
         <View style={{}}>
-          <Pressable
-            onPress={handleGoogleLogin}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              padding: 10,
-              justifyContent: 'center',
-              borderColor: '#E0E0E0',
-              margin: 12,
-              borderWidth: 1,
-              gap: 30,
-              borderRadius: 25,
-              position: 'relative',
-              marginTop: 20,
-            }}>
-            <Text style={{textAlign: 'center', fontSize: 15, color: Colors.WHITE, fontWeight: '500'}}>
-              Sign In With Google
-            </Text>
-          </Pressable>
+          <SocialLoginBtn
+            onBtnPress={handleGoogleLogin}
+            logoName={'logo-google'}
+            btnText={'Sign in with Google'}
+          />
+          <SocialLoginBtn
+            onBtnPress={handleFacebookLogin}
+            logoName={'logo-facebook'}
+            btnText={'Sign in with Facebook'}
+          />
         </View>
       }
-    </SafeAreaView>
+    </PageWrapper>
   );
 };
 

@@ -13,7 +13,7 @@ import {StyleSheet, View} from "react-native";
 SplashScreen.preventAutoHideAsync()
   .catch(err => console.log('error', err));
 
-export default function AppRoot(): ReactNode {
+export default function DELETE_ME(): ReactNode {
   const [appIsReady, setAppIsReady] = useState(false);
   const dispatch = useDispatch();
   const {userId} = useContext(AuthContext);
@@ -68,7 +68,7 @@ export default function AppRoot(): ReactNode {
   if (!appIsReady) {
     return null;
   }
-  console.log('AppRoot changing');
+  console.log('DELETE_ME changing');
   return (
     <View
       style={styles.rootWrapper}

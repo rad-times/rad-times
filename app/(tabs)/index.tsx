@@ -1,18 +1,26 @@
-import UserHome from "@/views/UserHome";
-import LoginPage from "@/views/LoginPage";
+import {DisplayTextStateProp} from "@/state/displayLanguageSlice";
+import {CheckInBtn} from "@/views/checkIn/CheckInBtn";
+import PageTitle from "@/views/components/PageTitle";
+import Spacer from "@/views/components/Spacer";
+import {FriendsActiveBox} from "@/views/FriendsActiveBox";
 import PageWrapper from "@/views/components/PageWrapper";
-import { AuthContext } from '@/providers/AuthProvider';
 import {ReactNode, useContext} from "react";
+import {useSelector} from "react-redux";
 
 export default function Index(): ReactNode {
-  const {userId} = useContext(AuthContext);
-
-  console.log('index rendering with userID:', userId);
+  const displayText = useSelector((state: DisplayTextStateProp) => state.displayText.displayTextJson);
 
   return (
     <PageWrapper>
-      {userId === -1 ? LoginPage() : UserHome()}
-
+      <>
+        <PageTitle
+          title={displayText.index.title}
+        />
+        <Spacer />
+        <FriendsActiveBox />
+        <Spacer />
+        <CheckInBtn />
+      </>
     </PageWrapper>
   );
 }

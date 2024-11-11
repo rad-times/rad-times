@@ -1,9 +1,10 @@
+import {Colors} from "@/constants/Colors";
 import { store } from "@/state/store";
+import {Stack} from "expo-router";
 import {Provider as ReduxProvider} from "react-redux";
 import { WebSocketProvider } from '@/providers/WebSocketProvider';
 import { AuthProvider} from "@/providers/AuthProvider";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import AppRoot from '@/app/AppRoot';
 import { StatusBar } from 'react-native';
 import {ReactNode, useEffect, useState} from "react";
 
@@ -31,7 +32,21 @@ export default function Layout(): ReactNode {
             <StatusBar
               barStyle={'light-content'}
             />
-            <AppRoot />
+            <AuthProvider>
+              <Stack
+                screenOptions={{
+                  headerStyle: {
+                    backgroundColor: Colors.DARK_RED
+                  },
+                  headerTintColor: Colors.WHITE,
+                  title: ''
+                }}
+              >
+                <Stack.Screen
+                  name="(tabs)"
+                />
+              </Stack>
+            </AuthProvider>
           </SafeAreaProvider>
         </AuthProvider>
       </WebSocketProvider>
