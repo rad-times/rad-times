@@ -1,4 +1,4 @@
-import {AuthContext} from "@/context/AuthProvider";
+import {AuthContext} from "@/providers/AuthProvider";
 import Constants from "expo-constants";
 import {useEffect, createContext, useRef, ReactNode, useContext} from 'react';
 import {

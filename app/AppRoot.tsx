@@ -1,5 +1,5 @@
 import {Colors} from "@/constants/Colors";
-import {AuthContext} from "@/context/AuthProvider";
+import {AuthContext} from "@/providers/AuthProvider";
 import {setDisplayText} from "@/state/displayLanguageSlice";
 import {Stack} from "expo-router";
 import {ReactNode, useCallback, useContext, useEffect, useState} from "react";

@@ -17,7 +17,7 @@ import {
   User
 } from '@react-native-google-signin/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AuthContext } from '@/context/AuthProvider';
+import { AuthContext } from '@/providers/AuthProvider';
 
 const API_URL = Constants.expoConfig?.extra?.API_URL_ROOT || '';
 

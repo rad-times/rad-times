@@ -1,7 +1,7 @@
 import { store } from "@/state/store";
 import {Provider as ReduxProvider} from "react-redux";
-import { WebSocketProvider } from '@/context/WebSocketProvider';
-import { AuthProvider} from "@/context/AuthProvider";
+import { WebSocketProvider } from '@/providers/WebSocketProvider';
+import { AuthProvider} from "@/providers/AuthProvider";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import AppRoot from '@/app/AppRoot';
 import { StatusBar } from 'react-native';

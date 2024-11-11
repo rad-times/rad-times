@@ -1,5 +1,5 @@
 import {CHECK_IN, CHECK_OUT} from "@/constants/SocketTypes";
-import {WebSocketProvider} from "@/context/WebSocketProvider";
+import {WebSocketProvider} from "@/providers/WebSocketProvider";
 import {
   IActiveFriendsState,
   setActiveUserIsCheckedIn,
