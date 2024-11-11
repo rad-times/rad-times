@@ -76,10 +76,15 @@
       [
         "@react-native-google-signin/google-signin",
         {
-          "iosUrlScheme": "com.googleusercontent.apps.270430905807-6mt3kqb3705v493r7usosihpc945c77a"
+          "iosUrlScheme": ""
         }
       ],
-      "react-native-fbsdk-next"
+      [
+        "react-native-fbsdk-next",
+        {
+          "displayName": "Rad Times"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
