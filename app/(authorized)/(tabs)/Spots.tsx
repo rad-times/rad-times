@@ -1,6 +1,6 @@
 import {Spot} from "@/types/Spot";
 import ActionButton from "@/views/components/ActionButton";
-import CreateNewSpot from "@/app/spots/CreateNewSpot";
+import CreateNewSpot from "@/app/(authorized)/spots/CreateNewSpot";
 import {View, FlatList, StyleSheet, Modal} from "react-native";
 
 import PageTitle from "@/views/components/PageTitle";

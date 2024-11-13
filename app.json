@@ -94,7 +94,8 @@
         "projectId": ""
       },
       "API_URL_ROOT": "",
-      "WS_ROOT": ""
+      "WS_ROOT": "",
+      "oauthKeys": {}
     }
   }
 }

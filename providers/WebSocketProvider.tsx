@@ -1,4 +1,4 @@
-import {AuthContext} from "@/providers/AuthProvider";
+import {ActiveUserStateProp} from "@/state/activeUserSlice";
 import Constants from "expo-constants";
 import {useEffect, createContext, useRef, ReactNode, useContext} from 'react';
 import {
@@ -7,6 +7,7 @@ import {
   IWebSocketProvider
 } from '@/types/SocketMessage';
 import _ from 'lodash';
+import {useSelector} from "react-redux";
 
 const WS_URL = Constants.expoConfig?.extra?.WS_ROOT || '';
 
@@ -15,7 +16,7 @@ const WebSocketContext = createContext(null);
 function WebSocketProvider({children}:IWebSocketProvider): ReactNode {
   const ws = useRef<WebSocket>({} as WebSocket);
   let socket:WebSocket = ws.current;
-  const {userId} = useContext(AuthContext);
+  const activeUser = useSelector((state: ActiveUserStateProp) => state.activeUser.user);
 
   const channelsRef = useRef<IChannels>({} as IChannels);
   const channels = channelsRef.current;
@@ -35,7 +36,7 @@ function WebSocketProvider({children}:IWebSocketProvider): ReactNode {
   };
 
   useEffect(() => {
-    if (userId === -1 || _.isNil(userId)) {
+    if (_.isNil(activeUser.id)) {
       return;
     }
 
@@ -68,7 +69,7 @@ function WebSocketProvider({children}:IWebSocketProvider): ReactNode {
     }
 
     return ():void => {socket.close()}
-  }, [userId]);
+  }, [activeUser]);
 
   return (
     // @ts-ignore

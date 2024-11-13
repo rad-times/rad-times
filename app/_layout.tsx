@@ -3,7 +3,7 @@ import { store } from "@/state/store";
 import {Stack} from "expo-router";
 import {Provider as ReduxProvider} from "react-redux";
 import { WebSocketProvider } from '@/providers/WebSocketProvider';
-import { AuthProvider} from "@/providers/AuthProvider";
+import AuthProvider from "@/providers/AuthProvider";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'react-native';
 import {ReactNode, useEffect, useState} from "react";
@@ -32,7 +32,6 @@ export default function Layout(): ReactNode {
             <StatusBar
               barStyle={'light-content'}
             />
-            <AuthProvider>
               <Stack
                 screenOptions={{
                   headerStyle: {
@@ -46,7 +45,6 @@ export default function Layout(): ReactNode {
                   name="(tabs)"
                 />
               </Stack>
-            </AuthProvider>
           </SafeAreaProvider>
         </AuthProvider>
       </WebSocketProvider>

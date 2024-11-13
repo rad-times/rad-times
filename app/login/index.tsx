@@ -1,24 +1,14 @@
 import {Colors} from "@/constants/Colors";
+import {BODY_TEXT, CENTER_ON_PAGE} from "@/constants/Styles";
 import Icon from "@/views/components/Icon";
 import PageWrapper from "@/views/components/PageWrapper";
-import Constants from "expo-constants";
+import Spacer from "@/views/components/Spacer";
 import Ionicons from '@expo/vector-icons/Ionicons';
-import {StyleSheet, Text, View, Pressable, ActivityIndicator, GestureResponderEvent} from 'react-native';
-import React, {useState, useContext, ReactNode} from 'react';
-import {GoogleSignin, isErrorWithCode, isSuccessResponse, statusCodes, User} from '@react-native-google-signin/google-signin';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AuthContext } from '@/providers/AuthProvider';
-
-const API_URL = Constants.expoConfig?.extra?.API_URL_ROOT || '';
-
-GoogleSignin.configure({
-  webClientId: '270430905807-km29dfj7ncfkrh59h7km322d9c4c8hpa.apps.googleusercontent.com',
-  scopes: ['profile', 'email'],
-  offlineAccess: true,
-  forceCodeForRefreshToken: true,
-  accountName: '',
-  iosClientId: '270430905807-6mt3kqb3705v493r7usosihpc945c77a.apps.googleusercontent.com',
-});
+import {StyleSheet, Text, View, Pressable, Image, GestureResponderEvent, ActivityIndicator} from 'react-native';
+import React, {useState, ReactNode} from 'react';
+import useGoogleSignIn from '@/hooks/useGoogleSignin';
+import { useAuthSession } from '@/providers/AuthProvider';
+import _ from 'lodash';
 
 interface ISocialLoginBtn {
   onBtnPress: (e: GestureResponderEvent) => void;
@@ -63,69 +53,20 @@ const SocialLoginBtn = ({
 }
 
 export default function LoginScreen (): ReactNode {
-  const {setToken} = useContext(AuthContext);
-  const {setUserId} = useContext(AuthContext);
+  const {signIn} = useAuthSession();
   const [loading, setLoading] = useState(false);
-
-  const signIn = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const response = await GoogleSignin.signIn();
-      if (isSuccessResponse(response)) {
-        return response.data;
-      }
-    } catch (error) {
-      if (isErrorWithCode(error)) {
-        switch (error.code) {
-          case statusCodes.IN_PROGRESS:
-            console.log('error 1', error);
-            break;
-          case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
-            console.log('error 2', error);
-            break;
-          default:
-            console.log('error 3', error);
-        }
-      } else {
-        console.log('error 4', error);
-      }
-    }
-  };
 
   const handleGoogleLogin = async () => {
     setLoading(true);
-    try {
-      const authData: User|undefined = await signIn();
-      if (!authData) return;
-
-      const {idToken} = authData;
-
-      if (idToken) {
-        const response = await fetch(`${API_URL}/login`, {
-          method: "GET",
-          headers: {
-            "Authorization": `Bearer ${idToken}`
-          }
-        })
-          .then(res => {
-            return res.json()
-          });
-
-        const {
-          activeUser,
-          token
-        } = response;
-
-        await AsyncStorage.setItem('authToken', token);
-        setToken(token);
-        setUserId(activeUser.id);
-      }
-    } catch (error) {
-      console.log('Login Error:', error);
-    } finally {
-      console.log('removing login page loader');
-      setLoading(false);
+    const [token, error] = await useGoogleSignIn();
+    if (error || _.isNil(token)) {
+      //@todo handle auth error
+      console.error("There was an error with Google authentication:", error);
+      return;
     }
+
+    signIn(token);
+    setLoading(false);
   };
 
   const handleFacebookLogin = async() => {
@@ -134,26 +75,54 @@ export default function LoginScreen (): ReactNode {
 
   return (
     <PageWrapper>
-      {loading &&
-        <View style={{flex: 1}}>
-          <ActivityIndicator />
+      <View style={CENTER_ON_PAGE}>
+        <View style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: 40,
+          // Helps visually center the weight of the page
+          marginTop: -80
+        }}>
+          <Image
+            style={{
+              height: 120,
+              width: 120
+            }}
+            source={{
+              uri:' /assets/images/skate-tool.png'
+            }}
+          />
         </View>
-      }
 
-      {!loading &&
-        <View style={{}}>
-          <SocialLoginBtn
-            onBtnPress={handleGoogleLogin}
-            logoName={'logo-google'}
-            btnText={'Sign in with Google'}
-          />
-          <SocialLoginBtn
-            onBtnPress={handleFacebookLogin}
-            logoName={'logo-facebook'}
-            btnText={'Sign in with Facebook'}
-          />
-        </View>
-      }
+        <Text
+          style={[BODY_TEXT, {
+            paddingLeft: 12, paddingRight: 12
+          }]}
+        >
+          Rad Times are just ahead. We just need to get you logged in first.
+        </Text>
+        <Spacer />
+        {loading &&
+          <View style={{flex: 1}}>
+            <ActivityIndicator />
+          </View>
+        }
+
+        {!loading &&
+          <View style={{}}>
+            <SocialLoginBtn
+              onBtnPress={handleGoogleLogin}
+              logoName={'logo-google'}
+              btnText={'Sign in with Google'}
+            />
+            <SocialLoginBtn
+              onBtnPress={handleFacebookLogin}
+              logoName={'logo-facebook'}
+              btnText={'Sign in with Facebook'}
+            />
+          </View>
+        }
+      </View>
     </PageWrapper>
   );
 };
