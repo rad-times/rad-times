@@ -36,7 +36,11 @@ function WebSocketProvider({children}:IWebSocketProvider): ReactNode {
   };
 
   useEffect(() => {
-    if (_.isNil(activeUser.id)) {
+    /**
+     * If no user is logged in, don't initialize the websocket.
+     * @TODO no reason to wait on a user session. Should instead just wait on app to be loaded and ready?
+     */
+    if (activeUser.id === 0) {
       return;
     }
 

@@ -1,12 +1,13 @@
 import {Colors} from "@/constants/Colors";
 import { store } from "@/state/store";
-import {Stack} from "expo-router";
+import {Navigator, Stack} from "expo-router";
 import {Provider as ReduxProvider} from "react-redux";
 import { WebSocketProvider } from '@/providers/WebSocketProvider';
 import AuthProvider from "@/providers/AuthProvider";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'react-native';
 import {ReactNode, useEffect, useState} from "react";
+import Slot = Navigator.Slot;
 
 export default function Layout(): ReactNode {
 
@@ -32,19 +33,7 @@ export default function Layout(): ReactNode {
             <StatusBar
               barStyle={'light-content'}
             />
-              <Stack
-                screenOptions={{
-                  headerStyle: {
-                    backgroundColor: Colors.DARK_RED
-                  },
-                  headerTintColor: Colors.WHITE,
-                  title: ''
-                }}
-              >
-                <Stack.Screen
-                  name="(tabs)"
-                />
-              </Stack>
+            <Slot />
           </SafeAreaProvider>
         </AuthProvider>
       </WebSocketProvider>

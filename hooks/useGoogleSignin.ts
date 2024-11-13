@@ -9,12 +9,12 @@ import Constants from "expo-constants";
 import {useState} from "react";
 
 GoogleSignin.configure({
-  webClientId: Constants.config.extra.oauthKeys.GOOGLE_OAUTH_WEB_CLIENTID,
+  webClientId: Constants.expoConfig?.extra?.oauthKeys.GOOGLE_OAUTH_WEB_CLIENTID,
   scopes: ['profile', 'email'],
   offlineAccess: true,
   forceCodeForRefreshToken: true,
   accountName: '',
-  iosClientId:Constants.config.extra.oauthKeys.GOOGLE_OAUTH_IOS_CLIENTID
+  iosClientId: Constants.expoConfig?.extra?.oauthKeys.GOOGLE_OAUTH_IOS_CLIENTID
 });
 
 const API_URL = Constants.expoConfig?.extra?.API_URL_ROOT || '';

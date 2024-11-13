@@ -1,3 +1,4 @@
+import {Colors} from "@/constants/Colors";
 import {useAuthSession} from "@/providers/AuthProvider";
 import {Redirect, Stack} from 'expo-router';
 import {Text} from 'react-native';
@@ -17,10 +18,16 @@ export default function RootLayout(): ReactNode {
   return (
     <Stack
       screenOptions={{
-        headerShown: false
+        headerStyle: {
+          backgroundColor: Colors.DARK_RED
+        },
+        headerTintColor: Colors.WHITE,
+        title: ''
       }}
     >
-      <Stack.Screen name="(tabs)" />
+      <Stack.Screen
+        name="(tabs)"
+      />
     </Stack>
   );
 }
