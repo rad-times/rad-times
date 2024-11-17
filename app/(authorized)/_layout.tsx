@@ -1,7 +1,7 @@
 import {Colors} from "@/constants/Colors";
 import {useAuthSession} from "@/providers/AuthProvider";
-import {Redirect, SplashScreen, Stack} from 'expo-router';
-import {StyleSheet, Text, View} from 'react-native';
+import {SplashScreen, Stack} from 'expo-router';
+import {StyleSheet, View} from 'react-native';
 import {ReactNode, useCallback} from "react";
 
 export default function RootLayout(): ReactNode {

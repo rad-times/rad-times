@@ -1,5 +1,5 @@
 import {useAuthSession} from "@/providers/AuthProvider";
-import displayText, {DisplayTextStateProp} from "@/state/displayLanguageSlice";
+import {DisplayTextStateProp} from "@/state/displayLanguageSlice";
 import { Tabs } from 'expo-router';
 import Icon from '@/views/components/Icon'
 import {Colors} from '@/constants/Colors';

@@ -12,8 +12,8 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {toggleFavoriteSpot} from "@/api/spotApi";
 import {ActiveUserStateProp} from "@/state/activeUserSlice";
-import {ReactNode, useEffect} from "react";
-import {useNavigation, usePathname, useRouter, useSegments} from "expo-router";
+import {ReactNode} from "react";
+import {useRouter} from "expo-router";
 
 type SpotListingItemProps = {
   spotDetails: Spot
