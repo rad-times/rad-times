@@ -36,12 +36,12 @@ module.exports = ({ config }) => {
   /**
    * oAuth keys for application use
    */
-  config.extra.oauthKeys.GOOGLE_OAUTH_IOS_CLIENTID=process.env.GOOGLE_OAUTH_CLIENT_ID_IOS;
-  config.extra.oauthKeys.GOOGLE_OAUTH_WEB_CLIENTID=process.env.GOOGLE_OAUTH_CLIENT_ID_WEB;
-  config.extra.oauthKeys.GOOGLE_OAUTH_ANDROID_CLIENTID=process.env.GOOGLE_OAUTH_CLIENT_ID_ANDROID;
-  config.extra.oauthKeys.FACEBOOK_APP_ID=process.env.FACEBOOK_AUTH_APP_ID;
-  config.extra.oauthKeys.FACEBOOK_CLIENT=process.env.FACEBOOK_AUTH_CLIENT_TOKEN;
-  config.extra.oauthKeys.FACEBOOK_SCHEME=process.env.FACEBOOK_AUTH_SCHEME;
+  config.extra.OAUTH_KEYS.GOOGLE_OAUTH_IOS_CLIENTID=process.env.GOOGLE_OAUTH_CLIENT_ID_IOS;
+  config.extra.OAUTH_KEYS.GOOGLE_OAUTH_WEB_CLIENTID=process.env.GOOGLE_OAUTH_CLIENT_ID_WEB;
+  config.extra.OAUTH_KEYS.GOOGLE_OAUTH_ANDROID_CLIENTID=process.env.GOOGLE_OAUTH_CLIENT_ID_ANDROID;
+  config.extra.OAUTH_KEYS.FACEBOOK_APP_ID=process.env.FACEBOOK_AUTH_APP_ID;
+  config.extra.OAUTH_KEYS.FACEBOOK_CLIENT=process.env.FACEBOOK_AUTH_CLIENT_TOKEN;
+  config.extra.OAUTH_KEYS.FACEBOOK_SCHEME=process.env.FACEBOOK_AUTH_SCHEME;
 
   /**
    * API Root
@@ -49,9 +49,11 @@ module.exports = ({ config }) => {
   if (process.env.ENVIRONMENT === 'dev') {
     config.extra.API_URL_ROOT = "http://localhost:8080";
     config.extra.WS_ROOT = "ws://localhost:8080";
+    config.extra.ENV = 'dev';
   } else {
     config.extra.API_URL_ROOT = "https://theradtimes.com";
     config.extra.WS_ROOT = "wss://theradtimes.com";
+    config.extra.ENV = 'prod';
   }
 
   return config;

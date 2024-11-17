@@ -4,8 +4,9 @@ import Icon from "@/views/components/Icon";
 import PageWrapper from "@/views/components/PageWrapper";
 import Spacer from "@/views/components/Spacer";
 import Ionicons from '@expo/vector-icons/Ionicons';
+import {SplashScreen} from "expo-router";
 import {StyleSheet, Text, View, Pressable, Image, GestureResponderEvent, ActivityIndicator} from 'react-native';
-import React, {useState, ReactNode} from 'react';
+import React, {useState, ReactNode, useCallback} from 'react';
 import useGoogleSignIn from '@/hooks/useGoogleSignin';
 import { useAuthSession } from '@/providers/AuthProvider';
 import _ from 'lodash';
@@ -53,7 +54,7 @@ const SocialLoginBtn = ({
 }
 
 export default function LoginScreen (): ReactNode {
-  const {signIn} = useAuthSession();
+  const {signIn, isLoading} = useAuthSession();
   const [loading, setLoading] = useState(false);
 
   const handleGoogleLogin = async () => {
@@ -73,9 +74,18 @@ export default function LoginScreen (): ReactNode {
     console.log('TODO');
   }
 
+  const onLayoutRootView = useCallback(async () => {
+    if (!isLoading) {
+      await SplashScreen.hideAsync();
+    }
+  }, [isLoading]);
+
   return (
     <PageWrapper>
-      <View style={CENTER_ON_PAGE}>
+      <View
+        style={CENTER_ON_PAGE}
+        onLayout={onLayoutRootView}
+      >
         <View style={{
           alignItems: 'center',
           justifyContent: 'center',
@@ -89,7 +99,7 @@ export default function LoginScreen (): ReactNode {
               width: 120
             }}
             source={{
-              uri:' /assets/images/skate-tool.png'
+              uri: '/assets/images/skate-tool.png'
             }}
           />
         </View>

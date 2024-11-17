@@ -1,3 +1,4 @@
+import {useAuthSession} from "@/providers/AuthProvider";
 import displayText, {DisplayTextStateProp} from "@/state/displayLanguageSlice";
 import { Tabs } from 'expo-router';
 import Icon from '@/views/components/Icon'
@@ -15,6 +16,7 @@ const baseTabOptions = {
 
 export default function RadTimesNavigationLayout(): ReactNode {
   const displayText = useSelector((state: DisplayTextStateProp) => state.displayText.displayTextJson);
+  const {token} = useAuthSession();
 
   return (
     <Tabs
@@ -46,14 +48,16 @@ export default function RadTimesNavigationLayout(): ReactNode {
           tabBarIcon: ({ color }) => <Icon size={24} name="at-circle" color={color} />,
         }}
       />
-      <Tabs.Screen
-        name="Crew"
-        options={{
-          ...baseTabOptions,
-          tabBarLabel: displayText.tabs.crew,
-          tabBarIcon: ({ color }) => <Icon size={24} name="people-circle" color={color} />,
-        }}
-      />
+      {token?.current !== '' &&
+        <Tabs.Screen
+          name="Crew"
+          options={{
+            ...baseTabOptions,
+            tabBarLabel: displayText.tabs.crew,
+            tabBarIcon: ({ color }) => <Icon size={24} name="people-circle" color={color} />,
+          }}
+        />
+      }
       <Tabs.Screen
         name="Setup"
         options={{

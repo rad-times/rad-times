@@ -93,9 +93,10 @@
       "eas": {
         "projectId": ""
       },
+      "ENV": "",
       "API_URL_ROOT": "",
       "WS_ROOT": "",
-      "oauthKeys": {}
+      "OAUTH_KEYS": {}
     }
   }
 }

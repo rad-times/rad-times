@@ -1,17 +1,29 @@
 import {ActiveUserStateProp} from "@/state/activeUserSlice";
 import Constants from "expo-constants";
-import {useEffect, createContext, useRef, ReactNode, useContext} from 'react';
+import {useEffect, createContext, useRef, ReactNode, useContext, MutableRefObject} from 'react';
 import {
   IChannels,
-  ISocketMessage,
+  SocketMessageType,
+  MetaDataType,
   IWebSocketProvider
 } from '@/types/SocketMessage';
-import _ from 'lodash';
 import {useSelector} from "react-redux";
 
 const WS_URL = Constants.expoConfig?.extra?.WS_ROOT || '';
 
-const WebSocketContext = createContext(null);
+const WebSocketContext = createContext<{
+  subscribe: (channel: keyof IChannels, callback: () => void) => void;
+  unsubscribe: (channel: keyof IChannels) => void;
+  sendMessage: (messageText: string) => void;
+}>({
+  subscribe: () => null,
+  unsubscribe: () => null,
+  sendMessage: () => null
+});
+
+const useWebsocket = () => {
+  return useContext(WebSocketContext);
+}
 
 function WebSocketProvider({children}:IWebSocketProvider): ReactNode {
   const ws = useRef<WebSocket>({} as WebSocket);
@@ -22,12 +34,10 @@ function WebSocketProvider({children}:IWebSocketProvider): ReactNode {
   const channels = channelsRef.current;
 
   const subscribe = (channel:keyof IChannels, callback: () => void):void => {
-    // @ts-ignore
-    channels[channel] = callback;
+    (channels[channel] as () => void) = callback;
   };
 
-  const unsubscribe = (channel: string):void => {
-    // @ts-ignore
+  const unsubscribe = (channel: keyof IChannels):void => {
     delete channels[channel];
   };
 
@@ -62,13 +72,12 @@ function WebSocketProvider({children}:IWebSocketProvider): ReactNode {
       const {
         type,
         meta
-      }:ISocketMessage  = JSON.parse(messageEvent.data);
+      }:SocketMessageType  = JSON.parse(messageEvent.data);
 
-      const messageChannel:string = type;
-      // @ts-ignore
+      const messageChannel: keyof IChannels = type;
+
       if (channels[messageChannel]) {
-        // @ts-ignore
-        channels[messageChannel](meta);
+        (channels[messageChannel] as (arg1: MetaDataType)=> void)(meta);
       }
     }
 
@@ -76,10 +85,9 @@ function WebSocketProvider({children}:IWebSocketProvider): ReactNode {
   }, [activeUser]);
 
   return (
-    // @ts-ignore
     <WebSocketContext.Provider value={{subscribe, unsubscribe, sendMessage}}>
       {children}
     </WebSocketContext.Provider>
   );
 }
-export {WebSocketContext, WebSocketProvider}
+export {useWebsocket, WebSocketProvider}
