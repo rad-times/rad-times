@@ -1,14 +1,18 @@
 import {Colors} from "@/constants/Colors";
 import {useAuthSession} from "@/providers/AuthProvider";
-import {SplashScreen, Stack} from 'expo-router';
+import {Redirect, SplashScreen, Stack} from 'expo-router';
 import {StyleSheet, View} from 'react-native';
 import {ReactNode, useCallback} from "react";
 
 export default function RootLayout(): ReactNode {
-  const {isLoading} = useAuthSession();
+  const {isLoading, token} = useAuthSession();
 
   if (isLoading) {
     return null;
+  }
+
+  if (token?.current === '') {
+    return <Redirect href="/login" />;
   }
 
   const onLayoutRootView = useCallback(async () => {

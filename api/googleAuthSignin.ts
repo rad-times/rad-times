@@ -19,17 +19,14 @@ GoogleSignin.configure({
 
 const API_URL = Constants.expoConfig?.extra?.API_URL_ROOT || '';
 
-const useGoogleSignIn = async ():Promise<[string|null, string]> => {
-  const [error, setError] = useState<string>('');
-  const [token, setToken] = useState<string | null>(null);
-
+const googleSignIn = async ():Promise<string> => {
   try {
     await GoogleSignin.hasPlayServices();
     const authResp: SignInResponse = await GoogleSignin.signIn();
 
     if (isSuccessResponse(authResp)) {
       const {idToken}:{idToken:string|null} = authResp.data;
-      const sessionToken: string = await fetch(`${API_URL}/login`, {
+      return await fetch(`${API_URL}/login`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${idToken}`
@@ -38,27 +35,25 @@ const useGoogleSignIn = async ():Promise<[string|null, string]> => {
         .then(res => {
           return res.json()
         });
-
-      setToken(sessionToken);
     }
 
   } catch (error) {
     if (isErrorWithCode(error)) {
       switch (error.code) {
         case statusCodes.IN_PROGRESS:
-          setError(error.message);
+          console.error('Google login error', error.message);
           break;
         case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
-          setError(error.message);
+          console.error('Google login error', error.message);
           break;
         default:
-          setError(error.message);
+          console.error('Unknown Google login error', error.message);
       }
-    } else {
-      setError(String(error));
     }
+
+    return String(error);
   }
-    return [token, error];
+  return "";
 }
 
-export default useGoogleSignIn;
+export default googleSignIn;

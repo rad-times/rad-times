@@ -7,7 +7,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import {SplashScreen} from "expo-router";
 import {StyleSheet, Text, View, Pressable, Image, GestureResponderEvent, ActivityIndicator} from 'react-native';
 import React, {useState, ReactNode, useCallback} from 'react';
-import useGoogleSignIn from '@/hooks/useGoogleSignin';
+import googleSignIn from '@/api/googleAuthSignin';
 import { useAuthSession } from '@/providers/AuthProvider';
 import _ from 'lodash';
 
@@ -59,15 +59,21 @@ export default function LoginScreen (): ReactNode {
 
   const handleGoogleLogin = async () => {
     setLoading(true);
-    const [token, error] = await useGoogleSignIn();
-    if (error || _.isNil(token)) {
-      //@todo handle auth error
-      console.error("There was an error with Google authentication:", error);
-      return;
+    try {
+      const token = await googleSignIn();
+      if (_.isEmpty(token)) {
+        //@todo handle auth error
+        console.error("There was an error with Google authentication:");
+        return;
+      }
+
+      signIn(token);
+      setLoading(false);
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
     }
 
-    signIn(token);
-    setLoading(false);
   };
 
   const handleFacebookLogin = async() => {
@@ -86,51 +92,50 @@ export default function LoginScreen (): ReactNode {
         style={CENTER_ON_PAGE}
         onLayout={onLayoutRootView}
       >
-        <View style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginBottom: 40,
-          // Helps visually center the weight of the page
-          marginTop: -80
-        }}>
-          <Image
-            style={{
-              height: 120,
-              width: 120
-            }}
-            source={{
-              uri: '/assets/images/skate-tool.png'
-            }}
-          />
-        </View>
-
-        <Text
-          style={[BODY_TEXT, {
-            paddingLeft: 12, paddingRight: 12
-          }]}
-        >
-          Rad Times are just ahead. We just need to get you logged in first.
-        </Text>
-        <Spacer />
         {loading &&
-          <View style={{flex: 1}}>
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
             <ActivityIndicator />
           </View>
         }
 
         {!loading &&
-          <View style={{}}>
-            <SocialLoginBtn
-              onBtnPress={handleGoogleLogin}
-              logoName={'logo-google'}
-              btnText={'Sign in with Google'}
-            />
-            <SocialLoginBtn
-              onBtnPress={handleFacebookLogin}
-              logoName={'logo-facebook'}
-              btnText={'Sign in with Facebook'}
-            />
-          </View>
+          <>
+            <View style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: 40,
+              // Helps visually center the weight of the page
+              marginTop: -80
+            }}>
+              <Image
+                style={{
+                  height: 120,
+                  width: 120
+                }}
+                source={require('@/assets/images/skate-tool.png')}
+              />
+            </View>
+            <Text
+              style={[BODY_TEXT, {
+                paddingLeft: 12, paddingRight: 12
+              }]}
+            >
+              Rad Times are just ahead. We just need to get you logged in first.
+            </Text>
+            <Spacer />
+            <View style={{}}>
+              <SocialLoginBtn
+                onBtnPress={handleGoogleLogin}
+                logoName={'logo-google'}
+                btnText={'Sign in with Google'}
+              />
+              <SocialLoginBtn
+                onBtnPress={handleFacebookLogin}
+                logoName={'logo-facebook'}
+                btnText={'Sign in with Facebook'}
+              />
+            </View>
+          </>
         }
       </View>
     </PageWrapper>
