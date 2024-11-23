@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "radTimes",
+    "scheme": "radtimes",
     "userInterfaceStyle": "automatic",
     "backgroundColor": "#AAAAAA",
     "splash": {
@@ -76,7 +76,13 @@
       [
         "@react-native-google-signin/google-signin",
         {
-          "iosUrlScheme": "com.googleusercontent.apps.270430905807-6mt3kqb3705v493r7usosihpc945c77a"
+          "iosUrlScheme": ""
+        }
+      ],
+      [
+        "react-native-fbsdk-next",
+        {
+          "displayName": "Rad Times"
         }
       ]
     ],
@@ -87,8 +93,10 @@
       "eas": {
         "projectId": ""
       },
+      "ENV": "",
       "API_URL_ROOT": "",
-      "WS_ROOT": ""
+      "WS_ROOT": "",
+      "OAUTH_KEYS": {}
     }
   }
 }

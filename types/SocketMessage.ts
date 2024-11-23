@@ -1,12 +1,14 @@
 import {ReactNode} from "react";
 
-export type ISocketMessage = {
-  type: string
-  meta: {
-    id: string | number[]
-    senderId: number
-    createdAt: Date
-  }
+export type MetaDataType = {
+  id: string | number[];
+  senderId: number;
+  createdAt: Date;
+}
+
+export type SocketMessageType = {
+  type: keyof IChannels;
+  meta: MetaDataType;
 }
 
 export interface IWebSocketProvider {

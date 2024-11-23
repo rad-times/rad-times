@@ -13,8 +13,8 @@ import {StyleSheet, View} from "react-native";
 SplashScreen.preventAutoHideAsync()
   .catch(err => console.log('error', err));
 
-export default function AppRoot(): ReactNode {
-  const [appIsReady, setAppIsReady] = useState(false);
+export default function DELETE_ME(): ReactNode {
+
   const dispatch = useDispatch();
   const {userId} = useContext(AuthContext);
 
@@ -55,12 +55,6 @@ export default function AppRoot(): ReactNode {
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
-      // This tells the splash screen to hide immediately! If we call this after
-      // `setAppIsReady`, then we may see a blank screen while the app is
-      // loading its initial state and rendering its first pixels. So instead,
-      // we hide the splash screen once we know the root view has already
-      // performed layout.
-      console.log("hiding splash");
       await SplashScreen.hideAsync();
     }
   }, [appIsReady]);
@@ -68,7 +62,7 @@ export default function AppRoot(): ReactNode {
   if (!appIsReady) {
     return null;
   }
-  console.log('AppRoot changing');
+
   return (
     <View
       style={styles.rootWrapper}
@@ -90,11 +84,3 @@ export default function AppRoot(): ReactNode {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  rootWrapper: {
-    height: '100%',
-    width: '100%',
-    backgroundColor: Colors.BLACK
-  }
-});

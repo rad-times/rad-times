@@ -3,21 +3,24 @@ import {CheckInBtn} from "@/views/checkIn/CheckInBtn";
 import PageTitle from "@/views/components/PageTitle";
 import Spacer from "@/views/components/Spacer";
 import {FriendsActiveBox} from "@/views/FriendsActiveBox";
-import {ReactNode} from "react";
+import PageWrapper from "@/views/components/PageWrapper";
+import {ReactNode, useContext} from "react";
 import {useSelector} from "react-redux";
 
-export default function UserHome():ReactNode {
+export default function Index(): ReactNode {
   const displayText = useSelector((state: DisplayTextStateProp) => state.displayText.displayTextJson);
 
   return (
-    <>
-      <PageTitle
-        title={displayText.index.title}
-      />
-      <Spacer />
-      <FriendsActiveBox />
-      <Spacer />
-      <CheckInBtn />
-    </>
+    <PageWrapper>
+      <>
+        <PageTitle
+          title={displayText.index.title}
+        />
+        <Spacer />
+        <FriendsActiveBox />
+        <Spacer />
+        <CheckInBtn />
+      </>
+    </PageWrapper>
   );
 }
