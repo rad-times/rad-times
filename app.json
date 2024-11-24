@@ -77,14 +77,15 @@
         {
           "displayName": "Rad Times"
         }
-      ]
+      ],
+      "expo-tracking-transparency"
     ],
     "experiments": {
       "typedRoutes": true
     },
     "extra": {
       "eas": {
-        "projectId": ""
+        "projectId": "69b482d8-389b-4ac2-94a0-8e0c5a6bd2e7"
       },
       "ENV": "",
       "API_URL_ROOT": "",

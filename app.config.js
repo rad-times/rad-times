@@ -9,11 +9,6 @@ module.exports = ({ config }) => {
   config.android.config.googleMaps.apiKey = process.env.GOOGLE_MAPS_API_KEY;
 
   /**
-   * EAS project ID
-   */
-  config.extra.eas.projectId = process.env.EAS_PROJECT_ID;
-
-  /**
    * Plug required oAuth data into the browser specific config files
    */
   const googleAuthPluginIndex = config.plugins.findIndex(plugIn => typeof plugIn !== 'string' && plugIn[0] === '@react-native-google-signin/google-signin');
