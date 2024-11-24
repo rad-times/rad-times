@@ -29,7 +29,6 @@ function togglePersonFavoriteQuery(personId: number, activeUserId: number, isFav
   }`;
 }
 
-
 export async function getCrewByPersonId(id: number): Promise<Person[]> {
   try {
     const queryResp = await commonGraphQlRequest({

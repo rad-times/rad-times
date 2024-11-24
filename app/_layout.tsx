@@ -1,24 +1,37 @@
+import useDevLoadWait from "@/hooks/useDevLoadWait";
 import { store } from "@/state/store";
+import {Slot} from "expo-router";
+import * as SplashScreen from 'expo-splash-screen';
 import {Provider as ReduxProvider} from "react-redux";
-import { WebSocketProvider } from '@/context/WebSocketContext';
+import { WebSocketProvider } from '@/providers/WebSocketProvider';
+import AuthProvider from "@/providers/AuthProvider";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import AppRoot from '@/app/AppRoot';
-import { StatusBar } from 'react-native';
+import {StatusBar} from 'react-native';
 import {ReactNode} from "react";
 
+SplashScreen.preventAutoHideAsync()
+  .catch(console.warn);
+
+SplashScreen.setOptions({
+  duration: 500,
+  fade: true,
+});
+
 export default function Layout(): ReactNode {
+  const waiting = useDevLoadWait();
+  if (waiting) return null;
+
   return (
     <ReduxProvider store={store}>
       <WebSocketProvider>
-        <GestureHandlerRootView>
+        <AuthProvider>
           <SafeAreaProvider>
             <StatusBar
               barStyle={'light-content'}
             />
-            <AppRoot />
+            <Slot />
           </SafeAreaProvider>
-        </GestureHandlerRootView>
+        </AuthProvider>
       </WebSocketProvider>
     </ReduxProvider>
   );

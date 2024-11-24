@@ -6,13 +6,21 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "API_URL_ROOT": "http://localhost:8080",
+        "WS_ROOT": "ws://localhost:8080"
+      }
     },
     "preview": {
       "distribution": "internal"
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "API_URL_ROOT": "https://theradtimes.com",
+        "WS_ROOT": "wss://theradtimes.com"
+      }
     }
   },
   "submit": {

@@ -1,7 +1,9 @@
-import {URL_ROOT} from "@/constants/System";
 import {Person, unknownUser} from "@/types/Person";
 import {commonGraphQlRequest} from "@/api/commonApiMethods";
+import Constants from "expo-constants";
 import _ from "lodash";
+
+const API_URL = Constants.expoConfig?.extra?.API_URL_ROOT || '';
 
 function getPersonByIdQuery(id: number) {
   return `{
@@ -26,9 +28,9 @@ function getPersonByIdQuery(id: number) {
   }`;
 }
 
-function getActivePersonByIdQuery(id: number) {
+function getActivePersonBySubjectQuery(id: string) {
   return `{
-    activePersonById(id: ${id}) {
+    activePersonBySubject(id: "${id}") {
       id
       first_name
       last_name
@@ -64,11 +66,12 @@ function getActivePersonByIdQuery(id: number) {
   }`;
 }
 
-export async function getPersonById(id: number): Promise<Person> {
+export async function getPersonById(id: number, sessionToken:string): Promise<Person> {
   try {
     const queryResp = await commonGraphQlRequest({
       queryBody:  getPersonByIdQuery(id),
-      errorMessage: "Error fetching person by id"
+      errorMessage: "Error fetching person by id",
+      sessionToken
     });
 
     return _.get(queryResp, 'data.personById', unknownUser);
@@ -80,14 +83,15 @@ export async function getPersonById(id: number): Promise<Person> {
   }
 }
 
-export async function getActivePersonById(id: number): Promise<Person> {
+export async function getActivePersonBySubject(id: string, sessionToken:string): Promise<Person> {
   try {
     const queryResp = await commonGraphQlRequest({
-      queryBody:  getActivePersonByIdQuery(id),
-      errorMessage: "Error fetching person by id"
+      queryBody:  getActivePersonBySubjectQuery(id),
+      errorMessage: "Error fetching person by id",
+      sessionToken
     });
 
-    return _.get(queryResp, 'data.activePersonById', unknownUser);
+    return _.get(queryResp, 'data.activePersonBySubject', unknownUser);
 
   } catch (err) {
     console.error(err);
@@ -96,9 +100,9 @@ export async function getActivePersonById(id: number): Promise<Person> {
   }
 }
 
-export async function getUserLanguages(languageCode:string = 'en'): Promise<Object> {
+export async function getUserLanguages(languageCode:string = 'en'): Promise<object> {
   try {
-    return await fetch(`${URL_ROOT}/static/languages_${languageCode.toLowerCase()}.json`, {
+    return await fetch(`${API_URL}/static/languages_${languageCode.toLowerCase()}.json`, {
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json"

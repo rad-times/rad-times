@@ -5,23 +5,13 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "radTimes",
+    "scheme": "radtimes",
     "userInterfaceStyle": "automatic",
     "backgroundColor": "#AAAAAA",
-    "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#000000"
-    },
     "ios": {
       "supportsTablet": true,
       "config": {
         "googleMapsApiKey": ""
-      },
-      "splash": {
-        "image": "./assets/images/splash.png",
-        "resizeMode": "contain",
-        "backgroundColor": "#000000"
       },
       "bundleIdentifier": "com.davidryanhall.radtimes"
     },
@@ -34,11 +24,6 @@
         "googleMaps": {
           "apiKey": ""
         }
-      },
-      "splash": {
-        "image": "./assets/images/splash.png",
-        "resizeMode": "contain",
-        "backgroundColor": "#000000"
       },
       "permissions": [
         "android.permission.ACCESS_COARSE_LOCATION",
@@ -54,6 +39,14 @@
     },
     "plugins": [
       "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#000000",
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200
+        }
+      ],
       [
         "expo-location",
         {
@@ -72,6 +65,18 @@
           "photosPermission": "Allow $(PRODUCT_NAME) access to your photo library?",
           "cameraPermission": "Allow $(PRODUCT_NAME) access to your camera?"
         }
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": ""
+        }
+      ],
+      [
+        "react-native-fbsdk-next",
+        {
+          "displayName": "Rad Times"
+        }
       ]
     ],
     "experiments": {
@@ -80,7 +85,11 @@
     "extra": {
       "eas": {
         "projectId": ""
-      }
+      },
+      "ENV": "",
+      "API_URL_ROOT": "",
+      "WS_ROOT": "",
+      "OAUTH_KEYS": {}
     }
   }
 }
