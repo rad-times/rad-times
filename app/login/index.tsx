@@ -17,7 +17,7 @@ import { useAuthSession } from '@/providers/AuthProvider';
 import _ from 'lodash';
 
 interface ISocialLoginBtn {
-  onBtnPress: (e: GestureResponderEvent) => void;
+  onBtnPress: () => void;
   logoName: keyof typeof Ionicons.glyphMap;
   btnText: string;
 }
@@ -62,14 +62,22 @@ export default function LoginScreen (): ReactNode {
   const {signIn, isLoading} = useAuthSession();
   const [signInProcessing, setSignInProcessing] = useState(false);
 
-  const handleGoogleLogin = async () => {
+  const handleLogIn = async (authType: string) => {
     setSignInProcessing(true);
     try {
-      const token = await googleSignIn();
+      let token = "";
+      switch(authType) {
+        case "google":
+          token = await googleSignIn();
+          break;
+        case "facebook":
+          token = await facebookSignIn();
+          break
+      }
 
       if (_.isEmpty(token)) {
         //@todo handle auth error - notify user
-        console.error("There was an error with Google authentication:");
+        console.error("There was an error with " + authType + " authentication");
         setSignInProcessing(false);
         return;
       }
@@ -80,15 +88,7 @@ export default function LoginScreen (): ReactNode {
       console.error(err);
       setSignInProcessing(false);
     }
-
   };
-
-  const handleFacebookLogin = async() => {
-    setSignInProcessing(true);
-    await facebookSignIn();
-
-    setSignInProcessing(false);
-  }
 
   const onLayoutRootView = useCallback(async () => {
     if (!isLoading) {
@@ -135,12 +135,12 @@ export default function LoginScreen (): ReactNode {
             <Spacer />
             <View style={{}}>
               <SocialLoginBtn
-                onBtnPress={handleGoogleLogin}
+                onBtnPress={() => handleLogIn('google')}
                 logoName={'logo-google'}
                 btnText={'Sign in with Google'}
               />
               <SocialLoginBtn
-                onBtnPress={handleFacebookLogin}
+                onBtnPress={() => handleLogIn('facebook')}
                 logoName={'logo-facebook'}
                 btnText={'Sign in with Facebook'}
               />

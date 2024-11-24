@@ -3,7 +3,6 @@ import {Platform} from "react-native";
 import {
   AccessToken,
   AuthenticationToken,
-  LoginButton,
   LoginManager,
   Settings,
 } from 'react-native-fbsdk-next';
@@ -11,26 +10,38 @@ import FBAuthenticationToken from "react-native-fbsdk-next/lib/typescript/src/FB
 import FBAccessToken from "react-native-fbsdk-next/src/FBAccessToken";
 
 const API_URL = Constants.expoConfig?.extra?.API_URL_ROOT || '';
+const SECRET_KEY = Constants.expoConfig?.extra?.OAUTH_KEYS?.FACEBOOK_NONCE_KEY || '';
 
-const facebookSignIn = async ():Promise<FBAuthenticationToken|string> => {
+/**
+ * Log user in
+ */
+const facebookSignIn = async ():Promise<string> => {
   try {
-    const result = await LoginManager.logInWithPermissions(["public_profile", "email"]);
-    console.log('result', result);
+    Settings.initializeSDK();
+
+    const result = await LoginManager.logInWithPermissions(
+      ["public_profile", "email"],
+      "limited",
+      SECRET_KEY
+    );
+
     if (!result.isCancelled) {
       if (Platform.OS === "ios") {
-        const idToken:FBAuthenticationToken | null = await AuthenticationToken.getAuthenticationTokenIOS();
-        if (idToken !== null) {
+        const authenticationResp:FBAuthenticationToken | null = await AuthenticationToken.getAuthenticationTokenIOS();
+        if (authenticationResp !== null) {
+          const {authenticationToken}:{authenticationToken: string} = authenticationResp;
+
           await fetch(`${API_URL}/login?authType=facebook`, {
             method: "GET",
             headers: {
-              "Authorization": `Bearer ${idToken}`
+              "Authorization": `Bearer ${authenticationToken}`
             }
           })
             .catch(err => {
               throw new Error(err);
             });
 
-          return idToken;
+          return authenticationToken;
         }
 
       } else {
@@ -39,6 +50,7 @@ const facebookSignIn = async ():Promise<FBAuthenticationToken|string> => {
         // @todo
       }
     }
+
     return "";
 
   } catch (err) {
@@ -47,21 +59,11 @@ const facebookSignIn = async ():Promise<FBAuthenticationToken|string> => {
   }
 }
 
-// const currentProfile = Profile.getCurrentProfile().then(
-//   function(currentProfile) {
-//     if (currentProfile) {
-//       console.log(
-//         "The current logged user is: " +
-//         currentProfile.name +
-//         ". Their profile id is: " +
-//         currentProfile.userID
-//       );
-//     }
-//   }
-// );
-
+/**
+ * Log user out
+ */
 const facebookSignOut = async ():Promise<void> => {
-
+  LoginManager.logOut();
 }
 
 export {

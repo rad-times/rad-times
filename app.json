@@ -77,8 +77,7 @@
         {
           "displayName": "Rad Times"
         }
-      ],
-      "expo-tracking-transparency"
+      ]
     ],
     "experiments": {
       "typedRoutes": true
