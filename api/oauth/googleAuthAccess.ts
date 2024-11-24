@@ -29,7 +29,7 @@ const googleSignIn = async ():Promise<string> => {
     if (isSuccessResponse(authResp)) {
       const {idToken}:{idToken:string|null} = authResp.data;
       if (idToken !== null) {
-        await fetch(`${API_URL}/login`, {
+        await fetch(`${API_URL}/login?authType=google`, {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${idToken}`

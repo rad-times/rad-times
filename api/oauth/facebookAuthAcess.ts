@@ -1,21 +1,43 @@
 import Constants from "expo-constants";
+import {Platform} from "react-native";
 import {
+  AccessToken,
+  AuthenticationToken,
   LoginButton,
   LoginManager,
   Settings,
-  ShareDialog,
-  ShareLinkContent,
 } from 'react-native-fbsdk-next';
+import FBAuthenticationToken from "react-native-fbsdk-next/lib/typescript/src/FBAuthenticationToken";
+import FBAccessToken from "react-native-fbsdk-next/src/FBAccessToken";
 
 const API_URL = Constants.expoConfig?.extra?.API_URL_ROOT || '';
 
-const facebookSignIn = async ():Promise<string> => {
+const facebookSignIn = async ():Promise<FBAuthenticationToken|string> => {
   try {
     const result = await LoginManager.logInWithPermissions(["public_profile", "email"]);
-    if (result.isCancelled) {
-      console.log("Login cancelled");
-    } else {
-      console.log("Login success with permissions: " + result?.grantedPermissions?.toString());
+    console.log('result', result);
+    if (!result.isCancelled) {
+      if (Platform.OS === "ios") {
+        const idToken:FBAuthenticationToken | null = await AuthenticationToken.getAuthenticationTokenIOS();
+        if (idToken !== null) {
+          await fetch(`${API_URL}/login?authType=facebook`, {
+            method: "GET",
+            headers: {
+              "Authorization": `Bearer ${idToken}`
+            }
+          })
+            .catch(err => {
+              throw new Error(err);
+            });
+
+          return idToken;
+        }
+
+      } else {
+        // This token can be used to access the Graph API? Android will need to be tested separately
+        const idToken:FBAccessToken | null = await AccessToken.getCurrentAccessToken();
+        // @todo
+      }
     }
     return "";
 
