@@ -10,11 +10,10 @@ import {StatusBar} from 'react-native';
 import {ReactNode} from "react";
 
 SplashScreen.preventAutoHideAsync()
-  .then((result) => console.log(`SplashScreen.preventAutoHideAsync() succeeded: ${result}`))
   .catch(console.warn);
 
 SplashScreen.setOptions({
-  duration: 1000,
+  duration: 500,
   fade: true,
 });
 
