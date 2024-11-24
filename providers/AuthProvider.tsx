@@ -4,7 +4,7 @@ import {setCrewList} from "@/state/crewSearchSlice";
 import {setDisplayText} from "@/state/displayLanguageSlice";
 import {
   googleSignOut
-} from '@/api/googleAuthSignin';
+} from '@/api/oauth/googleAuthAccess';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Href, router} from "expo-router";
 import {jwtDecode, JwtPayload} from "jwt-decode";

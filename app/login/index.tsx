@@ -9,7 +9,10 @@ import {StyleSheet, Text, View, Pressable, Image, GestureResponderEvent, Activit
 import React, {useState, ReactNode, useCallback} from 'react';
 import {
   googleSignIn
-} from '@/api/googleAuthSignin';
+} from '@/api/oauth/googleAuthAccess';
+import {
+  facebookSignIn
+} from '@/api/oauth/facebookAuthAcess';
 import { useAuthSession } from '@/providers/AuthProvider';
 import _ from 'lodash';
 
@@ -81,7 +84,10 @@ export default function LoginScreen (): ReactNode {
   };
 
   const handleFacebookLogin = async() => {
-    console.log('TODO');
+    setSignInProcessing(true);
+    await facebookSignIn();
+
+    setSignInProcessing(false);
   }
 
   const onLayoutRootView = useCallback(async () => {
