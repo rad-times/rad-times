@@ -1,5 +1,7 @@
+import useDevLoadWait from "@/hooks/useDevLoadWait";
 import { store } from "@/state/store";
-import {Slot, SplashScreen} from "expo-router";
+import {Slot} from "expo-router";
+import * as SplashScreen from 'expo-splash-screen';
 import {Provider as ReduxProvider} from "react-redux";
 import { WebSocketProvider } from '@/providers/WebSocketProvider';
 import AuthProvider from "@/providers/AuthProvider";
@@ -8,9 +10,18 @@ import {StatusBar} from 'react-native';
 import {ReactNode} from "react";
 
 SplashScreen.preventAutoHideAsync()
-  .catch(err => console.log('error', err));
+  .then((result) => console.log(`SplashScreen.preventAutoHideAsync() succeeded: ${result}`))
+  .catch(console.warn);
+
+SplashScreen.setOptions({
+  duration: 1000,
+  fade: true,
+});
 
 export default function Layout(): ReactNode {
+  const waiting = useDevLoadWait();
+  if (waiting) return null;
+
   return (
     <ReduxProvider store={store}>
       <WebSocketProvider>

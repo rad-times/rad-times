@@ -1,5 +1,6 @@
 import {Colors} from "@/constants/Colors";
 import {BODY_TEXT, CENTER_ON_PAGE} from "@/constants/Styles";
+import {setActiveUser} from "@/state/activeUserSlice";
 import Icon from "@/views/components/Icon";
 import PageWrapper from "@/views/components/PageWrapper";
 import Spacer from "@/views/components/Spacer";
@@ -10,6 +11,7 @@ import React, {useState, ReactNode, useCallback} from 'react';
 import googleSignIn from '@/api/googleAuthSignin';
 import { useAuthSession } from '@/providers/AuthProvider';
 import _ from 'lodash';
+import {useDispatch} from "react-redux";
 
 interface ISocialLoginBtn {
   onBtnPress: (e: GestureResponderEvent) => void;
@@ -61,6 +63,7 @@ export default function LoginScreen (): ReactNode {
     setLoading(true);
     try {
       const token = await googleSignIn();
+
       if (_.isEmpty(token)) {
         //@todo handle auth error
         console.error("There was an error with Google authentication:");

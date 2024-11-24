@@ -6,7 +6,6 @@ import {
   statusCodes
 } from '@react-native-google-signin/google-signin';
 import Constants from "expo-constants";
-import {useState} from "react";
 
 GoogleSignin.configure({
   webClientId: Constants.expoConfig?.extra?.OAUTH_KEYS.GOOGLE_OAUTH_WEB_CLIENTID,
@@ -26,34 +25,40 @@ const googleSignIn = async ():Promise<string> => {
 
     if (isSuccessResponse(authResp)) {
       const {idToken}:{idToken:string|null} = authResp.data;
-      return await fetch(`${API_URL}/login`, {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${idToken}`
-        }
-      })
-        .then(res => {
-          return res.json()
-        });
+      if (idToken !== null) {
+        await fetch(`${API_URL}/login`, {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${idToken}`
+          }
+        })
+          .catch(err => {
+            throw new Error(err);
+          });
+
+        return idToken;
+      }
     }
+    console.error('Google sign-in did not return a valid token.');
+    return "";
 
   } catch (error) {
     if (isErrorWithCode(error)) {
       switch (error.code) {
         case statusCodes.IN_PROGRESS:
           console.error('Google login error', error.message);
-          break;
+          throw new Error(error.message);
         case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
           console.error('Google login error', error.message);
-          break;
+          throw new Error(error.message);
         default:
           console.error('Unknown Google login error', error.message);
+          throw new Error(error.message);
       }
     }
 
-    return String(error);
+    throw new Error("Unhandled error when using google sign in");
   }
-  return "";
 }
 
 export default googleSignIn;

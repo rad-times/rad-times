@@ -6,22 +6,26 @@ const API_URL = Constants.expoConfig?.extra?.API_URL_ROOT || '';
 interface CommonGraphQlRequestProps {
   queryBody: string
   errorMessage: string
+  sessionToken: string
 }
 
 interface CommonGraphQlMutationProps {
   mutationBody: string
   errorMessage: string
+  sessionToken: string
 }
 
 export async function commonGraphQlRequest({
   queryBody,
-  errorMessage
+  errorMessage,
+  sessionToken
 }: CommonGraphQlRequestProps): Promise<any> {
   return await fetch(`${API_URL}/graphql`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Accept": "application/json"
+      "Accept": "application/json",
+      'Authorization': `Bearer ${sessionToken}`,
     },
     body: JSON.stringify({ query: queryBody })
   })
@@ -36,6 +40,10 @@ export async function commonGraphQlRequest({
 
         return data;
       }
+    })
+    .catch(error => {
+      console.error(error);
+      throw new Error(error);
     });
 }
 
