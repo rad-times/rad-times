@@ -18,6 +18,9 @@ GoogleSignin.configure({
 
 const API_URL = Constants.expoConfig?.extra?.API_URL_ROOT || '';
 
+/**
+ * Sign the user in via google oAuth
+ */
 const googleSignIn = async ():Promise<string> => {
   try {
     await GoogleSignin.hasPlayServices();
@@ -61,4 +64,19 @@ const googleSignIn = async ():Promise<string> => {
   }
 }
 
-export default googleSignIn;
+/**
+ * Log user out and revoke their access rights for the app
+ */
+const googleSignOut = async (): Promise<void> => {
+  try {
+    await GoogleSignin.revokeAccess();
+    await GoogleSignin.signOut();
+  } catch (err) {
+    throw new Error("Error signing user out via Google auth");
+  }
+}
+
+export {
+  googleSignIn,
+  googleSignOut
+};

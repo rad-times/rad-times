@@ -1,7 +1,5 @@
 import Spacer from "@/views/components/Spacer";
 import {View, StyleSheet} from "react-native";
-
-import {Colors} from "@/constants/Colors";
 import PageTitle from "@/views/components/PageTitle";
 import ActiveUserDetails from '@/views/ActiveUserDetails'
 import StackLink from '@/views/StackLink'
@@ -9,6 +7,7 @@ import {ReactNode} from "react";
 import PageWrapper from "@/views/components/PageWrapper";
 
 export default function Setup(): ReactNode {
+
   return (
     <PageWrapper>
       <PageTitle
@@ -35,6 +34,11 @@ export default function Setup(): ReactNode {
         <StackLink
           title={"Settings and Preferences"}
           link={"/setup/Settings"}
+        />
+        <Spacer margin={25} />
+        <StackLink
+          title={"Sign Out"}
+          link={"/logout"}
         />
       </View>
     </PageWrapper>
