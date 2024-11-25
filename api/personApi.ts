@@ -28,9 +28,9 @@ function getPersonByIdQuery(id: number) {
   }`;
 }
 
-function getActivePersonBySubjectQuery(id: string) {
+function getActivePersonByEmailQuery(email: string) {
   return `{
-    activePersonBySubject(id: "${id}") {
+    activePersonByEmail(email: "${email}") {
       id
       first_name
       last_name
@@ -83,15 +83,15 @@ export async function getPersonById(id: number, sessionToken:string): Promise<Pe
   }
 }
 
-export async function getActivePersonBySubject(id: string, sessionToken:string): Promise<Person> {
+export async function getActivePersonByEmail(email: string, sessionToken:string): Promise<Person> {
   try {
     const queryResp = await commonGraphQlRequest({
-      queryBody:  getActivePersonBySubjectQuery(id),
+      queryBody:  getActivePersonByEmailQuery(email),
       errorMessage: "Error fetching person by id",
       sessionToken
     });
 
-    return _.get(queryResp, 'data.activePersonBySubject', unknownUser);
+    return _.get(queryResp, 'data.activePersonByEmail', unknownUser);
 
   } catch (err) {
     console.error(err);

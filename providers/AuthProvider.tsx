@@ -1,4 +1,5 @@
-import {getActivePersonBySubject, getUserLanguages} from "@/api/personApi";
+import {facebookSignOut} from "@/api/oauth/facebookAuthAcess";
+import {getActivePersonByEmail, getUserLanguages} from "@/api/personApi";
 import {setActiveUser} from "@/state/activeUserSlice";
 import {setCrewList} from "@/state/crewSearchSlice";
 import {setDisplayText} from "@/state/displayLanguageSlice";
@@ -37,9 +38,9 @@ export default function AuthProvider ({children}:{children: ReactNode}): ReactNo
   const dispatch = useDispatch();
 
   const fetchActiveUser = useCallback(async (token:string):Promise<void> => {
-    const decoded: JwtPayload = jwtDecode(token);
-    if (decoded.sub) {
-      const personResp = await getActivePersonBySubject(decoded.sub, token);
+    const decoded: { email: string } = jwtDecode(token);
+    if (decoded.email) {
+      const personResp = await getActivePersonByEmail(decoded.email, token);
       dispatch(setActiveUser(personResp));
       dispatch(setCrewList(personResp?.crew || []))
 
@@ -50,6 +51,8 @@ export default function AuthProvider ({children}:{children: ReactNode}): ReactNo
 
   useEffect(() => {
     (async ():Promise<void> => {
+      await AsyncStorage.removeItem('@token');
+
       const token = await AsyncStorage.getItem('@token');
       if (token) {
         tokenRef.current = token;
@@ -68,7 +71,9 @@ export default function AuthProvider ({children}:{children: ReactNode}): ReactNo
 
   const signOut = useCallback(async ():Promise<void> => {
     try {
+      // Only one, clearly
       await googleSignOut();
+      await facebookSignOut();
       await AsyncStorage.removeItem('@token');
       tokenRef.current = null;
 
