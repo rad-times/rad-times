@@ -16,10 +16,6 @@ export default function Index(): ReactNode {
         <PageTitle
           title={displayText.index.title}
         />
-        <Spacer />
-        <FriendsActiveBox />
-        <Spacer />
-        <CheckInBtn />
       </>
     </PageWrapper>
   );

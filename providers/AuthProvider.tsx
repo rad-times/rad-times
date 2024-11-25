@@ -1,8 +1,14 @@
+import {facebookSignOut} from "@/api/oauth/facebookAuthAcess";
+import {getActivePersonByEmail, getUserLanguages} from "@/api/personApi";
 import {setActiveUser} from "@/state/activeUserSlice";
 import {setCrewList} from "@/state/crewSearchSlice";
 import {setDisplayText} from "@/state/displayLanguageSlice";
+import {
+  googleSignOut
+} from '@/api/oauth/googleAuthAccess';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Href, router} from "expo-router";
+import {jwtDecode, JwtPayload} from "jwt-decode";
 import {createContext, MutableRefObject, ReactNode, useCallback, useContext, useEffect, useRef, useState} from 'react';
 import {useDispatch} from "react-redux";
 
@@ -31,33 +37,52 @@ export default function AuthProvider ({children}:{children: ReactNode}): ReactNo
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
 
+  const fetchActiveUser = useCallback(async (token:string):Promise<void> => {
+    const decoded: { email: string } = jwtDecode(token);
+    if (decoded.email) {
+      const personResp = await getActivePersonByEmail(decoded.email, token);
+      dispatch(setActiveUser(personResp));
+      dispatch(setCrewList(personResp?.crew || []))
+
+      const displayText = await getUserLanguages(personResp.language_code);
+      dispatch(setDisplayText(displayText));
+    }
+  }, [tokenRef]);
+
   useEffect(() => {
     (async ():Promise<void> => {
-      await AsyncStorage.clear();
-
       const token = await AsyncStorage.getItem('@token');
       if (token) {
         tokenRef.current = token;
+        await fetchActiveUser(token);
       }
       setIsLoading(false);
     })()
   }, []);
 
-  const signIn = useCallback(async (token: string) => {
+  const signIn = useCallback(async (token: string):Promise<void> => {
     await AsyncStorage.setItem('@token', String(token));
     tokenRef.current = token;
+    await fetchActiveUser(token);
     router.replace(ROOT_PATH)
   }, []);
 
-  const signOut = useCallback(async () => {
-    await AsyncStorage.removeItem('@token');
-    tokenRef.current = null;
+  const signOut = useCallback(async ():Promise<void> => {
+    try {
+      // Only one, clearly
+      await googleSignOut();
+      await facebookSignOut();
+      await AsyncStorage.removeItem('@token');
+      tokenRef.current = null;
 
-    // Reset user data in store
-    dispatch(setActiveUser({}));
-    dispatch(setCrewList([]))
-    dispatch(setDisplayText({}));
-    router.replace(LOGIN_PATH);
+      // Reset user data in store
+      dispatch(setActiveUser({}));
+      dispatch(setCrewList([]))
+      dispatch(setDisplayText({}));
+      router.replace(LOGIN_PATH);
+    } catch (error) {
+      console.error(error);
+    }
   }, []);
 
   return (

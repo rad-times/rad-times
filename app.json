@@ -44,7 +44,7 @@
         {
           "backgroundColor": "#000000",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200
+          "imageWidth": 300
         }
       ],
       [
@@ -84,7 +84,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": ""
+        "projectId": "69b482d8-389b-4ac2-94a0-8e0c5a6bd2e7"
       },
       "ENV": "",
       "API_URL_ROOT": "",

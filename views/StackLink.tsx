@@ -6,7 +6,7 @@ import {ReactNode} from "react";
 
 interface StackLinkProps {
   title: string
-  link: "/setup/EditProfile" | "/setup/PhotoVideo" | "/setup/Settings" | "/setup/SocialLinks"
+  link: "/setup/EditProfile" | "/setup/PhotoVideo" | "/setup/Settings" | "/setup/SocialLinks" | "/logout"
 }
 
 const FONT_SIZE = 20;

@@ -9,11 +9,6 @@ module.exports = ({ config }) => {
   config.android.config.googleMaps.apiKey = process.env.GOOGLE_MAPS_API_KEY;
 
   /**
-   * EAS project ID
-   */
-  config.extra.eas.projectId = process.env.EAS_PROJECT_ID;
-
-  /**
    * Plug required oAuth data into the browser specific config files
    */
   const googleAuthPluginIndex = config.plugins.findIndex(plugIn => typeof plugIn !== 'string' && plugIn[0] === '@react-native-google-signin/google-signin');
@@ -42,6 +37,7 @@ module.exports = ({ config }) => {
   config.extra.OAUTH_KEYS.FACEBOOK_APP_ID=process.env.FACEBOOK_AUTH_APP_ID;
   config.extra.OAUTH_KEYS.FACEBOOK_CLIENT=process.env.FACEBOOK_AUTH_CLIENT_TOKEN;
   config.extra.OAUTH_KEYS.FACEBOOK_SCHEME=process.env.FACEBOOK_AUTH_SCHEME;
+  config.extra.OAUTH_KEYS.FACEBOOK_NONCE_KEY=process.env.FACEBOOK_NONCE_KEY;
 
   /**
    * API Root

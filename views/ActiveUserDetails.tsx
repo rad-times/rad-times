@@ -14,7 +14,7 @@ function ActiveUserDetails({}: ActiveUserDetailProps): ReactNode {
       <Image
         style={styles.profileImage}
         source={{
-          uri: 'https://static01.nyt.com/images/2012/05/11/fashion/skateboardsub/skateboardsub-superJumbo.jpg'
+          uri: activeUser.profile_image
       }}
       />
       <View style={styles.detailsWrapper}>
