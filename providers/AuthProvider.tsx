@@ -51,8 +51,6 @@ export default function AuthProvider ({children}:{children: ReactNode}): ReactNo
 
   useEffect(() => {
     (async ():Promise<void> => {
-      await AsyncStorage.removeItem('@token');
-
       const token = await AsyncStorage.getItem('@token');
       if (token) {
         tokenRef.current = token;
