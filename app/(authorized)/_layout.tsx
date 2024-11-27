@@ -1,9 +1,11 @@
 import {Colors} from "@/constants/Colors";
 import {useAuthSession} from "@/providers/AuthProvider";
+import RadTimesHeader from "@/views/RadTimesHeader";
 import {Redirect, Stack} from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import {StyleSheet, View} from 'react-native';
 import {ReactNode, useCallback} from "react";
+import {SafeAreaView} from "react-native-safe-area-context";
 
 export default function RootLayout(): ReactNode {
   const {isLoading, token} = useAuthSession();
@@ -23,24 +25,23 @@ export default function RootLayout(): ReactNode {
   }
 
   return (
-    <View
+    <SafeAreaView
       style={styles.rootWrapper}
       onLayout={onLayoutRootView}
     >
+      <RadTimesHeader />
       <Stack
         screenOptions={{
-          headerStyle: {
-            backgroundColor: Colors.DARK_RED
-          },
+          headerShown: false,
           headerTintColor: Colors.WHITE,
-           title: ''
+          title: ''
         }}
       >
          <Stack.Screen
           name="(tabs)"
         />
       </Stack>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -48,6 +49,6 @@ const styles = StyleSheet.create({
   rootWrapper: {
     height: '100%',
     width: '100%',
-    backgroundColor: Colors.BLACK
+    backgroundColor: Colors.DARK_RED
   }
 });

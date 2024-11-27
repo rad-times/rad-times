@@ -1,4 +1,3 @@
-import {useAuthSession} from "@/providers/AuthProvider";
 import {DisplayTextStateProp} from "@/state/displayLanguageSlice";
 import { Tabs } from 'expo-router';
 import Icon from '@/views/components/Icon'
@@ -8,10 +7,9 @@ import {useSelector} from "react-redux";
 
 const baseTabOptions = {
   headerShown: false,
-  tabBarActiveBackgroundColor: Colors.LIGHT_RED,
   tabBarInactiveBackgroundColor: Colors.DARK_RED,
-  tabBarActiveTintColor: Colors.LIGHT_GREY,
-  tabBarInactiveTintColor: Colors.LIGHT_GREY
+  tabBarActiveTintColor: Colors.WHITE,
+  tabBarInactiveTintColor: Colors.MEDIUM_LIGHT_GRAY
 };
 
 export default function RadTimesNavigationLayout(): ReactNode {
@@ -21,13 +19,10 @@ export default function RadTimesNavigationLayout(): ReactNode {
     <Tabs
       screenOptions={{
         tabBarStyle: {
-          height: 75,
-          borderTopColor: Colors.GREY,
+          height: 40,
+          borderTopColor: Colors.BLACK,
           borderTopWidth: 1,
           backgroundColor: Colors.DARK_RED
-        },
-        tabBarLabelStyle: {
-          fontSize: 10
         }
       }}
     >
@@ -35,7 +30,7 @@ export default function RadTimesNavigationLayout(): ReactNode {
         name="index"
         options={{
           ...baseTabOptions,
-          tabBarLabel: displayText.tabs.home,
+          tabBarShowLabel: false,
           tabBarIcon: ({ color }) => <Icon size={24} name="home-sharp" color={color} />
         }}
       />
@@ -43,7 +38,7 @@ export default function RadTimesNavigationLayout(): ReactNode {
         name="Spots"
         options={{
           ...baseTabOptions,
-          tabBarLabel: displayText.tabs.spots,
+          tabBarShowLabel: false,
           tabBarIcon: ({ color }) => <Icon size={24} name="at-circle" color={color} />,
         }}
       />
@@ -51,7 +46,7 @@ export default function RadTimesNavigationLayout(): ReactNode {
         name="Crew"
         options={{
           ...baseTabOptions,
-          tabBarLabel: displayText.tabs.crew,
+          tabBarShowLabel: false,
           tabBarIcon: ({ color }) => <Icon size={24} name="people-circle" color={color} />,
         }}
       />
@@ -59,7 +54,7 @@ export default function RadTimesNavigationLayout(): ReactNode {
         name="Setup"
         options={{
           ...baseTabOptions,
-          tabBarLabel: displayText.tabs.setup,
+          tabBarShowLabel: false,
           tabBarIcon: ({ color }) => <Icon size={24} name="settings" color={color} />,
         }}
       />

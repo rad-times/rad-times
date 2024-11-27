@@ -7,7 +7,7 @@
     "icon": "./assets/images/icon.png",
     "scheme": "radtimes",
     "userInterfaceStyle": "automatic",
-    "backgroundColor": "#AAAAAA",
+    "backgroundColor": "#410707",
     "ios": {
       "supportsTablet": true,
       "config": {
