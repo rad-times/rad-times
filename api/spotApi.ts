@@ -2,9 +2,9 @@ import _ from 'lodash';
 import {Spot} from '@/types/Spot';
 import {commonGraphQlRequest} from '@/api/commonApiMethods';
 
-function getSpotByNameQuery(userId: number, inputName: string): string {
+function getSpotByNameQuery(inputName: string): string {
   return `{
-    spotByName(nameToMatch: "${inputName}", activeUserId: ${userId}) {
+    spotByName(nameToMatch: "${inputName}") {
       spot_id
       spot_name
       spot_image
@@ -26,9 +26,9 @@ function getSpotByNameQuery(userId: number, inputName: string): string {
   }`;
 }
 
-function getFetchSpotsByLatLngQuery(lat: number, lng: number, distance: number, activeUserId: number):string {
+function getFetchSpotsByLatLngQuery(lat: number, lng: number, distance: number):string {
   return `{
-    spotByLatLng(lat: ${lat}, lng: ${lng}, distance: ${distance}, activeUserId: ${activeUserId}) {
+    spotByLatLng(lat: ${lat}, lng: ${lng}, distance: ${distance}}) {
       spot_id
       spot_name
       spot_image
@@ -50,20 +50,21 @@ function getFetchSpotsByLatLngQuery(lat: number, lng: number, distance: number, 
   }`
 }
 
-function toggleSpotFavoriteQuery(spotId: number, personId: number, isFavorite: boolean) {
+function toggleSpotFavoriteQuery(spotId: number, isFavorite: boolean) {
   return `mutation {
-    toggleSpotFavorite(spotId: ${spotId}, activeUserId: ${personId}, isFavorite: ${isFavorite}) {
+    toggleSpotFavorite(spotId: ${spotId}, isFavorite: ${isFavorite}) {
       spot_id
       is_favorite
     }
   }`;
 }
 
-export async function fetchSpotsByName(name: string, activeUserId: number): Promise<Spot[]> {
+export async function fetchSpotsByName(name: string, sessionToken: string): Promise<Spot[]> {
   try {
     const queryResp = await commonGraphQlRequest({
-      queryBody:  getSpotByNameQuery(activeUserId, name),
-      errorMessage: "Error fetching spot data by name"
+      queryBody:  getSpotByNameQuery(name),
+      errorMessage: "Error fetching spot data by name",
+      sessionToken
     });
 
     const resp = _.get(queryResp, 'data.spotByName', []);
@@ -81,11 +82,12 @@ export async function fetchSpotsByName(name: string, activeUserId: number): Prom
   }
 }
 
-export async function fetchSpotsByLatLng(lat: number, lng: number, distance: number, activeUserId: number): Promise<Spot[]> {
+export async function fetchSpotsByLatLng(lat: number, lng: number, distance: number, sessionToken: string): Promise<Spot[]> {
   try {
     const queryResp = await commonGraphQlRequest({
-      queryBody:  getFetchSpotsByLatLngQuery(lat, lng, distance, activeUserId),
-      errorMessage: "Error fetching spot data by lat/lng"
+      queryBody:  getFetchSpotsByLatLngQuery(lat, lng, distance),
+      errorMessage: "Error fetching spot data by lat/lng",
+      sessionToken
     });
 
     const resp = _.get(queryResp, 'data.spotByLatLng', []);
@@ -103,11 +105,12 @@ export async function fetchSpotsByLatLng(lat: number, lng: number, distance: num
   }
 }
 
-export async function toggleFavoriteSpot(spotId: number, personId: number, isFavorite: boolean): Promise<Spot> {
+export async function toggleFavoriteSpot(spotId: number, isFavorite: boolean, sessionToken: string): Promise<Spot> {
   try {
     const queryResp = await commonGraphQlRequest({
-      queryBody:  toggleSpotFavoriteQuery(spotId, personId, isFavorite),
-      errorMessage: "Error setting spot as favorite"
+      queryBody:  toggleSpotFavoriteQuery(spotId, isFavorite),
+      errorMessage: "Error setting spot as favorite",
+      sessionToken
     });
     return _.get(queryResp, 'data.toggleSpotFavorite', {});
 

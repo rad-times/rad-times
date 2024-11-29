@@ -1,3 +1,4 @@
+import {useAuthSession} from "@/providers/AuthProvider";
 import {ActiveUserStateProp} from "@/state/activeUserSlice";
 import {setSearchResults} from "@/state/spotSlice";
 import {Person} from "@/types/Person";
@@ -9,11 +10,12 @@ import FilterableSearchBar from "@/views/FilterableSearchBar";
 export default function SpotSearchField(): ReactNode {
   const [searchTerm, setSearchTerm] = useState('');
   const dispatch = useDispatch();
+  const {token} = useAuthSession();
   const activeUser:Person = useSelector((state: ActiveUserStateProp) => state.activeUser.user);
 
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
-      fetchSpotsByName(searchTerm, activeUser.id)
+      fetchSpotsByName(searchTerm, token?.current)
         .then(resp => {
           dispatch(setSearchResults(resp));
         });

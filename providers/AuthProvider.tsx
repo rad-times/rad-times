@@ -6,7 +6,7 @@ import {setDisplayText} from "@/state/displayLanguageSlice";
 import {
   googleSignOut
 } from '@/api/oauth/googleAuthAccess';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import useStorage from "@/hooks/useStorage";
 import {Href, router} from "expo-router";
 import {jwtDecode, JwtPayload} from "jwt-decode";
 import {createContext, MutableRefObject, ReactNode, useCallback, useContext, useEffect, useRef, useState} from 'react';
@@ -15,7 +15,7 @@ import {useDispatch} from "react-redux";
 const AuthContext = createContext<{
   signIn: (arg0: string) => void;
   signOut: () => void
-  token: MutableRefObject<string | null> | null;
+  token: MutableRefObject<string> | null;
   isLoading: boolean
 }>({
   signIn: () => null,
@@ -33,10 +33,18 @@ export function useAuthSession() {
 }
 
 export default function AuthProvider ({children}:{children: ReactNode}): ReactNode {
-  const tokenRef = useRef<string|null>(null);
+  const {
+    setItem,
+    getItem,
+    removeItem
+  } = useStorage();
+  const tokenRef = useRef<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
 
+  /**
+   * Fetch the active user data when app loads
+   */
   const fetchActiveUser = useCallback(async (token:string):Promise<void> => {
     const decoded: { email: string } = jwtDecode(token);
     if (decoded.email) {
@@ -51,7 +59,7 @@ export default function AuthProvider ({children}:{children: ReactNode}): ReactNo
 
   useEffect(() => {
     (async ():Promise<void> => {
-      const token = await AsyncStorage.getItem('@token');
+      const token = await getItem('@token');
       if (token) {
         tokenRef.current = token;
         await fetchActiveUser(token);
@@ -61,7 +69,7 @@ export default function AuthProvider ({children}:{children: ReactNode}): ReactNo
   }, []);
 
   const signIn = useCallback(async (token: string):Promise<void> => {
-    await AsyncStorage.setItem('@token', String(token));
+    await setItem('@token', String(token));
     tokenRef.current = token;
     await fetchActiveUser(token);
     router.replace(ROOT_PATH)
@@ -70,10 +78,10 @@ export default function AuthProvider ({children}:{children: ReactNode}): ReactNo
   const signOut = useCallback(async ():Promise<void> => {
     try {
       // Only one, clearly
-      await googleSignOut();
+      // await googleSignOut();
       await facebookSignOut();
-      await AsyncStorage.removeItem('@token');
-      tokenRef.current = null;
+      await removeItem('@token');
+      tokenRef.current = "";
 
       // Reset user data in store
       dispatch(setActiveUser({}));

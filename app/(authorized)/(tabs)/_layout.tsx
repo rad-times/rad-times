@@ -13,8 +13,6 @@ const baseTabOptions = {
 };
 
 export default function RadTimesNavigationLayout(): ReactNode {
-  const displayText = useSelector((state: DisplayTextStateProp) => state.displayText.displayTextJson);
-
   return (
     <Tabs
       screenOptions={{
