@@ -3,7 +3,7 @@ import {useAuthSession} from "@/providers/AuthProvider";
 import RadTimesHeader from "@/views/RadTimesHeader";
 import {Redirect, Stack} from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {ReactNode, useCallback} from "react";
 import {SafeAreaView} from "react-native-safe-area-context";
 

@@ -1,9 +1,7 @@
 import {useAuthSession} from "@/providers/AuthProvider";
-import {ApiTokenStateProp} from "@/state/apiTokenSlice";
 import Constants from "expo-constants";
 import _ from "lodash";
 import {useRef, useState} from "react";
-import {useSelector} from "react-redux";
 
 interface IUseFetch {
   method: "GET"|"POST"|"PUT"|"DELETE",
@@ -18,8 +16,7 @@ export default function useFetch({
 }:IUseFetch) {
 
   const API_URL = useRef(Constants.expoConfig?.extra?.API_URL_ROOT || '');
-  const {signOut} = useAuthSession();
-  const apiToken = useSelector((state: ApiTokenStateProp) => state.apiToken.token);
+  const {signOut, token} = useAuthSession();
 
   const [fetching, setFetching] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
@@ -32,7 +29,7 @@ export default function useFetch({
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
-          'Authorization': `Bearer ${apiToken}`,
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(requestBody)
       });

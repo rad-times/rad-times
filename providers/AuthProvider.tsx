@@ -7,6 +7,7 @@ import {
   googleSignOut
 } from '@/api/oauth/googleAuthAccess';
 import useStorage from "@/hooks/useStorage";
+import Constants from "expo-constants";
 import {Href, router} from "expo-router";
 import {jwtDecode, JwtPayload} from "jwt-decode";
 import {createContext, MutableRefObject, ReactNode, useCallback, useContext, useEffect, useRef, useState} from 'react';
@@ -34,13 +35,35 @@ export function useAuthSession() {
 
 export default function AuthProvider ({children}:{children: ReactNode}): ReactNode {
   const {
-    setItem,
-    getItem,
-    removeItem
+    setStorageItemItem,
+    getStorageItemItem,
+    removeStorageItem
   } = useStorage();
   const tokenRef = useRef<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
+
+  /**
+   *
+   */
+  const validateToken = async  (tokenFromStorage: string) => {
+    try {
+      const API_URL = Constants.expoConfig?.extra?.API_URL_ROOT || '';
+      const validateResponse = await fetch(`${API_URL}/validateToken`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          'Authorization': `Bearer ${tokenFromStorage}`
+        },
+        method: 'GET'
+      })
+
+      return validateResponse.status === 200;
+
+    } catch (err) {
+      return false;
+    }
+  }
 
   /**
    * Fetch the active user data when app loads
@@ -59,17 +82,26 @@ export default function AuthProvider ({children}:{children: ReactNode}): ReactNo
 
   useEffect(() => {
     (async ():Promise<void> => {
-      const token = await getItem('@token');
+      const token = await getStorageItemItem('@token');
       if (token) {
-        tokenRef.current = token;
-        await fetchActiveUser(token);
+        const isValidToken = await validateToken(token);
+        if (isValidToken) {
+          tokenRef.current = token;
+          await fetchActiveUser(token);
+
+        } else {
+          signOut();
+        }
+
+      } else {
+        router.replace(LOGIN_PATH);
       }
       setIsLoading(false);
     })()
   }, []);
 
   const signIn = useCallback(async (token: string):Promise<void> => {
-    await setItem('@token', String(token));
+    await setStorageItemItem('@token', String(token));
     tokenRef.current = token;
     await fetchActiveUser(token);
     router.replace(ROOT_PATH)
@@ -77,10 +109,9 @@ export default function AuthProvider ({children}:{children: ReactNode}): ReactNo
 
   const signOut = useCallback(async ():Promise<void> => {
     try {
-      // Only one, clearly
       // await googleSignOut();
-      await facebookSignOut();
-      await removeItem('@token');
+      // await facebookSignOut();
+      await removeStorageItem('@token');
       tokenRef.current = "";
 
       // Reset user data in store

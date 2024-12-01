@@ -1,8 +1,6 @@
 import {useAuthSession} from "@/providers/AuthProvider";
-import {ApiTokenStateProp} from "@/state/apiTokenSlice";
 import Constants from 'expo-constants';
 import {MutableRefObject, useRef, useState} from "react";
-import {useSelector} from "react-redux";
 
 interface IUseQuery {
   queryBody: string;
@@ -15,8 +13,7 @@ export default function useQuery({
 }: IUseQuery): [boolean, any, string] {
 
   const API_URL:MutableRefObject<string> = useRef(Constants.expoConfig?.extra?.API_URL_ROOT || '');
-  const {signOut} = useAuthSession();
-  const apiToken = useSelector((state: ApiTokenStateProp) => state.apiToken.token);
+  const {signOut, token} = useAuthSession();
 
   const [fetching, setFetching] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
@@ -29,7 +26,7 @@ export default function useQuery({
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
-          'Authorization': `Bearer ${apiToken}`,
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({ query: queryBody })
       });
