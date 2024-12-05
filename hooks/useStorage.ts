@@ -5,12 +5,18 @@ export default function useStorage<T>() {
     return AsyncStorage.setItem(key, JSON.stringify(value));
   };
 
-  const getStorageItemItem = async (key: string): Promise<string | null> => {
+  // @TODO dont return any - work out what a proper types return is for "any object with any keys"
+  const getStorageItemItem = async (key: string): Promise<any | null> => {
     try {
-      return await AsyncStorage.getItem(key);
+      const resp:string|null = await AsyncStorage.getItem(key);
+      if (resp) {
+        return JSON.parse(resp);
+      }
+
+      return {};
     } catch (err) {
       console.error('err', err);
-      return "";
+      return {};
     }
 
   };

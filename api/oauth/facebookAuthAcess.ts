@@ -1,11 +1,6 @@
 import Constants from "expo-constants";
 import {Platform} from "react-native";
-import {
-  AccessToken,
-  AuthenticationToken,
-  LoginManager,
-  Settings,
-} from 'react-native-fbsdk-next';
+import {AccessToken, AuthenticationToken, LoginManager, Settings,} from 'react-native-fbsdk-next';
 import FBAuthenticationToken from "react-native-fbsdk-next/lib/typescript/src/FBAuthenticationToken";
 import FBAccessToken from "react-native-fbsdk-next/src/FBAccessToken";
 
@@ -31,17 +26,16 @@ const facebookSignIn = async ():Promise<string> => {
         if (authenticationResp !== null) {
           const {authenticationToken}:{authenticationToken: string} = authenticationResp;
 
-          await fetch(`${API_URL}/login?authType=facebook`, {
+          return await fetch(`${API_URL}/login?authType=facebook`, {
             method: "GET",
             headers: {
               "Authorization": `Bearer ${authenticationToken}`
             }
           })
+            .then(resp => resp.text())
             .catch(err => {
               throw new Error(err);
             });
-
-          return authenticationToken;
         }
 
       } else {
