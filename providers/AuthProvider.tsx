@@ -2,16 +2,13 @@ import {getActivePersonByEmail, getUserLanguages} from "@/api/personApi";
 import {setActiveUser} from "@/state/activeUserSlice";
 import {setCrewList} from "@/state/crewSearchSlice";
 import {setDisplayText} from "@/state/displayLanguageSlice";
-import {
-  googleSignOut
-} from '@/api/oauth/googleAuthAccess';
-import {facebookSignOut} from "@/api/oauth/facebookAuthAcess";
 import useStorage from "@/hooks/useStorage";
 import Constants from "expo-constants";
 import {Href, router} from "expo-router";
 import {jwtDecode} from "jwt-decode";
 import {createContext, MutableRefObject, ReactNode, useCallback, useContext, useEffect, useRef, useState} from 'react';
 import {useDispatch} from "react-redux";
+import _ from 'lodash';
 
 type DecodedTokenType = {
   sub: string,
@@ -19,11 +16,16 @@ type DecodedTokenType = {
   exp: number
 };
 
+type TokenPairType = {
+  accessToken: string,
+  refreshToken: string
+};
+
 const AuthContext = createContext<{
-  signIn: (arg0: string) => void;
-  signOut: () => void
+  signIn: (arg0: TokenPairType) => void;
+  signOut: () => void;
   token: MutableRefObject<string> | null;
-  isLoading: boolean
+  isLoading: boolean;
 }>({
   signIn: () => null,
   signOut: () => null,
@@ -34,17 +36,13 @@ const AuthContext = createContext<{
 const ROOT_PATH = "/" as Href;
 const LOGIN_PATH = "/login" as Href;
 
-// This hook can be used to access the user info.
-export function useAuthSession() {
-  return useContext(AuthContext);
-}
-
 export default function AuthProvider ({children}:{children: ReactNode}): ReactNode {
   const {
     setStorageItemItem,
     getStorageItemItem,
     removeStorageItem
   } = useStorage();
+  const API_URL = Constants.expoConfig?.extra?.API_URL_ROOT || '';
   const tokenRef = useRef<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
@@ -54,7 +52,6 @@ export default function AuthProvider ({children}:{children: ReactNode}): ReactNo
    */
   const validateToken = async (tokenFromStorage: string): Promise<boolean> => {
     try {
-      const API_URL = Constants.expoConfig?.extra?.API_URL_ROOT || '';
       const validateResponse = await fetch(`${API_URL}/validateToken`, {
         headers: {
           "Content-Type": "application/json",
@@ -68,6 +65,27 @@ export default function AuthProvider ({children}:{children: ReactNode}): ReactNo
 
     } catch (err) {
       return false;
+    }
+  }
+  /**
+   * Refresh access token
+   */
+  const refreshAccessToken = async (refreshToken: string): Promise<TokenPairType> => {
+    try {
+      const tokenRefreshResp = await fetch(`${API_URL}/refreshAccessToken`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          'Authorization': `Bearer ${refreshToken}`
+        },
+        method: 'GET'
+      });
+
+      return await tokenRefreshResp.json();
+
+    } catch (err) {
+      console.error("Error refresh access tokens");
+      return {} as TokenPairType;
     }
   }
 
@@ -90,13 +108,29 @@ export default function AuthProvider ({children}:{children: ReactNode}): ReactNo
   useEffect(() => {
     (async ():Promise<void> => {
       const {
-        token
-      }: {token: string} = await getStorageItemItem('@token');
-      if (token) {
-        const isValidToken = await validateToken(token);
+        accessToken,
+        refreshToken
+      }: TokenPairType = await getStorageItemItem('@token');
+
+      if (accessToken) {
+        const isValidToken = await validateToken(accessToken);
         if (isValidToken) {
-          tokenRef.current = token;
-          await fetchActiveUser(token);
+          tokenRef.current = accessToken;
+          await fetchActiveUser(accessToken);
+
+        } else if (refreshToken) {
+            const updatedAccessTokens:TokenPairType = await refreshAccessToken(refreshToken);
+            if (!_.isEmpty(updatedAccessTokens)) {
+              await setStorageItemItem('@token', {
+                accessToken: updatedAccessTokens.accessToken,
+                refreshToken: updatedAccessTokens.refreshToken
+              });
+              tokenRef.current = updatedAccessTokens.accessToken;
+              await fetchActiveUser(updatedAccessTokens.accessToken);
+
+            } else {
+              signOut();
+            }
 
         } else {
           signOut();
@@ -112,12 +146,10 @@ export default function AuthProvider ({children}:{children: ReactNode}): ReactNo
   /**
    * User signs in
    */
-  const signIn = useCallback(async (token: string):Promise<void> => {
-    await setStorageItemItem('@token', {
-      token
-    });
-    tokenRef.current = token;
-    await fetchActiveUser(token);
+  const signIn = useCallback(async (tokens: TokenPairType):Promise<void> => {
+    await setStorageItemItem('@token', tokens);
+    tokenRef.current = tokens.accessToken;
+    await fetchActiveUser(tokens.accessToken);
     router.replace(ROOT_PATH)
   }, []);
 
@@ -126,8 +158,6 @@ export default function AuthProvider ({children}:{children: ReactNode}): ReactNo
    */
   const signOut = useCallback(async ():Promise<void> => {
     try {
-      // await googleSignOut();
-      // await facebookSignOut();
       await removeStorageItem('@token');
       tokenRef.current = "";
 
@@ -154,3 +184,12 @@ export default function AuthProvider ({children}:{children: ReactNode}): ReactNo
     </AuthContext.Provider>
   );
 };
+
+export {
+  TokenPairType
+};
+
+// This hook can be used to access the user info.
+export function useAuthSession() {
+  return useContext(AuthContext);
+}
