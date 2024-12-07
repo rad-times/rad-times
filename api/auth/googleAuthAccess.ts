@@ -1,3 +1,4 @@
+import {TokenPairType} from "@/providers/AuthProvider";
 import {
   GoogleSignin,
   isErrorWithCode,
@@ -21,7 +22,7 @@ const API_URL = Constants.expoConfig?.extra?.API_URL_ROOT || '';
 /**
  * Sign the user in via google oAuth
  */
-const googleSignIn = async ():Promise<string> => {
+const googleSignIn = async ():Promise<TokenPairType> => {
   try {
     await GoogleSignin.hasPlayServices();
     const authResp: SignInResponse = await GoogleSignin.signIn();
@@ -29,21 +30,20 @@ const googleSignIn = async ():Promise<string> => {
     if (isSuccessResponse(authResp)) {
       const {idToken}:{idToken:string|null} = authResp.data;
       if (idToken !== null) {
-        await fetch(`${API_URL}/login?authType=google`, {
+        return await fetch(`${API_URL}/login?authType=google`, {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${idToken}`
           }
         })
+          .then(resp => resp.json())
           .catch(err => {
             throw new Error(err);
           });
-
-        return idToken;
       }
     }
     console.error('Google sign-in did not return a valid token.');
-    return "";
+    return {} as TokenPairType;
 
   } catch (error) {
     if (isErrorWithCode(error)) {

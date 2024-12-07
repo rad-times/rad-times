@@ -25,7 +25,7 @@ export async function commonGraphQlRequest({
     headers: {
       "Content-Type": "application/json",
       "Accept": "application/json",
-      'Authorization': `Bearer ${sessionToken}`,
+      'Authorization': `Bearer ${sessionToken}`
     },
     body: JSON.stringify({ query: queryBody })
   })

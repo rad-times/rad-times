@@ -13,6 +13,11 @@
       "config": {
         "googleMapsApiKey": ""
       },
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
+      },
       "bundleIdentifier": "com.davidryanhall.radtimes"
     },
     "android": {

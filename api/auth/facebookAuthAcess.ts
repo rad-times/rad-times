@@ -1,11 +1,7 @@
+import {TokenPairType} from "@/providers/AuthProvider";
 import Constants from "expo-constants";
 import {Platform} from "react-native";
-import {
-  AccessToken,
-  AuthenticationToken,
-  LoginManager,
-  Settings,
-} from 'react-native-fbsdk-next';
+import {AccessToken, AuthenticationToken, LoginManager, Settings,} from 'react-native-fbsdk-next';
 import FBAuthenticationToken from "react-native-fbsdk-next/lib/typescript/src/FBAuthenticationToken";
 import FBAccessToken from "react-native-fbsdk-next/src/FBAccessToken";
 
@@ -15,7 +11,7 @@ const SECRET_KEY = Constants.expoConfig?.extra?.OAUTH_KEYS?.FACEBOOK_NONCE_KEY |
 /**
  * Log user in
  */
-const facebookSignIn = async ():Promise<string> => {
+const facebookSignIn = async ():Promise<TokenPairType> => {
   try {
     Settings.initializeSDK();
 
@@ -31,17 +27,16 @@ const facebookSignIn = async ():Promise<string> => {
         if (authenticationResp !== null) {
           const {authenticationToken}:{authenticationToken: string} = authenticationResp;
 
-          await fetch(`${API_URL}/login?authType=facebook`, {
+          return await fetch(`${API_URL}/login?authType=facebook`, {
             method: "GET",
             headers: {
               "Authorization": `Bearer ${authenticationToken}`
             }
           })
+            .then(resp => resp.json())
             .catch(err => {
               throw new Error(err);
             });
-
-          return authenticationToken;
         }
 
       } else {
@@ -51,11 +46,11 @@ const facebookSignIn = async ():Promise<string> => {
       }
     }
 
-    return "";
+    return {} as TokenPairType;
 
   } catch (err) {
     console.error("Error authorizing with Facebook");
-    return "";
+    return {} as TokenPairType;
   }
 }
 

@@ -20,9 +20,9 @@ function crewByPersonIdQuery(id: number) {
   }`
 }
 
-function togglePersonFavoriteQuery(personId: number, activeUserId: number, isFavorite: boolean) {
+function togglePersonFavoriteQuery(personId: number, isFavorite: boolean) {
   return `mutation {
-    togglePersonFavorite(personId: ${personId}, activeUserId: ${activeUserId}, isFavorite: ${isFavorite}) {
+    togglePersonFavorite(personId: ${personId}, isFavorite: ${isFavorite}) {
       id
       is_favorite
     }
@@ -45,10 +45,10 @@ export async function getCrewByPersonId(id: number): Promise<Person[]> {
   }
 }
 
-export async function togglePersonFavorite(personId: number, activeUserId: number, isFavorite: boolean): Promise<Person> {
+export async function togglePersonFavorite(personId: number, isFavorite: boolean): Promise<Person> {
   try {
     const queryResp = await commonGraphQlRequest({
-      queryBody:  togglePersonFavoriteQuery(personId, activeUserId, isFavorite),
+      queryBody:  togglePersonFavoriteQuery(personId, isFavorite),
       errorMessage: "Error setting friend as favorite"
     });
     return _.get(queryResp, 'data.togglePersonFavorite', {});

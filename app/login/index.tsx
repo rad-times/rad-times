@@ -5,15 +5,15 @@ import PageWrapper from "@/views/components/PageWrapper";
 import Spacer from "@/views/components/Spacer";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {SplashScreen} from "expo-router";
-import {StyleSheet, Text, View, Pressable, Image, GestureResponderEvent, ActivityIndicator} from 'react-native';
+import {StyleSheet, Text, View, Pressable, Image, ActivityIndicator} from 'react-native';
 import React, {useState, ReactNode, useCallback} from 'react';
 import {
   googleSignIn
-} from '@/api/oauth/googleAuthAccess';
+} from '@/api/auth/googleAuthAccess';
 import {
   facebookSignIn
-} from '@/api/oauth/facebookAuthAcess';
-import { useAuthSession } from '@/providers/AuthProvider';
+} from '@/api/auth/facebookAuthAcess';
+import { useAuthSession, TokenPairType } from '@/providers/AuthProvider';
 import _ from 'lodash';
 
 interface ISocialLoginBtn {
@@ -65,24 +65,27 @@ export default function LoginScreen (): ReactNode {
   const handleLogIn = async (authType: string) => {
     setSignInProcessing(true);
     try {
-      let token = "";
+      let tokens: TokenPairType = {
+        accessToken: "",
+        refreshToken: ""
+      };
       switch(authType) {
         case "google":
-          token = await googleSignIn();
+          tokens = await googleSignIn();
           break;
         case "facebook":
-          token = await facebookSignIn();
+          tokens = await facebookSignIn();
           break
       }
 
-      if (_.isEmpty(token)) {
+      if (_.isEmpty(tokens)) {
         //@todo handle auth error - notify user
         console.error("There was an error with " + authType + " authentication");
         setSignInProcessing(false);
         return;
       }
 
-      signIn(token);
+      signIn(tokens);
 
     } catch (err) {
       console.error(err);
