@@ -1,9 +1,7 @@
-import {DisplayTextStateProp} from "@/state/displayLanguageSlice";
 import { Tabs } from 'expo-router';
 import Icon from '@/views/components/Icon'
 import {Colors} from '@/constants/Colors';
 import {ReactNode} from "react";
-import {useSelector} from "react-redux";
 
 const baseTabOptions = {
   headerShown: false,
@@ -29,7 +27,7 @@ export default function RadTimesNavigationLayout(): ReactNode {
         options={{
           ...baseTabOptions,
           tabBarShowLabel: false,
-          tabBarIcon: ({ color }) => <Icon size={24} name="home-sharp" color={color} />
+          tabBarIcon: ({ focused, color }) => <Icon size={24} name={focused ? "home-sharp" : "home-outline"} color={color} />
         }}
       />
       <Tabs.Screen
@@ -37,7 +35,15 @@ export default function RadTimesNavigationLayout(): ReactNode {
         options={{
           ...baseTabOptions,
           tabBarShowLabel: false,
-          tabBarIcon: ({ color }) => <Icon size={24} name="at-circle" color={color} />,
+          tabBarIcon: ({ focused, color }) => <Icon size={24} name={focused ? "at-circle-sharp" : "at-circle-outline"} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="Friends"
+        options={{
+          ...baseTabOptions,
+          tabBarShowLabel: false,
+          tabBarIcon: ({ focused, color }) => <Icon size={24} name={focused ? "person" : "person-outline"} color={color} />,
         }}
       />
       <Tabs.Screen
@@ -45,7 +51,7 @@ export default function RadTimesNavigationLayout(): ReactNode {
         options={{
           ...baseTabOptions,
           tabBarShowLabel: false,
-          tabBarIcon: ({ color }) => <Icon size={24} name="people-circle" color={color} />,
+          tabBarIcon: ({ focused, color }) => <Icon size={24} name={focused ? "people-circle-sharp" : "people-circle-outline"} color={color} />,
         }}
       />
       <Tabs.Screen
@@ -53,7 +59,7 @@ export default function RadTimesNavigationLayout(): ReactNode {
         options={{
           ...baseTabOptions,
           tabBarShowLabel: false,
-          tabBarIcon: ({ color }) => <Icon size={24} name="settings" color={color} />,
+          tabBarIcon: ({ focused, color }) => <Icon size={24} name={focused ? "construct-sharp" : "construct-outline"} color={color} />,
         }}
       />
     </Tabs>
