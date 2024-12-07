@@ -1,25 +1,15 @@
 import {getActivePersonByEmail, getUserLanguages} from "@/api/personApi";
+import {validateToken, refreshAccessToken} from '@/api/auth/acessTokens';
 import {setActiveUser} from "@/state/activeUserSlice";
 import {setCrewList} from "@/state/crewSearchSlice";
 import {setDisplayText} from "@/state/displayLanguageSlice";
 import useStorage from "@/hooks/useStorage";
-import Constants from "expo-constants";
+import {DecodedTokenType, TokenPairType} from '@/types/AuthToken';
 import {Href, router} from "expo-router";
 import {jwtDecode} from "jwt-decode";
 import {createContext, MutableRefObject, ReactNode, useCallback, useContext, useEffect, useRef, useState} from 'react';
 import {useDispatch} from "react-redux";
 import _ from 'lodash';
-
-type DecodedTokenType = {
-  sub: string,
-  languageCode: string,
-  exp: number
-};
-
-type TokenPairType = {
-  accessToken: string,
-  refreshToken: string
-};
 
 const AuthContext = createContext<{
   signIn: (arg0: TokenPairType) => void;
@@ -42,52 +32,10 @@ export default function AuthProvider ({children}:{children: ReactNode}): ReactNo
     getStorageItemItem,
     removeStorageItem
   } = useStorage();
-  const API_URL = Constants.expoConfig?.extra?.API_URL_ROOT || '';
+
   const tokenRef = useRef<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
-
-  /**
-   * Ensure the stored token is valid before using it in the app
-   */
-  const validateToken = async (tokenFromStorage: string): Promise<boolean> => {
-    try {
-      const validateResponse = await fetch(`${API_URL}/validateToken`, {
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          'Authorization': `Bearer ${tokenFromStorage}`
-        },
-        method: 'GET'
-      });
-
-      return validateResponse.status === 200;
-
-    } catch (err) {
-      return false;
-    }
-  }
-  /**
-   * Refresh access token
-   */
-  const refreshAccessToken = async (refreshToken: string): Promise<TokenPairType> => {
-    try {
-      const tokenRefreshResp = await fetch(`${API_URL}/refreshAccessToken`, {
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          'Authorization': `Bearer ${refreshToken}`
-        },
-        method: 'GET'
-      });
-
-      return await tokenRefreshResp.json();
-
-    } catch (err) {
-      console.error("Error refresh access tokens");
-      return {} as TokenPairType;
-    }
-  }
 
   /**
    * Fetch the active user data when app loads

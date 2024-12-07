@@ -9,10 +9,10 @@ import {StyleSheet, Text, View, Pressable, Image, ActivityIndicator} from 'react
 import React, {useState, ReactNode, useCallback} from 'react';
 import {
   googleSignIn
-} from '@/api/oauth/googleAuthAccess';
+} from '@/api/auth/googleAuthAccess';
 import {
   facebookSignIn
-} from '@/api/oauth/facebookAuthAcess';
+} from '@/api/auth/facebookAuthAcess';
 import { useAuthSession, TokenPairType } from '@/providers/AuthProvider';
 import _ from 'lodash';
 
