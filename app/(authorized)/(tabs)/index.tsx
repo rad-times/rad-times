@@ -13,9 +13,6 @@ export default function Index(): ReactNode {
   return (
     <PageWrapper>
       <>
-        <PageTitle
-          title={displayText.index.title}
-        />
       </>
     </PageWrapper>
   );
