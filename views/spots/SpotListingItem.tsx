@@ -29,7 +29,8 @@ function SpotListingItem({
 
   const onPressFavorite = async () => {
     try {
-      const toggleResp = await toggleFavoriteSpot(spotDetails.spot_id, activeUser.id, !spotDetails.is_favorite);
+      // Need to pass session token
+      const toggleResp = await toggleFavoriteSpot(spotDetails.spot_id, !spotDetails.is_favorite, "12121");
       dispatch(updateSpotFavorite({
         spotId: spotDetails.spot_id,
         isFavorite: toggleResp.is_favorite

@@ -1,3 +1,4 @@
+import {CONTENT_FULL_PAGE} from "@/constants/Styles";
 import {Spot} from "@/types/Spot";
 import ActionButton from "@/views/components/ActionButton";
 import CreateNewSpot from "@/app/(authorized)/spots/CreateNewSpot";
@@ -43,7 +44,7 @@ export default function Spots(): ReactNode {
       <View style={styles.spotResultContent}>
         <View>
           <SpotSearchField />
-          <View style={styles.resultsWrapper}>
+          <View style={CONTENT_FULL_PAGE}>
             <FlatList
               data={searchResultsList}
               renderItem={({item}) => <SpotListingItem spotDetails={item} />}

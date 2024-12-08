@@ -3,7 +3,7 @@ import _ from "lodash";
 import {ReactNode} from "react";
 import {NativeSyntheticEvent, TextInput, Text, StyleSheet, TextInputFocusEventData, View} from "react-native";
 
-interface FormInputProps {
+interface IFormInputProps {
   label?: string;
   formValue: string | undefined
   onChangeInput?: (text: string) => void
@@ -13,6 +13,7 @@ interface FormInputProps {
   clearField?: Function
   disabled?: boolean
   autoCorrect?: boolean
+  autoCapitalize?: "sentences" | "none"
   autoFocus?: boolean
 }
 
@@ -25,9 +26,10 @@ export default function FormInput(
     isMultiline = false,
     maxLength = 50,
     disabled = false,
-    autoCorrect = true,
+    autoCorrect = false,
+    autoCapitalize = "sentences",
     autoFocus = false
-  }: FormInputProps): ReactNode {
+  }: IFormInputProps): ReactNode {
   return (
     <View style={styles.formInputWrapper}>
       {label &&
@@ -42,6 +44,7 @@ export default function FormInput(
               readOnly={disabled}
               autoCorrect={autoCorrect}
               autoFocus={autoFocus}
+              autoCapitalize={autoCapitalize}
               onFocus={onFocus}
               multiline={true}
               numberOfLines={4}
@@ -93,7 +96,7 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     paddingRight: 5,
     fontSize: 14,
-    color: Colors.GREY,
+    color: Colors.MEDIUM_LIGHT_GRAY,
     zIndex: 100
   }
 });

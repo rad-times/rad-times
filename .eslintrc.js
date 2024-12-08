@@ -2,6 +2,7 @@
 module.exports = {
   extends: [
     'expo',
-    'plugin:react-hooks/recommended'
+    'plugin:react-hooks/recommended',
+    '@tanstack/eslint-plugin-query'
   ]
 };
