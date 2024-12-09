@@ -85,16 +85,13 @@ export default function SearchablePicker(
     itemIdKey
 }: SearchablePickerProps): ReactNode {
   const [pickerModalShown, showPickerModal] = useState(false);
-  const [displayOnlySearchValue, setDisplayOnlySearchValue] = useState(searchValue);
 
   const onSelectItem = (selection: SelectResponse) => {
     showPickerModal(false);
-    setDisplayOnlySearchValue(selection.value);
     onSelectOption(selection);
   };
 
   const onClickCloseModal = (e: GestureResponderEvent) => {
-   onChangeSearchText(displayOnlySearchValue);
    showPickerModal(false);
   };
 
@@ -102,7 +99,7 @@ export default function SearchablePicker(
     <View>
       <FormInput
         label={_.isNil(label) ? '' : label}
-        formValue={displayOnlySearchValue}
+        formValue={searchValue}
         onFocus={() => showPickerModal(true)}
         maxLength={50}
         disabled={disabled}

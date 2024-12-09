@@ -1,64 +1,54 @@
 import {getLocationData, searchGooglePlaces} from "@/api/googlePlacesApi";
+import {updateUserById} from '@/api/personApi';
 import {Colors} from "@/constants/Colors";
-import {ActiveUserStateProp} from "@/state/activeUserSlice";
+import {BOTTOM_BUTTON, CENTER_CONTENT_FULL_PAGE, CONTENT_FULL_PAGE} from "@/constants/Styles";
+import {useAuthSession} from "@/providers/AuthProvider";
+import {ActiveUserStateProp, setActiveUser} from "@/state/activeUserSlice";
 import {GoogleLocationStateProps, setSearchInput, setSearchResults} from "@/state/googleLocationsSlice";
 import ActionButton from "@/views/components/ActionButton";
 import FormInput from "@/views/components/FormInput";
 import SearchablePicker, {SelectResponse} from "@/views/components/SearchablePicker";
 import Spacer from "@/views/components/Spacer";
+import {useMutation} from "@tanstack/react-query";
+import {router} from "expo-router";;
 import {ReactNode, useEffect, useState} from "react";
 import PageWrapper from "@/views/components/PageWrapper";
 import PageTitle from "@/views/components/PageTitle";
-import {StyleSheet} from 'react-native';
+import {View} from 'react-native';
+import { Snackbar, ActivityIndicator } from 'react-native-paper';
 import {useDispatch, useSelector} from "react-redux";
+import _ from 'lodash';
 
 interface EditProfileProps {}
 
 export default function EditProfile({}: EditProfileProps): ReactNode {
   const dispatch = useDispatch();
+  const {token} = useAuthSession();
 
-  const locationSearchTerm = useSelector((state: GoogleLocationStateProps) => state.googleLocationSearch.locationSearchTerm);
   const searchResults = useSelector((state: GoogleLocationStateProps) => state.googleLocationSearch.locationSearchResults);
   const activeUser = useSelector((state: ActiveUserStateProp) => state.activeUser.user);
   const [editedUser, setEditedUser] = useState(activeUser);
-  const [changeList, setChangeList] = useState({})
+  const [hasChanges, setHasChanges] = useState<boolean>(false)
+  const [hasUpdateError, setHasUpdateError] = useState<boolean>(false);
+  const [locationSearchTerm, setLocationSearchTerm] = useState<string>("");
 
-  const onChangeFirstName = (val: string) => {
+  const onChangeFormElement = (key: string, val: string) => {
     setEditedUser({
       ...editedUser,
-      first_name: val
+      [key]: val
     });
-    setChangeList({
-      ...changeList,
-      first_name: val
-    });
-  };
 
-  const onChangeLastName = (val: string) => {
-    setEditedUser({
-      ...editedUser,
-      last_name: val
-    });
-    setChangeList({
-      ...changeList,
-      first_name: val
-    });
-  };
-
-  const onChangeBio = (val: string) => {
-    setEditedUser({
-      ...editedUser,
-      bio: val
-    });
-    setChangeList({
-      ...changeList,
-      first_name: val
-    });
+    setHasChanges(true);
   };
 
   // Set initial state
   useEffect(() => {
-    dispatch(setSearchInput(`${editedUser.location?.city_name}, ${editedUser.location?.state_name}, ${editedUser.location?.country_name}`));
+    if (editedUser.location === null || _.isEmpty(editedUser.location)) {
+      setLocationSearchTerm("");
+      return;
+    }
+
+    setLocationSearchTerm(`${editedUser.location?.city_name}, ${editedUser.location?.state_name}, ${editedUser.location?.country_name}`);
   }, []);
 
   useEffect(() => {
@@ -75,7 +65,7 @@ export default function EditProfile({}: EditProfileProps): ReactNode {
   }, [locationSearchTerm]);
 
   const setLocationSearchValue = (val: string) => {
-    dispatch(setSearchInput(val));
+    setLocationSearchTerm(val);
   }
 
   const onSelectLocation = async (
@@ -86,70 +76,115 @@ export default function EditProfile({}: EditProfileProps): ReactNode {
     const fullLocation = await getLocationData(id);
     const updatedLocation = {
       lat: fullLocation.location.latitude,
-        lng: fullLocation.location.longitude,
-        city_name: fullLocation.addressComponents[0].longText,
-        state_name: fullLocation.addressComponents[2].longText,
-        country_name: fullLocation.addressComponents[3].longText
+      lng: fullLocation.location.longitude,
+      city_id: fullLocation.id,
+      city_name: fullLocation.addressComponents[0].longText,
+      state_name: fullLocation.addressComponents[2].longText,
+      country_name: fullLocation.addressComponents[3].longText
     };
+
     setEditedUser({
       ...editedUser,
       location: updatedLocation
     });
-    setChangeList({
-      ...changeList,
-      location: updatedLocation
-    });
+    setLocationSearchTerm(`${updatedLocation.city_name}, ${updatedLocation.state_name}, ${updatedLocation.country_name}`);
+    setHasChanges(true);
   }
 
-  const saveChanges = () => {
-    console.log('saving');
+  const mutation = useMutation({
+    mutationFn: async () => {
+      return updateUserById(activeUser.id, editedUser, token?.current || '')
+    },
+    onError: (error, variables, context) => {
+      setHasUpdateError(true);
+    },
+    onSuccess: (data, variables, context) => {
+      dispatch(setActiveUser(editedUser));
+      router.back();
+    }
+  })
+
+  useEffect(() => {
+    if (mutation.isError) {
+      setHasUpdateError(true);
+      setTimeout(() => {
+        setHasUpdateError(false);
+      }, 5000);
+    }
+  }, [mutation.isError]);
+
+  const cancelChanges = () => {
+    setEditedUser(activeUser);
+    router.back();
   }
 
   return (
-    <PageWrapper>
-      <PageTitle
-        title={"Edit My Profile"}
-      />
-      <Spacer />
-      <FormInput
-        label={'First Name'}
-        formValue={editedUser.first_name}
-        onChangeInput={onChangeFirstName}
-      />
-      <FormInput
-        label={'Last Name'}
-        formValue={editedUser.last_name}
-        onChangeInput={onChangeLastName}
-      />
-      <FormInput
-        label={'Bio'}
-        formValue={editedUser.bio}
-        onChangeInput={onChangeBio}
-        isMultiline={true}
-        maxLength={255}
-        autoCorrect={true}
-      />
-      <SearchablePicker
-        label={"Location"}
-        searchValue={locationSearchTerm}
-        searchResults={searchResults}
-        onChangeSearchText={(val: string) => setLocationSearchValue(val)}
-        onSelectOption={onSelectLocation}
-        clearSearchValue={() => setLocationSearchValue('')}
-        itemDisplayValueKey={'location_name'}
-        itemIdKey={'place_id'}
-      />
-      <Spacer margin={50} />
-      <ActionButton onClickBtn={saveChanges} btnDisplayText={"Save"} />
-    </PageWrapper>
+    <>
+      <PageWrapper>
+        <PageTitle
+          title={"Edit My Profile"}
+        />
+        <>
+          {mutation.isPending ? (
+            <View style={CENTER_CONTENT_FULL_PAGE}>
+              <ActivityIndicator animating={true} size={"large"} color={Colors.WHITE} />
+            </View>
+          ) : (
+            <>
+              <View style={CONTENT_FULL_PAGE}>
+                <Spacer />
+                <FormInput
+                  label={'First Name'}
+                  formValue={editedUser.first_name}
+                  onChangeInput={(val) => onChangeFormElement("first_name", val)}
+                />
+                <FormInput
+                  label={'Last Name'}
+                  formValue={editedUser.last_name}
+                  onChangeInput={(val) => onChangeFormElement("last_name", val)}
+                />
+                <FormInput
+                  label={'Bio'}
+                  formValue={editedUser.bio}
+                  onChangeInput={(val) => onChangeFormElement("bio", val)}
+                  isMultiline={true}
+                  maxLength={255}
+                  autoCorrect={false}
+                />
+                <SearchablePicker
+                  label={"Location"}
+                  searchValue={locationSearchTerm}
+                  searchResults={searchResults}
+                  onChangeSearchText={(val: string) => setLocationSearchValue(val)}
+                  onSelectOption={onSelectLocation}
+                  clearSearchValue={() => setLocationSearchValue('')}
+                  itemDisplayValueKey={'location_name'}
+                  itemIdKey={'place_id'}
+                />
+              </View>
+
+              <View style={BOTTOM_BUTTON}>
+                <ActionButton onClickBtn={() => mutation.mutate()} btnDisabled={!hasChanges} btnWidthPercent={50} theme={"actionBtn"} btnDisplayText={"Save"} />
+                <ActionButton onClickBtn={cancelChanges} btnWidthPercent={50} theme={"destroyBtn"} btnDisplayText={"Cancel"} />
+              </View>
+            </>
+          )}
+        </>
+      </PageWrapper>
+
+      <Snackbar
+        visible={hasUpdateError}
+        onDismiss={() => {
+          setHasUpdateError(false);
+        }}
+        action={{
+          label: "Dismiss",
+          onPress: () => {
+            setHasUpdateError(false);
+          },
+        }}>
+        {mutation?.error?.message || "Error updating user."}
+      </Snackbar>
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  formLabel: {
-    fontSize: 18,
-    fontStyle: 'italic',
-    marginBottom: 5,
-    color: Colors.LIGHT_GREY
-  }
-});

@@ -3,11 +3,13 @@ import {Colors} from "@/constants/Colors";
 import {useSelector} from "react-redux";
 import {ActiveUserStateProp} from '@/state/activeUserSlice';
 import {ReactNode} from "react";
+import _ from 'lodash';
 
 export type ActiveUserDetailProps = {};
 
 function ActiveUserDetails({}: ActiveUserDetailProps): ReactNode {
   const activeUser = useSelector((state: ActiveUserStateProp) => state.activeUser.user);
+  const usersLocation = _.isEmpty(activeUser.location) ? "From Unknown Regions" : `${activeUser.location?.city_name}, ${activeUser.location?.state_name}`;
 
   return (
     <View style={styles.mainWrapper}>
@@ -19,8 +21,8 @@ function ActiveUserDetails({}: ActiveUserDetailProps): ReactNode {
       />
       <View style={styles.detailsWrapper}>
         <Text style={styles.userName}>{activeUser.first_name} {activeUser.last_name}</Text>
-        <Text style={styles.locationText}>{activeUser.location?.city_name}, {activeUser.location?.state_name}</Text>
-        <Text>{activeUser.location?.country_name}</Text>
+        <Text style={styles.locationText}>{usersLocation}</Text>
+        <Text style={styles.countryText}>{activeUser.location?.country_name}</Text>
         <Text style={styles.bioText}>{activeUser.bio}</Text>
       </View>
     </View>
@@ -45,7 +47,7 @@ const styles = StyleSheet.create({
   },
   profileImage: {
     height: HEIGHT,
-    width: 170,
+    width: 120,
     borderWidth: 2,
     borderColor: Colors.DARK_GREY,
     marginRight: 10
@@ -65,8 +67,14 @@ const styles = StyleSheet.create({
     color: Colors.LIGHT_GREY,
     fontSize: 14,
     fontWeight: 'normal',
+    fontStyle: 'italic'
+  },
+  countryText: {
+    color: Colors.GREY,
+    fontSize: 12,
+    fontWeight: 'normal',
     fontStyle: 'italic',
-    paddingBottom: 5
+    paddingBottom: 7
   }
 });
 

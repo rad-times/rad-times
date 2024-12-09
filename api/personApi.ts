@@ -100,6 +100,35 @@ export async function getActivePersonByEmail(email: string, sessionToken:string)
   }
 }
 
+export async function updateUserById(id: number, editedUser:Person, sessionToken:string): Promise<Person> {
+  try {
+    const personResp = await fetch(`${API_URL}/person/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        first_name: editedUser.first_name,
+        last_name: editedUser.last_name,
+        bio: editedUser.bio,
+        location: editedUser.location
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": `Bearer ${sessionToken}`
+      }
+    });
+
+    if (personResp.status >= 400) {
+      throw new Error();
+    }
+
+    return await personResp.json();
+
+  } catch (err) {
+    throw new Error("Error updating user");
+  }
+
+}
+
 export async function getUserLanguages(languageCode:string = 'en'): Promise<object> {
   try {
     return await fetch(`${API_URL}/static/languages_${languageCode.toLowerCase()}.json`, {

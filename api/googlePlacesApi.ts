@@ -1,5 +1,7 @@
 import _ from 'lodash';
+import Constants from "expo-constants";
 
+const GOOGLE_MAPS_API_KEY:string = Constants.expoConfig?.extra?.GOOGLE_MAPS_KEY;
 /**
  * Takes lat / lng coordinates and returns the city location
  */
@@ -7,7 +9,7 @@ const getLocationByLatLng = async (lat: number, lng: number): Promise<google.map
   const resp = await fetch(`https://maps.googleapis.com/maps/api/geocode/json` +
     `?latlng=${lat},${lng}` +
     `&result_type=neighborhood|park` +
-    `&key=AIzaSyDWsX3AIFC8x2_uSTWDLoLG52MZpqr_-II`
+    `&key=${GOOGLE_MAPS_API_KEY}`
   , {
     method: 'GET'
   })
@@ -24,7 +26,7 @@ const getLocationData = async (placeId: string) => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'X-Goog-Api-Key': 'AIzaSyDWsX3AIFC8x2_uSTWDLoLG52MZpqr_-II',
+      'X-Goog-Api-Key': GOOGLE_MAPS_API_KEY,
       'X-Goog-FieldMask': 'id,addressComponents,location'
     }
   })
@@ -42,7 +44,7 @@ const searchGooglePlaces = async (searchValue:string) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-Goog-Api-Key': 'AIzaSyDWsX3AIFC8x2_uSTWDLoLG52MZpqr_-II'
+      'X-Goog-Api-Key': GOOGLE_MAPS_API_KEY
     },
     body: JSON.stringify({
       "input": searchValue,
