@@ -1,8 +1,9 @@
 import {getLocationData, searchGooglePlaces} from "@/api/googlePlacesApi";
+import {updateUserById} from '@/api/personApi';
 import {Colors} from "@/constants/Colors";
-import {BOTTOM_BUTTON, CONTENT_FULL_PAGE} from "@/constants/Styles";
+import {BOTTOM_BUTTON, CENTER_CONTENT_FULL_PAGE, CONTENT_FULL_PAGE} from "@/constants/Styles";
 import {useAuthSession} from "@/providers/AuthProvider";
-import {ActiveUserStateProp} from "@/state/activeUserSlice";
+import {ActiveUserStateProp, setActiveUser} from "@/state/activeUserSlice";
 import {GoogleLocationStateProps, setSearchInput, setSearchResults} from "@/state/googleLocationsSlice";
 import ActionButton from "@/views/components/ActionButton";
 import FormInput from "@/views/components/FormInput";
@@ -83,27 +84,15 @@ export default function EditProfile({}: EditProfileProps): ReactNode {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      return fetch(`http://localhost:8080/users/${activeUser.id}`, {
-        method: "PUT",
-        body: JSON.stringify({
-          first_name: editedUser.first_name,
-          last_name: editedUser.last_name,
-          bio: editedUser.bio
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "Authorization": `Bearer ${token?.current}`
-        }
-      })
-        .then(resp => resp.json())
-        .then(() => {
-          if (mutation.isSuccess) {
-            router.back();
-          }
-        })
-        .catch(err => console.error(err));
+      return updateUserById(activeUser.id, editedUser, token?.current || '')
     },
+    onError: (error, variables, context) => {
+      setHasUpdateError(true);
+    },
+    onSuccess: (data, variables, context) => {
+      dispatch(setActiveUser(editedUser));
+      router.back();
+    }
   })
 
   useEffect(() => {
@@ -121,16 +110,17 @@ export default function EditProfile({}: EditProfileProps): ReactNode {
   }
 
   return (
-    <PageWrapper>
-      <PageTitle
-        title={"Edit My Profile"}
-      />
-      <>
-        {mutation.isPending ? (
-          <View style={CONTENT_FULL_PAGE}>
-            <ActivityIndicator animating={true} size={"large"} color={Colors.WHITE} />
-          </View>
-        ) : (
+    <>
+      <PageWrapper>
+        <PageTitle
+          title={"Edit My Profile"}
+        />
+        <>
+          {mutation.isPending ? (
+            <View style={CENTER_CONTENT_FULL_PAGE}>
+              <ActivityIndicator animating={true} size={"large"} color={Colors.WHITE} />
+            </View>
+          ) : (
             <>
               <View style={CONTENT_FULL_PAGE}>
                 <Spacer />
@@ -169,8 +159,9 @@ export default function EditProfile({}: EditProfileProps): ReactNode {
                 <ActionButton onClickBtn={cancelChanges} btnWidthPercent={50} theme={"destroyBtn"} btnDisplayText={"Cancel"} />
               </View>
             </>
-        )}
-      </>
+          )}
+        </>
+      </PageWrapper>
 
       <Snackbar
         visible={hasUpdateError}
@@ -183,9 +174,8 @@ export default function EditProfile({}: EditProfileProps): ReactNode {
             setHasUpdateError(false);
           },
         }}>
-        {mutation?.error?.message || ""}
+        {mutation?.error?.message || "Error updating user."}
       </Snackbar>
-
-    </PageWrapper>
+    </>
   );
 }

@@ -35,3 +35,10 @@ export const CONTENT_FULL_PAGE:StyleProp<ViewStyle> = {
   flexDirection: 'column',
   flex: 1
 }
+
+export const CENTER_CONTENT_FULL_PAGE:StyleProp<ViewStyle> = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  flex: 1
+}
