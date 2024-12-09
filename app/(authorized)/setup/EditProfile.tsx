@@ -9,7 +9,7 @@ import ActionButton from "@/views/components/ActionButton";
 import FormInput from "@/views/components/FormInput";
 import SearchablePicker, {SelectResponse} from "@/views/components/SearchablePicker";
 import Spacer from "@/views/components/Spacer";
-import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {useMutation} from "@tanstack/react-query";
 import {router} from "expo-router";;
 import {ReactNode, useEffect, useState} from "react";
 import PageWrapper from "@/views/components/PageWrapper";
@@ -17,20 +17,20 @@ import PageTitle from "@/views/components/PageTitle";
 import {View} from 'react-native';
 import { Snackbar, ActivityIndicator } from 'react-native-paper';
 import {useDispatch, useSelector} from "react-redux";
+import _ from 'lodash';
 
 interface EditProfileProps {}
 
 export default function EditProfile({}: EditProfileProps): ReactNode {
   const dispatch = useDispatch();
-  const queryClient = useQueryClient()
   const {token} = useAuthSession();
 
-  const locationSearchTerm = useSelector((state: GoogleLocationStateProps) => state.googleLocationSearch.locationSearchTerm);
   const searchResults = useSelector((state: GoogleLocationStateProps) => state.googleLocationSearch.locationSearchResults);
   const activeUser = useSelector((state: ActiveUserStateProp) => state.activeUser.user);
   const [editedUser, setEditedUser] = useState(activeUser);
   const [hasChanges, setHasChanges] = useState<boolean>(false)
   const [hasUpdateError, setHasUpdateError] = useState<boolean>(false);
+  const [locationSearchTerm, setLocationSearchTerm] = useState<string>("");
 
   const onChangeFormElement = (key: string, val: string) => {
     setEditedUser({
@@ -43,24 +43,29 @@ export default function EditProfile({}: EditProfileProps): ReactNode {
 
   // Set initial state
   useEffect(() => {
-    dispatch(setSearchInput(`${editedUser.location?.city_name}, ${editedUser.location?.state_name}, ${editedUser.location?.country_name}`));
+    if (editedUser.location === null || _.isEmpty(editedUser.location)) {
+      setLocationSearchTerm("");
+      return;
+    }
+
+    setLocationSearchTerm(`${editedUser.location?.city_name}, ${editedUser.location?.state_name}, ${editedUser.location?.country_name}`);
   }, []);
 
   useEffect(() => {
-    // if (locationSearchTerm === '') {
-    //   dispatch(setSearchResults([]));
-    //   return;
-    // }
-    //
-    // const debounceTimer = setTimeout(() => {
-    //   searchGooglePlaces(locationSearchTerm)
-    //     .then(res => dispatch(setSearchResults(res)))
-    // }, 500);
-    // return () => clearTimeout(debounceTimer);
+    if (locationSearchTerm === '') {
+      dispatch(setSearchResults([]));
+      return;
+    }
+
+    const debounceTimer = setTimeout(() => {
+      searchGooglePlaces(locationSearchTerm)
+        .then(res => dispatch(setSearchResults(res)))
+    }, 500);
+    return () => clearTimeout(debounceTimer);
   }, [locationSearchTerm]);
 
   const setLocationSearchValue = (val: string) => {
-    dispatch(setSearchInput(val));
+    setLocationSearchTerm(val);
   }
 
   const onSelectLocation = async (
@@ -71,15 +76,19 @@ export default function EditProfile({}: EditProfileProps): ReactNode {
     const fullLocation = await getLocationData(id);
     const updatedLocation = {
       lat: fullLocation.location.latitude,
-        lng: fullLocation.location.longitude,
-        city_name: fullLocation.addressComponents[0].longText,
-        state_name: fullLocation.addressComponents[2].longText,
-        country_name: fullLocation.addressComponents[3].longText
+      lng: fullLocation.location.longitude,
+      city_id: fullLocation.id,
+      city_name: fullLocation.addressComponents[0].longText,
+      state_name: fullLocation.addressComponents[2].longText,
+      country_name: fullLocation.addressComponents[3].longText
     };
+
     setEditedUser({
       ...editedUser,
       location: updatedLocation
     });
+    setLocationSearchTerm(`${updatedLocation.city_name}, ${updatedLocation.state_name}, ${updatedLocation.country_name}`);
+    setHasChanges(true);
   }
 
   const mutation = useMutation({
@@ -142,16 +151,16 @@ export default function EditProfile({}: EditProfileProps): ReactNode {
                   maxLength={255}
                   autoCorrect={false}
                 />
-                {/*<SearchablePicker*/}
-                {/*  label={"Location"}*/}
-                {/*  searchValue={locationSearchTerm}*/}
-                {/*  searchResults={searchResults}*/}
-                {/*  onChangeSearchText={(val: string) => setLocationSearchValue(val)}*/}
-                {/*  onSelectOption={onSelectLocation}*/}
-                {/*  clearSearchValue={() => setLocationSearchValue('')}*/}
-                {/*  itemDisplayValueKey={'location_name'}*/}
-                {/*  itemIdKey={'place_id'}*/}
-                {/*/>*/}
+                <SearchablePicker
+                  label={"Location"}
+                  searchValue={locationSearchTerm}
+                  searchResults={searchResults}
+                  onChangeSearchText={(val: string) => setLocationSearchValue(val)}
+                  onSelectOption={onSelectLocation}
+                  clearSearchValue={() => setLocationSearchValue('')}
+                  itemDisplayValueKey={'location_name'}
+                  itemIdKey={'place_id'}
+                />
               </View>
 
               <View style={BOTTOM_BUTTON}>

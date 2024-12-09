@@ -44,10 +44,12 @@ module.exports = ({ config }) => {
    */
   if (process.env.ENVIRONMENT === 'dev') {
     config.extra.API_URL_ROOT = "http://localhost:8080";
+    config.extra.GOOGLE_MAPS_KEY = process.env.GOOGLE_MAPS_API_KEY;
     config.extra.WS_ROOT = "ws://localhost:8080";
     config.extra.ENV = 'dev';
   } else {
     config.extra.API_URL_ROOT = "https://theradtimes.com";
+    config.extra.GOOGLE_MAPS_KEY = process.env.GOOGLE_MAPS_API_KEY;
     config.extra.WS_ROOT = "wss://theradtimes.com";
     config.extra.ENV = 'prod';
   }

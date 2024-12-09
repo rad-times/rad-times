@@ -102,12 +102,13 @@ export async function getActivePersonByEmail(email: string, sessionToken:string)
 
 export async function updateUserById(id: number, editedUser:Person, sessionToken:string): Promise<Person> {
   try {
-    const personResp = await fetch(`http://localhost:8080/person/${id}`, {
+    const personResp = await fetch(`${API_URL}/person/${id}`, {
       method: "PUT",
       body: JSON.stringify({
         first_name: editedUser.first_name,
         last_name: editedUser.last_name,
-        bio: editedUser.bio
+        bio: editedUser.bio,
+        location: editedUser.location
       }),
       headers: {
         "Content-Type": "application/json",
