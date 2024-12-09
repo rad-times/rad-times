@@ -1,9 +1,10 @@
-import {Colors} from "@/constants/Colors";
+import {CONTENT_FULL_PAGE} from "@/constants/Styles";
+import NavigateBackArrowBtn from "@/views/components/NavigateBackArrowBtn";
 import Spacer from "@/views/components/Spacer";
-import {ReactNode, useEffect} from "react";
+import React, {ReactNode} from "react";
 import PageWrapper from "@/views/components/PageWrapper";
 import PageTitle from "@/views/components/PageTitle";
-import {StyleSheet} from "react-native";
+import {StyleSheet, View} from "react-native";
 
 export default function PhotoVideo(): ReactNode {
   return (
@@ -11,7 +12,11 @@ export default function PhotoVideo(): ReactNode {
       <PageTitle
         title={"Session Footage"}
       />
-      <Spacer />
+      <View style={CONTENT_FULL_PAGE}>
+        <Spacer />
+      </View>
+
+      <NavigateBackArrowBtn />
     </PageWrapper>
   );
 }

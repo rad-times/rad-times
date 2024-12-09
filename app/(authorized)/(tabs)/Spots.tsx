@@ -52,7 +52,7 @@ export default function Spots(): ReactNode {
             />
           </View>
         </View>
-        <ActionButton link={'/spots/CreateNewSpot'} btnDisplayText={'Add a spot'} />
+        <ActionButton link={'/spots/CreateNewSpot'} theme={"actionBtn"} btnDisplayText={'Add a spot'} />
       </View>
     </PageWrapper>
   );

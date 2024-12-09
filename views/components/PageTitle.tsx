@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, type TextProps} from "react-native";
+import {View, Text, Pressable, StyleSheet, type TextProps} from "react-native";
 import {Colors} from "@/constants/Colors";
 import {ReactNode} from "react";
 

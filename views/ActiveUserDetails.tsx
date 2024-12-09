@@ -22,7 +22,7 @@ function ActiveUserDetails({}: ActiveUserDetailProps): ReactNode {
       <View style={styles.detailsWrapper}>
         <Text style={styles.userName}>{activeUser.first_name} {activeUser.last_name}</Text>
         <Text style={styles.locationText}>{usersLocation}</Text>
-        <Text>{activeUser.location?.country_name}</Text>
+        <Text style={styles.countryText}>{activeUser.location?.country_name}</Text>
         <Text style={styles.bioText}>{activeUser.bio}</Text>
       </View>
     </View>
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   },
   profileImage: {
     height: HEIGHT,
-    width: 170,
+    width: 120,
     borderWidth: 2,
     borderColor: Colors.DARK_GREY,
     marginRight: 10
@@ -67,8 +67,14 @@ const styles = StyleSheet.create({
     color: Colors.LIGHT_GREY,
     fontSize: 14,
     fontWeight: 'normal',
+    fontStyle: 'italic'
+  },
+  countryText: {
+    color: Colors.GREY,
+    fontSize: 12,
+    fontWeight: 'normal',
     fontStyle: 'italic',
-    paddingBottom: 5
+    paddingBottom: 7
   }
 });
 

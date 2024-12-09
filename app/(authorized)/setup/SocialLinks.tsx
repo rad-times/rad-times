@@ -1,9 +1,12 @@
 import {Colors} from "@/constants/Colors";
+import {CONTENT_FULL_PAGE} from "@/constants/Styles";
 import {ActiveUserStateProp} from "@/state/activeUserSlice";
 import Icon from "@/views/components/Icon";
+import NavigateBackArrowBtn from "@/views/components/NavigateBackArrowBtn";
 import Spacer from "@/views/components/Spacer";
 import EditSocialLinkForm from "@/views/EditSocialLinkForm";
 import SocialMediaLink from "@/views/SocialMediaLink";
+import {router} from "expo-router";
 import {ReactNode, useState} from "react";
 import PageWrapper from "@/views/components/PageWrapper";
 import PageTitle from "@/views/components/PageTitle";
@@ -32,45 +35,48 @@ export default function SocialLinks(): ReactNode {
       <PageTitle
         title={"My Socials"}
       />
-      <Spacer margin={15} />
+      <View style={CONTENT_FULL_PAGE}>
+        <Spacer margin={15} />
 
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={editLink}
-      >
-        <EditSocialLinkForm
-          onClickClose={setEditLink}
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={editLink}
+        >
+          <EditSocialLinkForm
+            onClickClose={setEditLink}
+          />
+        </Modal>
+
+        <FlatList
+          style={styles.socialLinkList}
+          data={activeUser.socials}
+          renderItem={({item}) => <SocialMediaLink socialDetails={item} editMode={editMode} onClickEdit={onClickEdit}/>}
+          keyExtractor={item => String(item.id)}
         />
-      </Modal>
 
-      <FlatList
-        style={styles.socialLinkList}
-        data={activeUser.socials}
-        renderItem={({item}) => <SocialMediaLink socialDetails={item} editMode={editMode} onClickEdit={onClickEdit}/>}
-        keyExtractor={item => String(item.id)}
-      />
-
-      {/*Don't allow adding new if the user has all available types*/}
-      {editMode && activeUser.socials?.length !== 3 &&
-        <Pressable
+        {/*Don't allow adding new if the user has all available types*/}
+        {editMode && activeUser.socials?.length !== 3 &&
+          <Pressable
             style={styles.addNewBtn}
             onPress={showCreateNewModal}
-        >
+          >
             <Text style={styles.addNewText}>Add New</Text>
             <Icon size={25} name='add-circle' color={Colors.DARK_GREY} />
+          </Pressable>
+        }
+
+        <Pressable
+          style={styles.editIconWrapper}
+          onPress={toggleEditMode}
+        >
+          <View style={styles.editIcon}>
+            <Icon size={editMode ? 30 : 25} name={editMode ? 'close' : 'pencil-sharp'} color={Colors.DARK_GREY} />
+          </View>
         </Pressable>
-      }
+      </View>
 
-      <Pressable
-        style={styles.editIconWrapper}
-        onPress={toggleEditMode}
-      >
-        <View style={styles.editIcon}>
-          <Icon size={editMode ? 30 : 25} name={editMode ? 'close' : 'pencil-sharp'} color={Colors.DARK_GREY} />
-        </View>
-      </Pressable>
-
+      <NavigateBackArrowBtn />
     </PageWrapper>
   );
 }
