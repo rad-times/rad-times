@@ -55,18 +55,19 @@ export default function AuthProvider ({children}:{children: ReactNode}): ReactNo
    */
   useEffect(() => {
     (async ():Promise<void> => {
-      const {
-        accessToken,
-        refreshToken
-      }: TokenPairType = await getStorageItemItem('@token');
+      try {
+        const {
+          accessToken,
+          refreshToken
+        }: TokenPairType = await getStorageItemItem('@token');
 
-      if (accessToken) {
-        const isValidToken = await validateToken(accessToken);
-        if (isValidToken) {
-          tokenRef.current = accessToken;
-          await fetchActiveUser(accessToken);
+        if (accessToken) {
+          const isValidToken = await validateToken(accessToken);
+          if (isValidToken) {
+            tokenRef.current = accessToken;
+            await fetchActiveUser(accessToken);
 
-        } else if (refreshToken) {
+          } else if (refreshToken) {
             const updatedAccessTokens:TokenPairType = await refreshAccessToken(refreshToken);
             if (!_.isEmpty(updatedAccessTokens)) {
               await setStorageItemItem('@token', {
@@ -80,14 +81,20 @@ export default function AuthProvider ({children}:{children: ReactNode}): ReactNo
               signOut();
             }
 
-        } else {
-          signOut();
-        }
+          } else {
+            signOut();
+          }
 
-      } else {
-        router.replace(LOGIN_PATH);
+        } else {
+          router.replace(LOGIN_PATH);
+        }
+        setIsLoading(false);
+
+      } catch (err) {
+        signOut();
+        setIsLoading(false);
       }
-      setIsLoading(false);
+
     })()
   }, []);
 
