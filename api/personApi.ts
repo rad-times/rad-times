@@ -102,7 +102,7 @@ export async function getActivePersonByEmail(email: string, sessionToken:string)
 
 export async function updateUserById(id: number, editedUser:Person, sessionToken:string): Promise<Person> {
   try {
-    const personResp = await fetch(`${API_URL}/person/${id}`, {
+    const personResp = await fetch(`${API_URL}/api/person/${id}`, {
       method: "PUT",
       body: JSON.stringify({
         first_name: editedUser.first_name,
