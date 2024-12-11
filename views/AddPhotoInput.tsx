@@ -14,7 +14,7 @@ import { useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 
 interface IAddPhotoInput {
-  setPhotoData: (arg0: string) => void
+  setPhotoData: (arg0: { base64:string, name:string }) => void
 }
 
 export default function AddPhotoInput({
@@ -76,7 +76,7 @@ export default function AddPhotoInput({
     }
 
     ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images', 'videos'],
       allowsEditing: true,
       quality: 0.8,
       base64: true
@@ -84,7 +84,10 @@ export default function AddPhotoInput({
       .then(result => {
         if (!result.canceled) {
           setImage(result.assets[0].uri);
-          setPhotoData(result.assets[0].uri);
+          setPhotoData({
+            base64: result.assets[0].base64 || "",
+            name: result.assets[0].uri
+          });
           setImageSelected(true);
         }
       });
@@ -111,13 +114,19 @@ export default function AddPhotoInput({
                 showCameraPermissionsModal(false);
               });
           }}
+          theme={"actionBtn"}
           btnDisplayText="grant permission"
         />
       </InPageModal>
 
       {/* Ugly camera */}
       <Camera
-        setPhotoData={setPhotoData}
+        setPhotoData={(base64: string) => {
+          setPhotoData({
+            base64: base64,
+            name: "New photo"
+          });
+        }}
         cameraShown={showCamera}
         toggleCameraShown={toggleShowCamera}
       />

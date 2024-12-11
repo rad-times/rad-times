@@ -10,6 +10,12 @@ export const LABEL_TEXT: StyleProp<TextStyle> = {
   fontWeight: 'normal'
 };
 
+export const LABEL_TEXT_ITALIC:StyleProp<TextStyle> = {
+  ...LABEL_TEXT,
+  fontSize: 14,
+  fontStyle: 'italic'
+}
+
 export const BODY_TEXT:StyleProp<TextStyle> = {
   color: Colors.LIGHT_GREY,
   fontSize: 18,

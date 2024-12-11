@@ -1,14 +1,15 @@
 import {getLocationData, searchGooglePlaces} from "@/api/googlePlacesApi";
 import {updateUserById} from '@/api/personApi';
 import {Colors} from "@/constants/Colors";
-import {BOTTOM_BUTTON, CENTER_CONTENT_FULL_PAGE, CONTENT_FULL_PAGE} from "@/constants/Styles";
+import {CENTER_CONTENT_FULL_PAGE, CONTENT_FULL_PAGE} from "@/constants/Styles";
 import {useAuthSession} from "@/providers/AuthProvider";
 import {ActiveUserStateProp, setActiveUser} from "@/state/activeUserSlice";
-import {GoogleLocationStateProps, setSearchInput, setSearchResults} from "@/state/googleLocationsSlice";
-import ActionButton from "@/views/components/ActionButton";
+import {GoogleLocationStateProps, setSearchResults} from "@/state/googleLocationsSlice";
+
 import FormInput from "@/views/components/FormInput";
 import SearchablePicker, {SelectResponse} from "@/views/components/SearchablePicker";
 import Spacer from "@/views/components/Spacer";
+import SaveCancelBtnBlock from "@/views/SaveCancelBtnBlock";
 import {useMutation} from "@tanstack/react-query";
 import {router} from "expo-router";;
 import {ReactNode, useEffect, useState} from "react";
@@ -102,7 +103,7 @@ export default function EditProfile({}: EditProfileProps): ReactNode {
       dispatch(setActiveUser(editedUser));
       router.back();
     }
-  })
+  });
 
   useEffect(() => {
     if (mutation.isError) {
@@ -163,10 +164,11 @@ export default function EditProfile({}: EditProfileProps): ReactNode {
                 />
               </View>
 
-              <View style={BOTTOM_BUTTON}>
-                <ActionButton onClickBtn={() => mutation.mutate()} btnDisabled={!hasChanges} btnWidthPercent={50} theme={"actionBtn"} btnDisplayText={"Save"} />
-                <ActionButton onClickBtn={cancelChanges} btnWidthPercent={50} theme={"destroyBtn"} btnDisplayText={"Cancel"} />
-              </View>
+              <SaveCancelBtnBlock
+                saveAction={mutation.mutate}
+                saveEnabled={hasChanges}
+                cancelAction={cancelChanges}
+              />
             </>
           )}
         </>
